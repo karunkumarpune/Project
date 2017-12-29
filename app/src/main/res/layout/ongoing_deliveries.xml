@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <RelativeLayout
+        android:layout_below="@+id/day_date_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:id="@+id/below_card"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="10dp"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        android:layout_height="165dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_track_driver"
+            android:gravity="center"
+            android:textSize="@dimen/medium_text"
+            android:textColor="@color/appcolor"
+            android:text="@string/txt_tracking_driver"
+            android:layout_marginBottom="7dp"
+            android:layout_gravity="bottom|center"/>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+
+        android:layout_width="match_parent"
+        android:id="@+id/top_card"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="10dp"
+        android:translationZ="4dp"
+        app:cardElevation="4dp"
+        android:layout_height="130dp">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:translationZ="20dp"
+            android:layout_marginBottom="8dp">
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="-19dp"
+                android:layout_alignParentEnd="true"
+                android:background="@color/otp_text_color"
+                android:visibility="gone"
+                android:rotation="45">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_cancel"
+                    android:layout_centerInParent="true"
+                    android:text="@string/txt_assign"
+                    android:textSize="8dp"
+                    android:textColor="@color/grey_text_color"/>
+
+
+
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="3"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/user_image_row_list"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:adjustViewBounds="true"
+                        android:layout_centerHorizontal="true"
+                        android:scaleType="centerCrop"
+                        app:riv_oval="true"
+                        android:src="@drawable/driver" />
+
+
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/rl_container"
+                    android:layout_weight=".8">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/row_user_name"
+                        android:layout_marginTop="2dp"
+                        android:layout_toEndOf="@+id/txt_helper"
+                        android:text="Prashant Chauhan"
+                        android:textColor="@color/grey_text_color"
+                        android:textSize="@dimen/medium_text" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/row_user_name"
+                        android:id="@+id/pic_drop_view"
+                        android:layout_marginTop="-2dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/pick_location"/>
+
+                        <View
+                            android:layout_width="0.5dp"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="-10dp"
+                            android:background="@color/greyColor"/>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-8dp"
+                            android:src="@drawable/drop_location"/>
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/row_user_name"
+                        android:orientation="vertical"
+                        android:layout_toEndOf="@+id/pic_drop_view">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/row_txt_form"
+                                android:layout_marginTop="5dp"
+                                android:layout_toEndOf="@+id/txt_helper"
+                                android:text="@string/txt_form"
+                                android:textColor="@color/greyColor"
+                                android:textSize="8dp" />
+                            <TextView
+                                android:id="@+id/edt_pickup_location"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Douglasville, GA"
+                                android:textColor="@color/grey_text_color"
+                                android:textSize="10dp" />
+
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/label_drop_location"
+                                android:layout_marginTop="2dp"
+                                android:layout_toEndOf="@+id/txt_helper"
+                                android:text="@string/txt_to"
+                                android:textColor="@color/greyColor"
+                                android:textSize="8dp" />
+                            <TextView
+                                android:id="@+id/edt_drop_location"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="HappeVille, GA"
+                                android:textColor="@color/grey_text_color"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="7dp"
+                                android:layout_toEndOf="@+id/txt_helper"
+                                android:text="@string/txt_assign"
+                                android:textColor="@color/greyColor"
+                                android:textSize="@dimen/small_text" />
+                            <TextView
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Handey Jorden"
+                                android:textColor="@color/grey_text_color"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="7dp"
+                    android:background="@color/greyColor"/>
+
+
+
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/rl_price_container"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/row_label_txt_fare"
+                        android:layout_centerInParent="true"
+                        android:text="@string/txt_apx_fare"
+                        android:textColor="@color/otp_text_color"
+                        android:textSize="@dimen/medium_text" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/row_apx_fare"
+                        android:layout_centerInParent="true"
+                        android:layout_below="@+id/row_label_txt_fare"
+                        android:text="$21"
+                        android:textColor="@color/otp_text_color"
+                        android:textSize="@dimen/xtra_large_text" />
+
+                </RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/below_card">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="10dp"
+        android:elevation="4dp"
+        android:translationZ="4dp"
+        android:layout_height="185dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/track_driver_below"
+            android:textSize="@dimen/medium_text"
+            android:textColor="@color/appcolor"
+            android:text="@string/txt_tracking_driver"
+            android:layout_marginBottom="7dp"
+            android:layout_gravity="bottom"/>
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="10dp"
+        android:translationZ="4dp"
+        app:cardElevation="4dp"
+        android:layout_height="150dp">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:translationZ="20dp"
+            android:layout_marginBottom="8dp">
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="-19dp"
+                android:layout_alignParentEnd="true"
+                android:background="@color/otp_text_color"
+                android:visibility="visible"
+                android:rotation="45">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="@string/txt_assign"
+                    android:textSize="8dp"
+                    android:textColor="@color/grey_text_color"/>
+
+
+
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="3"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.2">
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        app:riv_oval="true"
+                        android:src="@drawable/ac_sing_helper"
+                        />
+
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:layout_weight=".8">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/row_user_name_below"
+                        android:layout_marginTop="2dp"
+                        android:layout_toEndOf="@+id/txt_helper"
+                        android:text="Prashant Chauhan"
+                        android:textColor="@color/grey_text_color"
+                        android:textSize="@dimen/medium_text" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginTop="-2dp"
+                        android:layout_below="@+id/row_user_name_below"
+                        android:id="@+id/pic_drop_view_below"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/pick_location"/>
+
+                        <View
+                            android:layout_width="0.5dp"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="-10dp"
+                            android:background="@color/greyColor"/>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-8dp"
+                            android:src="@drawable/drop_location"/>
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/row_user_name_below"
+                        android:orientation="vertical"
+                        android:layout_toEndOf="@+id/pic_drop_view_below">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:layout_marginTop="5dp"
+                                android:layout_toEndOf="@+id/txt_helper"
+                                android:text="@string/txt_form"
+                                android:textColor="@color/greyColor"
+                                android:textSize="8dp" />
+                            <TextView
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+
+                                android:text="Douglasville, GA"
+                                android:textColor="@color/grey_text_color"
+                                android:textSize="10dp" />
+
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:layout_marginTop="2dp"
+                                android:layout_toEndOf="@+id/txt_helper"
+                                android:text="@string/txt_to"
+                                android:textColor="@color/greyColor"
+                                android:textSize="8dp" />
+                            <TextView
+
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:text="HappeVille, GA"
+                                android:textColor="@color/grey_text_color"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/label_assign"
+                                android:layout_marginTop="2dp"
+                                android:layout_toEndOf="@+id/txt_helper"
+                                android:text="@string/txt_assign"
+                                android:textColor="@color/greyColor"
+                                android:textSize="8dp" />
+                            <TextView
+                                android:id="@+id/txt_value_assign"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+
+                                android:text="Handey Jorden"
+                                android:textColor="@color/grey_text_color"
+                                android:textSize="10dp" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="7dp"
+                    android:background="@color/greyColor"/>
+
+
+
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/row_label_txt_fare_below"
+                        android:layout_centerInParent="true"
+                        android:text="@string/txt_apx_fare"
+                        android:textColor="@color/otp_text_color"
+                        android:textSize="@dimen/medium_text" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_below="@+id/row_label_txt_fare_below"
+                        android:text="$21"
+                        android:textColor="@color/otp_text_color"
+                        android:textSize="@dimen/xtra_large_text" />
+
+                </RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+    </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

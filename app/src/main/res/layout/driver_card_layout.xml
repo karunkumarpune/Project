@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    android:layout_height="wrap_content">
+   <!-- <include layout="@layout/toolbar_layout"></include>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:background="@android:color/transparent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/card_container"
+            android:layout_marginBottom="20dp"
+            android:layout_above="@+id/txt_track_status">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:id="@+id/id_card_driver"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="10dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="170dp">
+            <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/img_driver"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/driver"
+            app:riv_corner_radius_bottom_left="0dp"
+            app:riv_corner_radius_top_left="10dp"
+            app:riv_corner_radius_bottom_right="10dp"
+            app:riv_corner_radius_top_right="-0dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/img_driver"
+                android:layout_marginTop="15dp"
+                android:paddingStart="8dp"
+                android:layout_above="@+id/btn_asign"
+                android:orientation="vertical">
+
+              <TextView
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/txt_drver_name"
+                  android:textSize="@dimen/medium_text"
+                  android:textColor="@color/black"
+                  android:text="Prashant Chauhan"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_drver_address"
+                    android:layout_marginTop="-3dp"
+                    android:textSize="@dimen/small_text"
+                    android:textColor="@color/greyColor"
+                    android:text="Small Van- #0578"/>
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/btn_asign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginTop="12dp"
+                android:textAllCaps="true"
+                android:paddingBottom="10dp"
+                android:text="@string/txt_assign_another"
+                style="@style/btn_style"
+                android:layout_below="@+id/img_driver"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+        </RelativeLayout>
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:id="@+id/call_driver"
+            android:layout_marginBottom="-34dp"
+            android:src="@drawable/call"
+            android:layout_marginEnd="5dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/card_container" />
+
+
+
+
+        <RelativeLayout
+            android:id="@+id/txt_track_status"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_60"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bottom_sheet_behaviour"
+            >
+
+            <ImageView
+                android:layout_marginLeft="@dimen/dp_5"
+                android:id="@+id/open_bottomSheet"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_expand_less"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/medium_text"
+                android:text="@string/txt_tracking_status"
+                />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/design_bottom_sheet"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:layout_height="wrap_content"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        android:fitsSystemWindows="true">
+      <!--  <include layout="@layout/bottom_sheet_layout"-->
+        <include layout="@layout/bottom_sheet_layout"
+            />
+    </RelativeLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_main_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:background="#ffffff"
+        android:alpha="0.9">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:id="@+id/backImage_header"
+            android:src="@drawable/back_black"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/txt_activty_header"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            style="@style/toolbar_text" />
+    </android.support.v7.widget.Toolbar>
+
+
+</android.support.design.widget.CoordinatorLayout>
+

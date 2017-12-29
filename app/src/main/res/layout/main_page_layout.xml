@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_main_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:alpha="0.7">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:id="@+id/navigation_menu"
+            android:src="@drawable/sidebar"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/txt_activty_header"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            style="@style/toolbar_text" />
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_below="@+id/toolbar_main_activity"
+        android:layout_alignParentStart="true">
+
+
+        <RelativeLayout
+            android:layout_marginTop="@dimen/dp_10"
+            android:clickable="true"
+            android:id="@+id/t"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/recycler_search_option">
+            </include>
+
+
+        </RelativeLayout>
+
+
+        <ImageView
+
+            android:id="@+id/btn_current_location"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/t"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_my_location"/>
+
+        <ImageView
+            android:layout_centerInParent="true"
+            android:id="@+id/imageMarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_pin_pickup" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+            <include layout="@layout/recycler_home">
+            </include>
+
+
+
+        </RelativeLayout>
+
+<!--
+<android.support.v7.widget.RecyclerView
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@android:color/transparent"
+    android:alpha="0"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentStart="true">
+</android.support.v7.widget.RecyclerView>
+-->
+
+    </RelativeLayout>
+
+    <com.github.rahatarmanahmed.cpv.CircularProgressView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/progress_view"
+        android:layout_width="@dimen/dp_50"
+        android:layout_centerInParent="true"
+        android:layout_height="@dimen/dp_50"
+        android:visibility="gone"
+        app:cpv_animAutostart="true"
+        app:cpv_indeterminate="true"
+        app:cpv_color="@color/appcolor"/>
+
+
+</RelativeLayout>

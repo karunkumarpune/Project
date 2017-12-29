@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.app.bickup_user.fragments.OnGoingFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/delivery_recy"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+    </android.support.v7.widget.RecyclerView>
+
+
+
+    <com.github.rahatarmanahmed.cpv.CircularProgressView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:visibility="gone"
+        android:id="@+id/progress_view"
+        android:layout_width="@dimen/dp_50"
+        android:layout_centerInParent="true"
+        android:layout_height="@dimen/dp_50"
+        app:cpv_animAutostart="true"
+        app:cpv_indeterminate="true"
+        app:cpv_color="@color/appcolor"/>
+
+</RelativeLayout>

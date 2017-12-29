@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:id="@+id/cordinatorlayout"
+    android:orientation="vertical"
+    android:background="@color/screen_background">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/screen_background">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/screen_background"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="6dp">
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:paddingBottom="20dp"
+       android:background="#ffffff"
+       android:orientation="vertical"
+       android:paddingStart="20dp">
+
+
+       <RelativeLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:visibility="visible"
+           android:id="@+id/img_container_booking_details"
+           android:layout_marginTop="10dp"
+           android:background="#ffffff"
+           android:orientation="vertical">
+           <android.support.v7.widget.RecyclerView
+               android:layout_width="match_parent"
+               android:layout_height="100dp"
+               android:layout_marginTop="10dp"
+               android:id="@+id/recyclerImages_booking">
+
+           </android.support.v7.widget.RecyclerView>
+
+           <HorizontalScrollView
+               android:id="@+id/hsv"
+               android:layout_width="match_parent"
+               android:layout_height="100dp"
+               android:layout_marginTop="10dp"
+               android:scrollbars="none"
+               android:visibility="gone"
+               android:scrollbarSize="12dip"
+               android:fillViewport="true">
+
+               <LinearLayout
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal">
+                   <include layout="@layout/row_goods_image"/>
+                   <RelativeLayout
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginStart="10dp">
+                       <include layout="@layout/row_goods_image"
+                           android:id="@+id/njsdj" />
+                   </RelativeLayout>
+                   <RelativeLayout
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginStart="10dp">
+                       <include layout="@layout/row_goods_image"
+                           android:id="@+id/njsdj" />
+                   </RelativeLayout>
+                   <RelativeLayout
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginStart="10dp">
+                       <include layout="@layout/row_goods_image"
+                           android:id="@+id/njsdj" />
+                   </RelativeLayout>
+                   <RelativeLayout
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginStart="10dp">
+                       <include layout="@layout/row_goods_image"
+                           android:id="@+id/njsdj" />
+                   </RelativeLayout>
+               </LinearLayout>
+           </HorizontalScrollView>
+           <SeekBar
+               android:id="@+id/seekBar1"
+               android:visibility="gone"
+               android:layout_marginTop="10dp"
+               android:layout_marginEnd="10dp"
+               android:layout_below="@+id/hsv"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:thumb="@drawable/slider_hander"
+               android:layout_marginBottom="10dp" />
+       </RelativeLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/img_container_booking_details"
+    android:layout_marginTop="10dp"
+    android:visibility="visible"
+    android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/label_pickup_location"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/txt_helper"
+            android:text="@string/txt_pickup_location_details"
+            android:textColor="@color/greyColor"
+            android:textSize="@dimen/small_text" />
+    <TextView
+        android:id="@+id/value_pickup_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="123 6th St. Melbourne, FL 32940"
+        android:textColor="@color/grey_text_color"
+        android:textSize="@dimen/medium_text" />
+
+
+
+</LinearLayout>
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:visibility="visible"
+           android:layout_below="@+id/img_container_booking_details"
+           android:layout_marginTop="10dp"
+           android:orientation="vertical">
+
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="10dp"
+               android:layout_toEndOf="@+id/txt_helper"
+               android:id="@+id/label_pickup_contact"
+               android:text="@string/txt_pickup_contact_details"
+               android:textColor="@color/greyColor"
+               android:textSize="@dimen/small_text" />
+           <TextView
+               android:id="@+id/value_pickup_contact_name"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="2dp"
+               android:text="Andrew Smith"
+               android:textColor="@color/grey_text_color"
+               android:textSize="@dimen/medium_text" />
+           <TextView
+               android:id="@+id/value_pickup_contact_number"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="2dp"
+               android:text="+91-8894635648"
+               android:textColor="@color/grey_text_color"
+               android:textSize="@dimen/medium_text" />
+
+
+
+       </LinearLayout>
+
+       <LinearLayout
+           android:visibility="visible"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_below="@+id/img_container_booking_details"
+           android:layout_marginTop="10dp"
+           android:orientation="vertical">
+
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="10dp"
+               android:id="@+id/label_drop_location"
+               android:layout_toEndOf="@+id/txt_helper"
+               android:text="@string/txt_drop_location_details"
+               android:textColor="@color/greyColor"
+               android:textSize="@dimen/small_text" />
+           <TextView
+               android:id="@+id/value_drop_location"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="2dp"
+               android:text="123 6th St. Melbourne, FL 32940"
+               android:textColor="@color/grey_text_color"
+               android:textSize="@dimen/medium_text" />
+
+
+
+       </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_below="@+id/img_container_booking_details"
+           android:layout_marginTop="10dp"
+           android:orientation="vertical">
+
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="10dp"
+               android:id="@+id/label_drop_contact"
+               android:layout_toEndOf="@+id/txt_helper"
+               android:text="@string/txt_pickup_contact_details"
+               android:textColor="@color/greyColor"
+               android:textSize="@dimen/small_text" />
+           <TextView
+               android:id="@+id/value_drop_contact_name"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="2dp"
+               android:text="Andrew Smith"
+               android:textColor="@color/grey_text_color"
+               android:textSize="@dimen/medium_text" />
+           <TextView
+               android:id="@+id/value_drop_contact_number"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="2dp"
+               android:text="+91-8894635648"
+               android:textColor="@color/grey_text_color"
+               android:textSize="@dimen/medium_text" />
+
+
+
+       </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_below="@+id/img_container_booking_details"
+           android:layout_marginTop="10dp"
+           android:orientation="vertical">
+
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="10dp"
+               android:id="@+id/label_number_of_helpers"
+               android:layout_toEndOf="@+id/txt_helper"
+               android:text="@string/txt_number_of_helpers"
+               android:textColor="@color/greyColor"
+               android:textSize="@dimen/small_text" />
+           <ImageView
+               android:id="@+id/img_helpers"
+               android:visibility="visible"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="8dp"
+               android:src="@drawable/sing_helper"
+               />
+
+       </LinearLayout>
+
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_below="@+id/img_container_booking_details"
+           android:layout_marginTop="10dp"
+           android:orientation="vertical">
+
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="10dp"
+               android:id="@+id/label_types_of_goods"
+               android:layout_toEndOf="@+id/txt_helper"
+               android:text="@string/txt_types_of_goods"
+               android:textColor="@color/greyColor"
+               android:textSize="@dimen/small_text" />
+
+
+
+
+       </LinearLayout>
+
+
+
+
+       <LinearLayout
+           android:layout_marginTop="@dimen/dp_5"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:gravity="center_vertical">
+
+           <android.support.v7.widget.RecyclerView
+               android:id="@+id/types_good_recyclerView"
+               android:layout_width="match_parent"
+               android:layout_height="40dp"/>
+
+       </LinearLayout>
+
+
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:visibility="visible"
+           android:layout_below="@+id/img_container_booking_details"
+           android:layout_marginTop="10dp"
+           android:orientation="vertical">
+
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="10dp"
+               android:id="@+id/label_description"
+               android:layout_toEndOf="@+id/txt_helper"
+               android:text="@string/txt_description"
+               android:textColor="@color/greyColor"
+               android:textSize="@dimen/small_text" />
+           <TextView
+               android:id="@+id/value_description"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:visibility="visible"
+               android:layout_marginTop="10dp"
+               android:text="Andrew smith is a great person and he is willing to relocate so coming to noida to check the app.He lives in."
+               android:textColor="@color/grey_text_color"
+               android:textSize="@dimen/medium_text" />
+
+
+
+       </LinearLayout>
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_below="@+id/img_container_booking_details"
+           android:layout_marginTop="10dp"
+           android:orientation="vertical">
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="10dp"
+               android:id="@+id/label_amount_details"
+               android:layout_toEndOf="@+id/txt_helper"
+               android:text="@string/txt_amount_details"
+               android:textColor="@color/greyColor"
+               android:textSize="@dimen/small_text" />
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content">
+           <TextView
+               android:id="@+id/value_amount_string"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="10dp"
+               android:text="$ 52.00 + $ 5"
+               android:textColor="@color/grey_text_color"
+               android:textSize="@dimen/medium_text" />
+               <TextView
+                   android:id="@+id/txt_helper_string"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginTop="10dp"
+                   android:text="(Helper)"
+                   android:textColor="@color/greyColor"
+                   android:textSize="@dimen/medium_text" />
+               <TextView
+                   android:id="@+id/value_total_string"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginTop="10dp"
+                   android:text="= $57.00"
+                   android:textStyle="bold"
+                   android:textColor="@color/grey_text_color"
+                   android:textSize="@dimen/medium_text" />
+           </LinearLayout>
+
+
+
+       </LinearLayout>
+
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:layout_marginTop="10dp"
+           android:visibility="visible"
+           android:layout_marginEnd="20dp"
+           android:weightSum="2">
+
+           <TextView
+               android:layout_marginRight="@dimen/dp_5"
+               android:layout_width="match_parent"
+               android:layout_height="70dp"
+               android:layout_weight="1"
+               android:id="@+id/btn_paid_by_me"
+               android:gravity="center"
+               android:text="@string/txt_paid_by_me"
+               android:textColor="@color/black"
+               android:textSize="@dimen/medium_text"
+               android:paddingBottom="10dp"
+               android:background="@color/white"
+               />
+
+           <TextView
+               android:layout_marginLeft="@dimen/dp_5"
+               android:layout_width="match_parent"
+               android:layout_weight="1"
+               android:id="@+id/paid_by_other"
+               android:text="@string/txt_others"
+               android:paddingBottom="10dp"
+               android:gravity="center"
+               android:textColor="#ffffff"
+               android:textSize="@dimen/medium_text"
+               android:layout_height="70dp"
+               android:background="@drawable/sm_btn"/>
+
+       </LinearLayout>
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="10dp"
+           android:layout_marginEnd="20dp"
+           android:orientation="horizontal"
+           android:weightSum="2">
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:orientation="vertical">
+
+
+               <android.support.design.widget.TextInputLayout
+                   android:layout_width="match_parent"
+                   android:clipToPadding="false"
+                   android:layout_marginTop="10dp"
+                   app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout_grey"
+                   android:layout_below="@+id/tv_forgot_heading"
+                   android:layout_height="wrap_content">
+                   <EditText
+                       android:id="@+id/edt_contact_person_name"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:textSize="@dimen/medium_text"
+                       android:inputType="text"
+                       android:maxLines="1"
+                       android:textCursorDrawable="@null"
+                       android:paddingTop="1dp"
+                       android:paddingBottom="15dp"
+                       android:backgroundTint="@color/greyColor"
+                       android:hint="@string/txt_contact_person_name"
+                       />
+               </android.support.design.widget.TextInputLayout>
+<!--
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginTop="10dp"
+                   android:id="@+id/label_contact_person_name"
+                   android:text="@string/txt_contact_person_name"
+                   android:textColor="@color/greyColor"
+                   android:textSize="@dimen/small_text" />
+
+               <EditText
+                   android:textSize="@dimen/medium_text"
+                   android:id="@+id/edt_contact_person_name"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:textColor="@color/grey_text_color"
+                   android:paddingBottom="0dp"
+                   android:layout_marginLeft="-5dp"
+                   android:maxLines="1"
+                   android:backgroundTint="@color/greyColor"
+                   />-->
+
+           </LinearLayout>
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:orientation="vertical">
+
+               <android.support.design.widget.TextInputLayout
+                   android:layout_width="match_parent"
+                   android:clipToPadding="false"
+                   android:layout_marginTop="10dp"
+                   app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout_grey"
+                   android:layout_below="@+id/tv_forgot_heading"
+                   android:layout_height="wrap_content">
+                   <EditText
+                       android:id="@+id/edt_contact_person_number"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:textSize="@dimen/medium_text"
+                       android:inputType="number"
+                       android:maxLines="1"
+                       android:textCursorDrawable="@null"
+                       android:paddingTop="1dp"
+                       android:paddingBottom="15dp"
+                       android:backgroundTint="@color/greyColor"
+                       android:hint="@string/txt_contact_person_number"
+                       />
+               </android.support.design.widget.TextInputLayout>
+              <!-- <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginTop="10dp"
+                   android:id="@+id/label_contact_person_number"
+                   android:text="@string/txt_contact_person_number"
+                   android:textColor="@color/greyColor"
+                   android:textSize="@dimen/small_text" />
+               <EditText
+                   android:textSize="@dimen/medium_text"
+                   android:id="@+id/edt_contact_person_number"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:inputType="number"
+                   android:layout_marginLeft="-5dp"
+                   android:maxLines="1"
+                   android:textColor="@color/grey_text_color"
+                   android:paddingBottom="0dp"
+                   android:backgroundTint="@color/greyColor"
+                   />-->
+
+           </LinearLayout>
+       </LinearLayout>
+       <Button
+           android:layout_width="match_parent"
+           android:id="@+id/btn_confirm_booking"
+           android:layout_marginBottom="12dp"
+           android:layout_below="@+id/date_time_container"
+           android:text="@string/txt_confirm"
+           android:textAllCaps="false"
+           android:layout_marginEnd="20dp"
+           android:layout_marginTop="@dimen/btn_margin_login"
+           android:paddingBottom="@dimen/btn_padding_bottom"
+           android:gravity="center"
+           android:textColor="#ffffff"
+           android:textSize="@dimen/medium_text"
+           android:background="@drawable/lg_btn"
+           android:layout_height="@dimen/btn_height"
+           />
+   </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
+    <com.github.rahatarmanahmed.cpv.CircularProgressView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/progress_view"
+        android:layout_width="@dimen/dp_50"
+        android:layout_gravity="center"
+        android:layout_height="@dimen/dp_50"
+        android:visibility="gone"
+        app:cpv_animAutostart="true"
+        app:cpv_indeterminate="true"
+        app:cpv_color="@color/appcolor"/>
+</android.support.design.widget.CoordinatorLayout>
+

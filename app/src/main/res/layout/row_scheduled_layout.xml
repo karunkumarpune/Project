@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:id="@+id/below_card"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="10dp"
+        android:elevation="7dp"
+        android:translationZ="10dp"
+        android:layout_height="185dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
+            android:weightSum="2">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_cancel_schedule"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="@dimen/medium_text"
+                android:textColor="@color/grey_text_color"
+                android:text="@string/txt_cancel" />
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/greyColor"></View>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_recshedul"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="@dimen/medium_text"
+            android:textColor="@color/appcolor"
+            android:text="@string/txt_reschedule"
+            />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:id="@+id/top_card"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="10dp"
+        android:translationZ="10dp"
+        app:cardElevation="5dp"
+        android:layout_height="135dp">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:translationZ="20dp"
+
+            >
+            <RelativeLayout
+                android:layout_width="60dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="-19dp"
+                android:layout_alignParentEnd="true"
+                android:background="@color/red"
+                android:visibility="gone"
+                android:rotation="45">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txt_cancel"
+                    android:layout_centerInParent="true"
+                    android:text="@string/txt_cancel"
+                    android:textSize="8dp"
+                    android:textColor="#ffffff"/>
+
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:weightSum="2"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.3">
+                    <RelativeLayout
+                        android:padding="@dimen/dp_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:riv_corner_radius_bottom_left="10dp"
+                        app:riv_corner_radius_top_left="10dp"
+                        app:riv_corner_radius_bottom_right="10dp"
+                        app:riv_corner_radius_top_right="10dp"
+                        android:src="@drawable/driver"
+                        android:id="@+id/user_image_row_list"/>
+                    </RelativeLayout>
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/rl_container"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight=".8">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/row_user_name"
+                        android:id="@+id/pic_drop_view"
+                        android:gravity="center"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/pick_location"/>
+
+                        <View
+                            android:layout_width="0.5dp"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="-10dp"
+                            android:background="@color/greyColor"/>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-8dp"
+                            android:src="@drawable/drop_location"/>
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/row_user_name"
+                        android:orientation="vertical"
+                        android:id="@+id/txt_container"
+                        android:layout_toEndOf="@+id/pic_drop_view">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/img_container_booking_details"
+                            android:visibility="visible"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/row_txt_form"
+                                android:layout_marginTop="6dp"
+                                android:layout_toEndOf="@+id/txt_helper"
+                                android:text="@string/txt_form"
+                                android:textColor="@color/greyColor"
+                                android:textSize="@dimen/sp_14" />
+                            <TextView
+                                android:id="@+id/edt_pickup_location"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:maxLines="2"
+                                android:text="123 6th St. Melbourne, FL 32940"
+                                android:textColor="@color/grey_text_color"
+                                android:textSize="@dimen/sp_15" />
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/img_container_booking_details"
+                            android:visibility="visible"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/label_drop_location"
+                                android:layout_marginTop="7dp"
+                                android:layout_toEndOf="@+id/txt_helper"
+                                android:text="@string/txt_to"
+                                android:textColor="@color/greyColor"
+                                android:textSize="@dimen/sp_14" />
+                            <TextView
+                                android:id="@+id/edt_drop_location"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:textSize="@dimen/sp_15"
+                                android:maxLines="2"
+                                android:text="123 6th St. Melbourne, FL 32940"
+                                android:textColor="@color/grey_text_color"
+                                />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/txt_container"
+                        android:gravity="bottom"
+
+                        android:layout_marginBottom="10dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginTop="@dimen/sp_8"
+                        android:weightSum="2">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:id="@+id/row_date_schedule"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center_vertical"
+                            android:drawableStart="@drawable/calander_sm"
+                            android:text="08/08/1017"
+                            android:textColor="@color/greyColor"
+                            android:textSize="@dimen/sp_14" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:drawableStart="@drawable/time_sm"
+                            android:id="@+id/row_time_schedule"
+                            android:layout_marginTop="2dp"
+                            android:text="05:00 PM"
+                            android:textColor="@color/greyColor"
+                            android:textSize="@dimen/sp_14" />
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+
+</RelativeLayout>

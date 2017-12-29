@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/recv"
+        android:layout_margin="@dimen/dp_5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:padding="@dimen/dp_2"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:button="@drawable/customdrawablecheckbox"
+            android:id="@+id/image_driver"
+            android:layout_height="50dp"
+            android:layout_width="50dp"
+            android:src="@drawable/driver"
+            app:riv_oval="true"
+            app:riv_border_color="@color/btn_pressed_Color"
+            />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textSize="15sp"
+            android:textStyle="normal"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/image_driver"
+            />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_below="@+id/recv"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#a1a1a1"/>
+</RelativeLayout>

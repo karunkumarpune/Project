@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/coordinator_track_driver"
+    tools:context="com.app.bickup_user.TrackDriverActivity">
+
+    <fragment
+        android:id="@+id/map_track_driver"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        class="com.google.android.gms.maps.SupportMapFragment" >
+
+
+    </fragment>
+    <include layout="@layout/driver_card_layout" />
+    <com.github.rahatarmanahmed.cpv.CircularProgressView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/progress_view"
+        android:layout_width="@dimen/dp_50"
+        android:layout_gravity="center"
+        android:layout_height="@dimen/dp_50"
+        android:visibility="gone"
+        app:cpv_animAutostart="true"
+        app:cpv_indeterminate="true"
+        app:cpv_color="@color/appcolor"/>
+</android.support.design.widget.CoordinatorLayout>

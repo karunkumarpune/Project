@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rl_container"
+        android:layout_marginTop="10dp"
+        android:clickable="false"
+        android:alpha="1"
+        android:background="@drawable/search_main"
+        android:padding="7dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:id="@+id/pic_drop_view"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/pick_location"/>
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="@dimen/dp_45"
+                android:layout_marginTop="-10dp"
+                android:background="@color/greyColor"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-8dp"
+                android:src="@drawable/drop_location"/>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toEndOf="@+id/pic_drop_view">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_3"
+                android:layout_below="@+id/img_container_booking_details"
+                android:visibility="visible"
+                android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/label_pickup_location_dialog">
+                    <TextView
+                        android:id="@+id/btn_pickup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/txt_helper"
+                        android:text="@string/txt_pick_up"
+                        android:textColor="@color/greyColor"
+                        android:textSize="@dimen/small_text" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_30"
+                        android:layout_height="@dimen/dp_30"
+                        android:id="@+id/search_pickup"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/search_black"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+                    <TextView
+                        android:id="@+id/edt_pickup_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="0dp"
+                        android:layout_marginTop="-5dp"
+                        android:paddingBottom="@dimen/dp_5"
+                        android:layout_marginEnd="@dimen/dp_40"
+                        android:backgroundTint="@android:color/transparent"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="@color/grey_text_color"
+                        android:textSize="@dimen/medium_text" />
+
+
+                </RelativeLayout>
+
+
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/greyColor"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_container_booking_details"
+                android:visibility="visible"
+                android:layout_marginTop="@dimen/dp_5"
+                android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/label_drop_location">
+
+
+                    <TextView
+                        android:id="@+id/btn_drop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/txt_helper"
+                        android:text="@string/txt_drop"
+                        android:textColor="@color/greyColor"
+                        android:textSize="@dimen/small_text" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dp_30"
+                        android:layout_height="@dimen/dp_30"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/search_black"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:id="@+id/edt_drop_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="0dp"
+                        android:layout_marginEnd="@dimen/dp_40"
+                        android:backgroundTint="@android:color/transparent"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textColor="@color/grey_text_color"
+                        android:textSize="@dimen/medium_text" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

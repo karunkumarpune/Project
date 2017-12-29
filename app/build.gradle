@@ -1,0 +1,132 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+
+    }
+
+    defaultConfig {
+
+        applicationId "com.app.bickup_user"
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
+
+    }
+
+    aaptOptions {
+        cruncherEnabled = false
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+
+    }
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/res', 'src/main/res/values-ar']
+            assets.srcDirs = ['src/main/assets', 'src/main/assets/2', 'src/main/res/assets/', 'src/main/assets/']
+        }
+    }
+
+
+    dexOptions {
+
+        jumboMode true
+        javaMaxHeapSize "4g"
+
+    }
+
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+
+
+
+    compile project(path: ':duo-navigation-drawer')
+
+    compile project(path: ':roundedimageview')
+
+
+
+    compile project(path: ':calender')
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.0.8'
+
+
+    compile 'com.github.bumptech.glide:glide:4.0.0'
+
+    // Retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+
+    compile ('io.socket:socket.io-client:1.0.0') {
+        // excluding org.json which is provided by Android
+        exclude group: 'org.json', module: 'json'
+    }
+
+// JSON Parsing
+    compile 'com.google.code.gson:gson:2.6.1'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
+    compile 'com.android.support:support-v4:26.0.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.google.android.gms:play-services-auth:9.8.0'
+    compile 'com.android.support:support-v4:25.+'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.google.android.gms:play-services:9.8.0'
+    compile 'com.xw.repo:bubbleseekbar:3.6-lite'
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.applandeo:material-calendar-view:1.1.0'
+    compile 'com.wajahatkarim3.EasyFlipView:EasyFlipView:1.0.2'
+    compile 'com.flipboard:bottomsheet-core:1.5.3'
+    compile 'com.iarcuschin:simpleratingbar:0.1.+'
+    compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
+    compile 'com.github.mukeshsolanki:country-picker-android:1.1.9'
+    compile 'com.koushikdutta.ion:ion:2.+'
+    compile 'at.blogc:expandabletextview:1.0.5'
+    testCompile 'junit:junit:4.12'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile 'com.github.chrisbanes:PhotoView:2.1.3'
+
+    // this line must be included to integrate with Firebase
+
+
+
+    compile 'com.android.support:support-compat:26.0.1'
+}
+
+//apply plugin: 'com.google.gms.google-services'
+repositories {
+    mavenCentral()
+}
+/*repositories {
+    maven { url "https://jitpack.io" }
+}*/
+
+apply plugin: 'com.google.gms.google-services'

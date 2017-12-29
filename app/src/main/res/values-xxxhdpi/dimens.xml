@@ -1,0 +1,49 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+
+    <!--small text size-->
+    <dimen name="small_text">14dp</dimen>
+    <dimen name="medium_text">16dp</dimen>
+    <dimen name="large_text">18dp</dimen>
+    <dimen name="heading_large_text">20dp</dimen>
+    <dimen name="xtra_large_text">22dp</dimen>
+    <dimen name="feild_margin_top">60dp</dimen>
+    <dimen name="btn_height">75dp</dimen>
+    <dimen name="btn_padding_bottom">18dp</dimen>
+    <dimen name="btn_margin_login">32dp</dimen>
+    <dimen name="hollow_btn_height">60dp</dimen>
+
+    <dimen name="edit_padding">12dp</dimen>
+    <dimen name="round_radius">10dp</dimen>
+
+    <dimen name="round_radius_search">10dp</dimen>
+    <dimen name="otp_text_size">25dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+
+
+    <dimen name="sp_5">4sp</dimen>
+    <dimen name="sp_7">5.5sp</dimen>
+    <dimen name="sp_8">6sp</dimen>
+    <dimen name="sp_9">6.3sp</dimen>
+    <dimen name="sp_10">7.5sp</dimen>
+    <dimen name="sp_12">9sp</dimen>
+    <dimen name="sp_14">10.5sp</dimen>
+    <dimen name="sp_15">11sp</dimen>
+    <dimen name="sp_16">12sp</dimen>
+    <dimen name="sp_18">13.5sp</dimen>
+    <dimen name="sp_20">15sp</dimen>
+    <dimen name="sp_22">1.5sp</dimen>
+    <dimen name="sp_24">18sp</dimen>
+    <dimen name="sp_26">19.5sp</dimen>
+    <dimen name="sp_28">21sp</dimen>
+    <dimen name="sp_30">22.5sp</dimen>
+    <dimen name="sp_32">24sp</dimen>
+    <dimen name="sp_35">27sp</dimen>
+    <dimen name="sp_40">30sp</dimen>
+</resources>

@@ -1,0 +1,104 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.app.bickup_user.fragments.Otp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/otp_container"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="18dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="20dp">
+        <TextView
+            android:id="@+id/txt_header_otp"
+            style="@style/heading_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingTop="8dp"
+            android:text="@string/txt_header_otp" />
+
+        <TextView
+            android:id="@+id/txt_mobile_otp"
+            style="@style/heading_black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_header_otp"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="2dp"
+            android:text="+91 9716557421" />
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_enter_mobile"
+            android:layout_width="250dp"
+            android:visibility="visible"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_mobile_otp"
+            android:layout_centerHorizontal="true"
+            app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout"
+            android:layout_marginTop="@dimen/btn_margin_login"
+            android:gravity="center"
+            android:textColorHint="@color/otp_text_color">
+
+            <EditText
+                android:id="@+id/edt_mobile_otp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textCursorDrawable="@null"
+                android:maxLines="1"
+                android:backgroundTint="@color/greyColor"
+                android:gravity="center"
+                android:paddingTop="0dp"
+                android:textColorHint="@color/otp_text_color"
+                android:inputType="number"
+                android:maxLength="7"
+                android:paddingBottom="25dp"
+                android:textColor="@color/otp_text_color"
+                android:textSize="@dimen/otp_text_size" />
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/txt_resend_Otp"
+            style="@style/heading_black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_enter_mobile"
+            android:layout_marginTop="@dimen/btn_margin_login"
+            android:gravity="center_horizontal"
+            android:paddingTop="8dp"
+            android:text="@string/txt_resend_otp" />
+        <Button
+            android:id="@+id/btn_submit_otp"
+            style="@style/btn_style"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btn_height"
+            android:paddingBottom="@dimen/btn_padding_bottom"
+            android:layout_below="@+id/txt_resend_Otp"
+            android:layout_marginTop="@dimen/btn_margin_login"
+            android:textAllCaps="false"
+            android:stateListAnimator="@null"
+            android:text="@string/txt_submit" />
+        <Button
+            android:id="@+id/btn_change_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textSize="@dimen/large_text"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:textStyle="normal"
+            android:stateListAnimator="@null"
+            android:textColor="@color/appcolor"
+            android:text="@string/txt_change_number"
+            android:background="@drawable/hollow_btn_app_color"
+            android:layout_below="@+id/btn_submit_otp"/>
+    </RelativeLayout>
+
+</FrameLayout>
