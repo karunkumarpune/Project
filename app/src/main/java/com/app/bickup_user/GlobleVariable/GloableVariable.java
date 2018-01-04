@@ -74,7 +74,7 @@ public class GloableVariable {
 
     public static String Tag_Good_Details_Comming_time_type="";
     public static String Tag_Good_Details_Comming_Date_time="";
-    public static String Tag_Good_Details_Comming_Date_time_Stamp="";
+    public static long Tag_Good_Details_Comming_Date_time_Stamp;
 
 
 

@@ -56,10 +56,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -633,19 +630,6 @@ public class BookingDetailsFragment extends Fragment implements View.OnClickList
 
     private void editProfile() {
 
-        String time_stamp = "";
-        String date_time=GloableVariable.Tag_Good_Details_Comming_Date_time_Stamp;
-        DateFormat dfm = new SimpleDateFormat("yyyyMMddHHmmss");
-        long a = 0;
-        try {
-            a = dfm.parse(date_time).getTime();
-            //a = dfm.parse("20060610000000").getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        Log.d("Date_time","date_time: "+a/1000);
-
-
        String sss="";
        if(GloableVariable.Tag_distance ==null || GloableVariable.Tag_distance==""){
            sss="0";
@@ -720,7 +704,7 @@ public class BookingDetailsFragment extends Fragment implements View.OnClickList
 
                 .setMultipartParameter("pickup_time_type", GloableVariable.Tag_Good_Details_Comming_time_type)
 
-                .setMultipartParameter("pickup_time",time_stamp)
+                .setMultipartParameter("pickup_time", String.valueOf(GloableVariable.Tag_Good_Details_Comming_Date_time_Stamp))
 
                 .setMultipartParameter("total_price", String.valueOf(Total_prices))
 

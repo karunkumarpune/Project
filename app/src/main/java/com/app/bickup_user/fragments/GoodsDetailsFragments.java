@@ -147,6 +147,9 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
     private String current_Date;
     Bitmap bitmap1 = null, bitmap2 = null, bitmap3 = null, bitmap4 = null;
     private File imgFile;
+    private String time_Stamp_month;
+    private String time_Stamp_year;
+    private String time_Stamp_day;
 
     public GoodsDetailsFragments() {
         // Required empty public constructor
@@ -212,13 +215,11 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
 
         //Initialize calendar with date
         Calendar currentCalendar = Calendar.getInstance(Locale.getDefault());
-
         add_date_time= new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-        add_date_time_time_stamp= new SimpleDateFormat("yyyyMMdd").format(new Date());
-
 
          //Show Monday as first date of week
         calendarView.setFirstDayOfWeek(Calendar.MONDAY);
+
 
          //Show/hide overflow days of a month
         calendarView.setShowOverflowDate(false);
@@ -234,12 +235,11 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
             public void onDateSelected(Date date) {
 
                 if (!CalendarUtils.isPastDay(date)) {
+
                     SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-                    SimpleDateFormat df_stamp = new SimpleDateFormat("yyyyMMdd");
                     String dates=df.format(date);
-                    String datesstamp=df_stamp.format(df_stamp);
                     add_date_time=dates;
-                    add_date_time_time_stamp=datesstamp;
+
                     btnok.setEnabled(true);
                 } else {
                     btnok.setEnabled(false);
@@ -399,7 +399,15 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
 
                 Log.d("TAGS Time",add_date_time +"    "+add_hours+":"+ add_mit);
                     GloableVariable.Tag_Good_Details_Comming_Date_time=add_date_time +"  "+add_hours+":"+ add_mit;
-                    GloableVariable.Tag_Good_Details_Comming_Date_time_Stamp=add_date_time_time_stamp+""+add_hours+""+add_mit;
+                    String[] parsedate= add_date_time.split("/");
+                Calendar c = Calendar.getInstance();
+                c.set(Integer.parseInt(parsedate[2]),
+                        Integer.parseInt(parsedate[1]) - 1,
+                        Integer.parseInt(parsedate[0]),
+                        Integer.parseInt(add_hours),
+                        Integer.parseInt(add_mit));
+                long timestamp = c.getTimeInMillis();
+                GloableVariable.Tag_Good_Details_Comming_Date_time_Stamp=timestamp;
 
                 if (GloableVariable.Tag_Good_Details_Comming_time_type.equals("2")){
                     txtdateTime_.setText(GloableVariable.Tag_Good_Details_Comming_Date_time);
@@ -437,6 +445,11 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
             }
         }
     }
+//------------------------------------------------------------
+
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -540,9 +553,10 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
 
 
         String date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
-        String date_stamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         GloableVariable.Tag_Good_Details_Comming_Date_time=date;
-        GloableVariable.Tag_Good_Details_Comming_Date_time_Stamp=date_stamp;
+
+        Long tsLong = System.currentTimeMillis()/1000;
+        GloableVariable.Tag_Good_Details_Comming_Date_time_Stamp=tsLong;
         txtdateTime_.setText(date);
     }
 

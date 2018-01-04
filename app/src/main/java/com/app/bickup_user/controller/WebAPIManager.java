@@ -101,13 +101,24 @@ public class WebAPIManager {
 
     public static String get_url_Ride =ConstantValues.BASE_URL+"/ride";
 
+    //Retrofit
     public static final String get_url_scheduledRide="/user/scheduledRide";
 
     public static final String get_url_historyRide ="/user/historyRide";
 
     public static final String get_url_ongoingRide ="/user/ongoingRide";
 
+    public static final String get_url_statusUpdated ="/user/status";
+
+
+  //Ion
     public static final String get_url_rateDriver =ConstantValues.BASE_URL+"/user/rateDriver";
 
+    public static final String get_url_Cancel =ConstantValues.BASE_URL+"/user/ride/cancel";
+
+    public static final String get_url_Reschedule =ConstantValues.BASE_URL+"/user/ride/reschedule";
+
+
+    //      /user/status/{ride_id}
 
 }

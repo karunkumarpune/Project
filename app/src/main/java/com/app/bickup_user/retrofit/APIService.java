@@ -1,25 +1,36 @@
 package com.app.bickup_user.retrofit;
 
-import com.app.bickup_user.controller.WebAPIManager;
 import com.app.bickup_user.retrofit.model.OnGoing;
 import com.app.bickup_user.utility.ConstantValues;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Path;
+
+import static com.app.bickup_user.controller.WebAPIManager.get_url_historyRide;
+import static com.app.bickup_user.controller.WebAPIManager.get_url_ongoingRide;
+import static com.app.bickup_user.controller.WebAPIManager.get_url_scheduledRide;
+import static com.app.bickup_user.controller.WebAPIManager.get_url_statusUpdated;
 
 public interface APIService {
 
     //https://code.tutsplus.com/tutorials/sending-data-with-retrofit-2-http-client-for-android--cms-27845
 
-    @GET(WebAPIManager.get_url_ongoingRide)
+    @GET(get_url_ongoingRide)
     Call<OnGoing> getOngoingRide(@Header(ConstantValues.USER_ACCESS_TOKEN) String accessToken);
 
-    @GET(WebAPIManager.get_url_historyRide)
+    @GET(get_url_historyRide)
     Call<OnGoing> getHistoryRide(@Header(ConstantValues.USER_ACCESS_TOKEN) String accessToken);
 
-    @GET(WebAPIManager.get_url_scheduledRide)
+    @GET(get_url_scheduledRide)
     Call<OnGoing> getSchedul(@Header(ConstantValues.USER_ACCESS_TOKEN) String accessToken);
+
+    //Status updated
+    @GET(get_url_statusUpdated)
+    Call<OnGoing> getStatusUpdated(@Header(ConstantValues.USER_ACCESS_TOKEN) String accessToken,
+                                     @Path("ride_id") String rideId);
+
 
    /* @POST(WebAPIManager.get_url_rateDriver)
     @FormUrlEncoded

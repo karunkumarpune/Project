@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
@@ -16,6 +17,9 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +34,12 @@ import com.app.bickup_user.GlobleVariable.GloableVariable;
 import com.app.bickup_user.broadcastreciever.InternetConnectionBroadcast;
 import com.app.bickup_user.controller.AppController;
 import com.app.bickup_user.model.User;
+import com.app.bickup_user.retrofit.APIService;
+import com.app.bickup_user.retrofit.ApiUtils;
+import com.app.bickup_user.retrofit.model.OnGoing;
+import com.app.bickup_user.retrofit.model.Responses;
+import com.app.bickup_user.tracking_status.MyAdapter;
+import com.app.bickup_user.tracking_status.Status;
 import com.app.bickup_user.utility.CommonMethods;
 import com.app.bickup_user.utility.ConstantValues;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
@@ -63,8 +73,8 @@ import java.util.List;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
-
-import static com.app.bickup_user.R.id.btn_asign;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class TrackDriverActivity extends AppCompatActivity implements OnMapReadyCallback,View.OnClickListener, InternetConnectionBroadcast.ConnectivityRecieverListener {
 
@@ -86,6 +96,7 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
     private RelativeLayout rlBottomSheet;
     private String message = "";
 
+
     private GoogleMap googleMap;
     private ArrayList<Marker> markerList;
     private Location mCurrentLocation;
@@ -106,15 +117,39 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
     private Socket socket;
     private final  static  String TAG="TrackDriverActivity";
 
+    private RecyclerView recyclerView_status;
+    private ArrayList<Status> list;
+    private ArrayList<Status> list_uncheck;
+    private MyAdapter myAdapter;
+    private APIService mAPIService;
+    private String ride_id;
+    private String accessToken;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
         setContentView(R.layout.activity_track_driver);
-       // TrackDriverActivity.this.connectSocketForLocationUpdates();
+        mAPIService = ApiUtils.getAPIService();
+        list=new ArrayList<>();
+        list_uncheck=new ArrayList<>();
+        SharedPreferences sharedPreferences = getSharedPreferences(ConstantValues.USER_PREFERENCES, Context.MODE_PRIVATE);
+        accessToken=sharedPreferences.getString(ConstantValues.USER_ACCESS_TOKEN,"");
+
+        list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_booking_status)));
+        list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_on_the_way)));
+        list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_arrived)));
+        list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_loading)));
+        list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_Enroute)));
+        list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_reached)));
+        list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_unload)));
+        list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_delivered)));
+
+        // TrackDriverActivity.this.connectSocketForLocationUpdates();
         setGoogleMap();
         initiTializeViews();
+
 
     }
 
@@ -128,6 +163,8 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
             e.printStackTrace();
         }
     }
+
+
 
 
     @Override
@@ -146,6 +183,7 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
     private void initiTializeViews() {
         mCoordinatorLayout=(CoordinatorLayout) findViewById(R.id.coordinator_track_driver);
         circularProgressView= (CircularProgressView) findViewById(R.id.progress_view);
+        recyclerView_status= (RecyclerView) findViewById(R.id.recyclerView_status);
         activity=this;
         mActivityreference=this;
         mTypefaceRegular= Typeface.createFromAsset(activity.getAssets(), ConstantValues.TYPEFACE_REGULAR);
@@ -160,7 +198,7 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
         txtDriverNameBottomSheet=(TextView)findViewById(R.id.txt_drver_name_bottomsheet);
         txtDriverTexiAddress=(TextView)findViewById(R.id.txt_drver_address);
         txtDriverTexiAddressBottomSheet=(TextView)findViewById(R.id.txt_drver_address_bottomsheet);
-        btnAssignAnother=(Button)findViewById(btn_asign);
+       // btnAssignAnother=(Button)findViewById(btn_asign);
         btnAssignAnotherBottomSheet=(Button)findViewById(R.id.btn_asign_bottomsheet);
         imgDriverImageBottomSheet=(ImageView)findViewById(R.id.img_driver_bottomshet);
         imgDriverImage=(ImageView)findViewById(R.id.img_driver);
@@ -247,6 +285,89 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
 
             }
         });
+
+        recyclerView_status_LoadJson();
+    }
+
+
+
+    //Data Json Parse upldate status
+    private void recyclerView_status_LoadJson() {
+        String ride_ids="";
+        if(ride_id!=null){
+            ride_ids=ride_id;
+        }
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        recyclerView_status.setLayoutManager(mLayoutManager);
+        recyclerView_status.setItemAnimator(new DefaultItemAnimator());
+
+
+        final String[] message = new String[1];
+        circularProgressView.setVisibility(View.VISIBLE);
+        mAPIService.getStatusUpdated(accessToken,ride_ids).enqueue(new Callback<OnGoing>() {
+
+            @Override
+            public void onResponse(Call<OnGoing> call, retrofit2.Response<OnGoing> response) {
+
+              //  circularProgressView.setVisibility(View.GONE);
+                int status = response.code();
+
+                if (response.isSuccessful()) {
+                    List<Responses> lists = response.body().getResponses();
+
+                    for(int i=0;i<lists.size();i++){
+                        Responses responses=lists.get(i);
+
+                        for(Status status1:responses.getStatus()){
+                            list.add(status1);
+                        }
+                        myAdapter = new MyAdapter(list,list_uncheck);
+                        recyclerView_status.setAdapter(myAdapter);
+                        myAdapter.notifyDataSetChanged();
+                    }
+
+
+                    try {
+                     /*   myAdapter = new MyAdapter(list,list_uncheck);
+                        recyclerView_status.setAdapter(myAdapter);
+                        myAdapter.notifyDataSetChanged();*/
+                    }catch (Exception e){}
+
+                }
+                if (status != 200) {
+                    switch (status) {
+                        case 422:
+                            Toast.makeText(TrackDriverActivity.this, message[0], Toast.LENGTH_SHORT).show();
+                            break;
+                        case 400:
+                            Toast.makeText(TrackDriverActivity.this, message[0], Toast.LENGTH_SHORT).show();
+                            break;
+                        case 500:
+                            Toast.makeText(TrackDriverActivity.this, message[0], Toast.LENGTH_SHORT).show();
+                            break;
+                        case 201:
+                            Toast.makeText(TrackDriverActivity.this, getResources().getString(R.string.txt_driver_201), Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(TrackDriverActivity.this, message[0], Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<OnGoing> call, Throwable t) {
+              //  circularProgressView.setVisibility(View.GONE);
+                if (t != null) {
+                    Toast.makeText(TrackDriverActivity.this, getResources().getString(R.string.txt_Netork_error), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Log.e(TAG, "Unable to submit post to API.");
+            }
+        });
+
+
+
     }
 
     private void hidebottom() {
@@ -309,7 +430,7 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
         txtTrackStatusBottomSheet.setTypeface(mTypefaceRegular);
         TextView txtBookingStatusTime=(TextView)findViewById(R.id.txt_booking_status_time);
         TextView txtBookingStatus=(TextView)findViewById(R.id.txt_booking_status);
-        TextView txtOnTheWayTime=(TextView)findViewById(R.id.txt_on_the_way_time);
+/*        TextView txtOnTheWayTime=(TextView)findViewById(R.id.txt_on_the_way_time);
         TextView txtOnTheWay=(TextView)findViewById(R.id.txt_on_the_way);
         TextView txtArrivedTime=(TextView)findViewById(R.id.txt_arrived_time);
         TextView txtArrived=(TextView)findViewById(R.id.txt_arrived);
@@ -317,11 +438,11 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
         TextView txtLoading=(TextView)findViewById(R.id.txt_loading_time);
         TextView txtEnrouteTime=(TextView)findViewById(R.id.txt_enroute_time);
         TextView txtEnroute=(TextView)findViewById(R.id.txt_enroute);
-        TextView txtReachedDropOff=(TextView)findViewById(R.id.txt_reached_drop_off);
+        TextView txtReachedDropOff=(TextView)findViewById(R.id.txt_reached_drop_off);*/
 
         txtBookingStatusTime.setTypeface(mTypefaceRegular);
         txtBookingStatus.setTypeface(mTypefaceRegular);
-        txtOnTheWayTime.setTypeface(mTypefaceRegular);
+     /*   txtOnTheWayTime.setTypeface(mTypefaceRegular);
         txtOnTheWay.setTypeface(mTypefaceRegular);
         txtArrivedTime.setTypeface(mTypefaceRegular);
         txtArrived.setTypeface(mTypefaceRegular);
@@ -329,7 +450,7 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
         txtLoadingTime.setTypeface(mTypefaceRegular);
         txtEnrouteTime.setTypeface(mTypefaceRegular);
         txtEnroute.setTypeface(mTypefaceRegular);
-        txtReachedDropOff.setTypeface(mTypefaceRegular);
+        txtReachedDropOff.setTypeface(mTypefaceRegular);*/
     }
 
     @Override
@@ -346,6 +467,7 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
     @Override
     protected void onResume() {
         super.onResume();
+        ride_id=getIntent().getStringExtra("ride_id");
         checkInternetconnection();
         if (AppController.getInstance() != null) {
             AppController.getInstance().setConnectivityListener(this);
@@ -601,11 +723,6 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
             return routes;
         }
 
-
-        /**
-         * Method to decode polyline points
-         * Courtesy : https://jeffreysambells.com/2010/05/27/decoding-polylines-from-google-maps-direction-api-with-java
-         */
         private List<LatLng> decodePoly(String encoded) {
 
             List<LatLng> poly = new ArrayList<>();

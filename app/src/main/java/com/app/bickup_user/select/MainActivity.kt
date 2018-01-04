@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
 
         list_types_goods.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-        list = ArrayList<Model>()
+        list = ArrayList()
 
         for(m in goodsAndHelper.goods ){
             list.add(Model(m.goodsID, m.goodsName, false));

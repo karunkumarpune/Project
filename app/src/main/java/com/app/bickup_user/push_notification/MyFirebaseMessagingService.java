@@ -39,6 +39,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String message = remoteMessage.getData().get("message");
             String click_action_open = remoteMessage.getData().get("click_action");
             String action_url = remoteMessage.getData().get("action_url");
+            String ride_id = remoteMessage.getData().get("ride_id");
 
 
 
@@ -47,7 +48,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }if(click_action_open.equals("2")){
                 click_action_open1(title,message,action_url);
             }if(click_action_open.equals("3")){
-                notificationWithMessgae(title, message);
+                notificationWithMessgae(title, message,ride_id);
             }if(click_action_open.equals("4")){
                 Bitmap bitmap = getBitmapFromURL(action_url);
                 notificationWithImage(bitmap, title, message);
@@ -117,11 +118,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager.notify(NOTIFICATION_ID++, mNotifyBuilder.build());
     }
 
-    private void notificationWithMessgae(String title, String message) {
+    private void notificationWithMessgae(String title, String message, String ride_id) {
 
 
         Intent intent = new Intent(this, TrackDriverActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("ride_id",ride_id);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
