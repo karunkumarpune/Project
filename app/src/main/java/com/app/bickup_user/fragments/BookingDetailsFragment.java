@@ -747,7 +747,7 @@ public class BookingDetailsFragment extends Fragment implements View.OnClickList
                                 Toast.makeText(getApplicationContext(), message[0], Toast.LENGTH_SHORT).show();
                                 break;
                             case 200:
-                                showPopUp(response);
+                               showPopUp(response);
                             case 202:
                                 // loginActivity.onSuccess(resultObject, requestCode, status);
                                 break;

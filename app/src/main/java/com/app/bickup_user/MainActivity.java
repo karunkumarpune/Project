@@ -325,6 +325,9 @@ public class MainActivity extends AppCompatActivity implements
         String p_longs=String.valueOf(mCenterLatLong.longitude);
         String p_address=current_pickup_address;
 
+        GloableVariable.Tag_pickup_latitude=mCenterLatLong.latitude;
+        GloableVariable.Tag_pickup_longitude=mCenterLatLong.longitude;
+
         if(p_lat !=null && p_longs !=null && p_address !=null) {
             p_edit.putString("key_pickup_lat",p_lat);
             p_edit.putString("key_pickup_long",p_longs);
@@ -805,7 +808,10 @@ public class MainActivity extends AppCompatActivity implements
 
 
         if (userName != null && useremail != null) {
-            userName.setText(User.getInstance().getFirstName() +" "+User.getInstance().getLastName());
+            String name=User.getInstance().getFirstName() +" "+User.getInstance().getLastName();
+            if(name==null) {
+                userName.setText("");
+            }else  userName.setText(name);
             useremail.setText(User.getInstance().getEmail());
             if (userImage != null) {
                 if (userImageString != null) {

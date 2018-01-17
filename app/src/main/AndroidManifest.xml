@@ -122,7 +122,9 @@
             </intent-filter>
         </service>
 
-        <activity android:name="com.app.bickup_user.TrackDriverActivity"/>
+        <activity
+            android:name="com.app.bickup_user.TrackDriverActivity"
+            android:screenOrientation="portrait" />
 
 
         <!--  Push Notification- -->
@@ -162,11 +164,7 @@
         <activity
             android:name="com.app.bickup_user.TypesGoods"
             android:screenOrientation="portrait" />
-       <!-- <activity
-            android:name="com.app.bickup_user.TrackDriverActivity"
-            android:screenOrientation="portrait" />
 
--->
         <activity
             android:name="com.app.GoodsActivity"
             android:screenOrientation="portrait" />

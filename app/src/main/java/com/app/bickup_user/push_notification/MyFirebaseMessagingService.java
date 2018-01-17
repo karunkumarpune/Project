@@ -25,7 +25,7 @@ import java.net.URL;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static int NOTIFICATION_ID = 1;
     private static final String TAG = "FirebaseMessageService";
-    Bitmap bitmap;
+
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -33,13 +33,20 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
 
+/*
             String title = remoteMessage.getData().get("title");
             String message = remoteMessage.getData().get("message");
             String click_action_open = remoteMessage.getData().get("click_action");
             String action_url = remoteMessage.getData().get("action_url");
             String ride_id = remoteMessage.getData().get("ride_id");
+
+            Log.d(TAG, "Message data title: " +title);
+            Log.d(TAG, "Message data message: " + message);
+            Log.d(TAG, "Message data click_action: " + click_action_open);
+            Log.d(TAG, "Message data action_url: " + action_url);
+            Log.d(TAG, "Message data ride_id: " + ride_id);
+
 
 
 
@@ -53,6 +60,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 Bitmap bitmap = getBitmapFromURL(action_url);
                 notificationWithImage(bitmap, title, message);
             }
+        }*/
         }
 
     }

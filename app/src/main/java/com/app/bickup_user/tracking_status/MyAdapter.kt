@@ -41,6 +41,11 @@ class MyAdapter(val list:ArrayList<Status>, val list_uncheck:ArrayList<Status>):
             itemView.txt_booking_status.text= statusModel.status.toString()
             itemView.img_booking_status.setImageResource(R.drawable.de_checkbox)
 
+            val check=statusModel.status.toString()
+            if(check.contains("Delivered")) {
+
+                itemView.view_hide.visibility=View.GONE
+            }
 
             Log.d("TAGS","Uncheck -  ${list_uncheck_!!.size}")
 

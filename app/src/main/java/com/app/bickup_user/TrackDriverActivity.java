@@ -36,13 +36,10 @@ import com.app.bickup_user.controller.AppController;
 import com.app.bickup_user.model.User;
 import com.app.bickup_user.retrofit.APIService;
 import com.app.bickup_user.retrofit.ApiUtils;
-import com.app.bickup_user.retrofit.model.OnGoing;
-import com.app.bickup_user.retrofit.model.Responses;
 import com.app.bickup_user.tracking_status.MyAdapter;
 import com.app.bickup_user.tracking_status.Status;
 import com.app.bickup_user.utility.CommonMethods;
 import com.app.bickup_user.utility.ConstantValues;
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -73,8 +70,6 @@ import java.util.List;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
-import retrofit2.Call;
-import retrofit2.Callback;
 
 public class TrackDriverActivity extends AppCompatActivity implements OnMapReadyCallback,View.OnClickListener, InternetConnectionBroadcast.ConnectivityRecieverListener {
 
@@ -89,7 +84,7 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
     private ImageView imgDriverImageBottomSheet;
     private ImageView callDriver;
     private ImageView callDriverBottomSheet;
-    private Button btnAssignAnother;
+ //   private Button btnAssignAnother;
     private Button btnAssignAnotherBottomSheet;
     private BottomSheetBehavior mBottomSheetBehavior;
     private ImageView imgBackButton;
@@ -109,7 +104,7 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
     private Typeface mTypefaceBold;
     private Activity activity;
     private CoordinatorLayout mCoordinatorLayout;
-    private CircularProgressView circularProgressView;
+   // private CircularProgressView circularProgressView;
     private boolean mIsConnected;
     private Context mActivityreference;
     private Snackbar snackbar;
@@ -137,6 +132,15 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
         SharedPreferences sharedPreferences = getSharedPreferences(ConstantValues.USER_PREFERENCES, Context.MODE_PRIVATE);
         accessToken=sharedPreferences.getString(ConstantValues.USER_ACCESS_TOKEN,"");
 
+        list.add(new Status("1513322502922",this.getResources().getString(R.string.txt_booking_status)));
+        list.add(new Status("1513322502922",this.getResources().getString(R.string.txt_on_the_way)));
+        list.add(new Status("1513322502922",this.getResources().getString(R.string.txt_arrived)));
+        list.add(new Status("1513322502922",this.getResources().getString(R.string.txt_loading)));
+        list.add(new Status("1513322502922",this.getResources().getString(R.string.txt_Enroute)));
+        list.add(new Status("1513322502922",this.getResources().getString(R.string.txt_reached)));
+        list.add(new Status("1513322502922",this.getResources().getString(R.string.txt_unload)));
+        list.add(new Status("1513322502922",this.getResources().getString(R.string.txt_delivered)));
+
         list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_booking_status)));
         list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_on_the_way)));
         list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_arrived)));
@@ -145,6 +149,11 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
         list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_reached)));
         list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_unload)));
         list_uncheck.add(new Status("1513322502922",this.getResources().getString(R.string.txt_delivered)));
+
+
+
+
+
 
         // TrackDriverActivity.this.connectSocketForLocationUpdates();
         setGoogleMap();
@@ -181,9 +190,9 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
     }
 
     private void initiTializeViews() {
-        mCoordinatorLayout=(CoordinatorLayout) findViewById(R.id.coordinator_track_driver);
-        circularProgressView= (CircularProgressView) findViewById(R.id.progress_view);
-        recyclerView_status= (RecyclerView) findViewById(R.id.recyclerView_status);
+      //  mCoordinatorLayout=(CoordinatorLayout) findViewById(R.id.coordinator_track_driver);
+      //  circularProgressView= (CircularProgressView) findViewById(R.id.progress_view);
+        recyclerView_status= findViewById(R.id.recyclerView_status);
         activity=this;
         mActivityreference=this;
         mTypefaceRegular= Typeface.createFromAsset(activity.getAssets(), ConstantValues.TYPEFACE_REGULAR);
@@ -216,7 +225,7 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
             }
         });
 
-        btnAssignAnother.setOnClickListener(this);
+      // btnAssignAnother.setOnClickListener(this);
 
         rlBottomSheet=(RelativeLayout)findViewById(R.id.rl_bottomSheet);
         rlBottomSheet.setOnClickListener(this);
@@ -228,7 +237,7 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
         txtDriverTexiAddress.setTypeface(mTypefaceRegular);
         txtDriverNameBottomSheet.setTypeface(mTypefaceRegular);
         txtDriverTexiAddressBottomSheet.setTypeface(mTypefaceRegular);
-        btnAssignAnother.setTypeface(mTypefaceRegular);
+       // btnAssignAnother.setTypeface(mTypefaceRegular);
         btnAssignAnotherBottomSheet.setTypeface(mTypefaceRegular);
 
         setTypeFaceToViews();
@@ -293,18 +302,21 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
 
     //Data Json Parse upldate status
     private void recyclerView_status_LoadJson() {
-        String ride_ids="";
+        /*String ride_ids="";
         if(ride_id!=null){
             ride_ids=ride_id;
-        }
+        }*/
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView_status.setLayoutManager(mLayoutManager);
         recyclerView_status.setItemAnimator(new DefaultItemAnimator());
+        myAdapter = new MyAdapter(list,list_uncheck);
+        recyclerView_status.setAdapter(myAdapter);
+        myAdapter.notifyDataSetChanged();
 
 
-        final String[] message = new String[1];
-        circularProgressView.setVisibility(View.VISIBLE);
-        mAPIService.getStatusUpdated(accessToken,ride_ids).enqueue(new Callback<OnGoing>() {
+     /*   final String[] message = new String[1];
+       // circularProgressView.setVisibility(View.VISIBLE);
+      mAPIService.getStatusUpdated(accessToken,ride_ids).enqueue(new Callback<OnGoing>() {
 
             @Override
             public void onResponse(Call<OnGoing> call, retrofit2.Response<OnGoing> response) {
@@ -328,9 +340,9 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
 
 
                     try {
-                     /*   myAdapter = new MyAdapter(list,list_uncheck);
+                       myAdapter = new MyAdapter(list,list_uncheck);
                         recyclerView_status.setAdapter(myAdapter);
-                        myAdapter.notifyDataSetChanged();*/
+                        myAdapter.notifyDataSetChanged();
                     }catch (Exception e){}
 
                 }
@@ -367,7 +379,7 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
         });
 
 
-
+*/
     }
 
     private void hidebottom() {
@@ -428,8 +440,8 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
     private void setTypeFaceToViews() {
         TextView txtTrackStatusBottomSheet=(TextView)findViewById(R.id.track_status_bottomSheet);
         txtTrackStatusBottomSheet.setTypeface(mTypefaceRegular);
-        TextView txtBookingStatusTime=(TextView)findViewById(R.id.txt_booking_status_time);
-        TextView txtBookingStatus=(TextView)findViewById(R.id.txt_booking_status);
+      //  TextView txtBookingStatusTime=(TextView)findViewById(R.id.txt_booking_status_time);
+    //    TextView txtBookingStatus=(TextView)findViewById(R.id.txt_booking_status);
 /*        TextView txtOnTheWayTime=(TextView)findViewById(R.id.txt_on_the_way_time);
         TextView txtOnTheWay=(TextView)findViewById(R.id.txt_on_the_way);
         TextView txtArrivedTime=(TextView)findViewById(R.id.txt_arrived_time);
@@ -440,8 +452,8 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
         TextView txtEnroute=(TextView)findViewById(R.id.txt_enroute);
         TextView txtReachedDropOff=(TextView)findViewById(R.id.txt_reached_drop_off);*/
 
-        txtBookingStatusTime.setTypeface(mTypefaceRegular);
-        txtBookingStatus.setTypeface(mTypefaceRegular);
+      //  txtBookingStatusTime.setTypeface(mTypefaceRegular);
+       // txtBookingStatus.setTypeface(mTypefaceRegular);
      /*   txtOnTheWayTime.setTypeface(mTypefaceRegular);
         txtOnTheWay.setTypeface(mTypefaceRegular);
         txtArrivedTime.setTypeface(mTypefaceRegular);

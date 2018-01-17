@@ -4,17 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="20dp"
-    android:paddingEnd="20dp"
+    android:paddingStart="5dp"
+    android:paddingEnd="5dp"
     app:behavior_hideable="true"
     app:behavior_peekHeight="100dp"
-    android:layout_marginTop="@dimen/dp_40"
+    android:layout_marginTop="@dimen/dp_60"
     android:background="@android:color/transparent">
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_marginTop="@dimen/dp_20"
+    android:layout_marginTop="@dimen/dp_40"
     android:layout_height="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -51,8 +51,8 @@
                         android:scaleType="centerCrop"
                         android:src="@drawable/driver"
                         app:riv_corner_radius_bottom_left="0dp"
-                        app:riv_corner_radius_top_left="10dp"
-                        app:riv_corner_radius_bottom_right="10dp"
+                        app:riv_corner_radius_top_left="5dp"
+                        app:riv_corner_radius_bottom_right="5dp"
                         app:riv_corner_radius_top_right="-0dp" />
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -170,17 +170,18 @@
 
       <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="2dp"
             android:gravity="center_vertical"
             android:layout_marginTop="-8dp"
             android:layout_marginBottom="-8dp">
 
           <android.support.v7.widget.RecyclerView
+              android:layout_marginTop="@dimen/dp_20"
+              android:layout_marginBottom="@dimen/dp_10"
               android:id="@+id/recyclerView_status"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"/>
+              android:layout_height="match_parent"/>
 
         </LinearLayout>
 
