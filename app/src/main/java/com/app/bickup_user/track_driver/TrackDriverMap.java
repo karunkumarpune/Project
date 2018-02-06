@@ -326,7 +326,7 @@ public class TrackDriverMap extends AppCompatActivity implements OnMapReadyCallb
     public class DataParser {
 
         /**
-         * Receives a JSONObject and returns a list of lists containing latitude and longitude
+         * Receives a JSONObject and returns a list of lists containing latitude and longitude_pinmove
          */
         public List<List<HashMap<String, String>>> parse(JSONObject jObject) {
 

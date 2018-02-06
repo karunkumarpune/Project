@@ -64,7 +64,7 @@ public class ConstantValues {
     public  static String CONTACT_PERSON_NAME="location_contact_name";
     public  static String CONTACT_PERSON_NUMBER="location_contact_number";
     public  static String LATITUDE="latitude";
-    public static String  LONGITUDE="longitude";
+    public static String  LONGITUDE="longitude_pinmove";
     public static String  ADDRESS="address";
     public static String  COMMENTS="comments";
 

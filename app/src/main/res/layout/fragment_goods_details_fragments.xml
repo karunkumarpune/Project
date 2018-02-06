@@ -37,7 +37,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginTop="10dp"
-            android:scrollbars="none" android:visibility="gone"
+            android:scrollbars="none"
+                android:visibility="gone"
             android:scrollbarSize="12dip"
             android:fillViewport="true">
 

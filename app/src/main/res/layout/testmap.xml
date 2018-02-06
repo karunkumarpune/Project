@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:layout_margin="@dimen/dp_10"
+        android:gravity="center"
+        android:padding="@dimen/dp_10"
+        android:id="@+id/txt_pickup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_below="@+id/txt_pickup"
+        android:id="@+id/rl_mapview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff">
+
+        <fragment
+            android:id="@+id/google_map_loication"
+            class="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </fragment>
+
+        <ImageView
+            android:layout_marginRight="@dimen/dp_5"
+            android:id="@+id/btn_current_location"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/t"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_my_location"/>
+
+        <ImageView
+            android:layout_centerInParent="true"
+            android:id="@+id/imageMarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_pin_pickup" />
+
+    </RelativeLayout>
+</RelativeLayout>

@@ -1029,14 +1029,18 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.label_pickup_location_dialog:
                 check_pin=1;
                 imageMarker.setImageResource(R.drawable.ic_pin_pickup);
-                openAutoComplePicker(0);
+              //  openAutoComplePicker(0);
+
+                startActivity(new Intent(this, PickupLocationActivity.class));
+
                 CommonMethods.getInstance().hideSoftKeyBoard(this);
                 overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
                 break;
             case R.id.label_drop_location:
                 check_pin=2;
                 imageMarker.setImageResource(R.drawable.ic_pin_drop);
-                openAutoComplePicker(1);
+               // openAutoComplePicker(1);
+                startActivity(new Intent(this, DropLocationActivity.class));
                 CommonMethods.getInstance().hideSoftKeyBoard(this);
                 overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
                 break;

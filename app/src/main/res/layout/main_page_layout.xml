@@ -50,7 +50,6 @@
 
 
         <ImageView
-
             android:id="@+id/btn_current_location"
             android:layout_marginTop="@dimen/dp_5"
             android:layout_alignParentRight="true"

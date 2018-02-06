@@ -8,6 +8,7 @@
     tools:context="com.app.bickup_user.PickupLocationActivity">
 
     <ScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -49,13 +50,14 @@
                         android:layout_toEndOf="@+id/img_pickup">
 
                         <TextView
+                            android:layout_marginTop="@dimen/dp_5"
                             android:id="@+id/txt_pickup"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawableEnd="@drawable/search_black"
                             android:drawablePadding="@dimen/dp_10"
                             android:gravity="center_vertical"
-                            android:text="@string/txt_drop"
+                            android:text="@string/txt_pick_up"
                             android:textColor="@color/greyColor"
                             android:textSize="@dimen/medium_text" />
 
@@ -101,12 +103,54 @@
             </RelativeLayout>
 
 
+
+        <RelativeLayout
+            android:id="@+id/rl_mapview"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@+id/rl_pickup_location"
+            android:background="#ffffff">
+
+
+            <fragment
+                android:id="@+id/google_map_loication"
+                class="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </fragment>
+
+            <ImageView
+                android:id="@+id/imageView123"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@android:color/transparent" />
+
+            <ImageView
+                android:layout_marginRight="@dimen/dp_5"
+                android:id="@+id/btn_current_location"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/t"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_my_location"/>
+
+            <ImageView
+                android:layout_centerInParent="true"
+                android:id="@+id/imageMarker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_pin_pickup" />
+
+        </RelativeLayout>
+
+
+
             <RelativeLayout
                 android:id="@+id/rl_picup_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/rl_pickup_location"
-                android:layout_marginTop="10dp"
+                android:layout_below="@+id/rl_mapview"
                 android:background="#ffffff"
                 android:paddingBottom="15dp"
                 android:paddingEnd="20dp"
@@ -610,6 +654,8 @@
                 android:textColor="#ffffff"
                 android:textSize="@dimen/large_text" />
         </RelativeLayout>
+
+
     </ScrollView>
 
     <com.github.rahatarmanahmed.cpv.CircularProgressView xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -621,4 +667,7 @@
         app:cpv_animAutostart="true"
         app:cpv_color="@color/appcolor"
         app:cpv_indeterminate="true" />
+
+
+
 </RelativeLayout>

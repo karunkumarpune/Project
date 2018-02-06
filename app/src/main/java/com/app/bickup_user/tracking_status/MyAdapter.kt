@@ -50,7 +50,7 @@ class MyAdapter(val list:ArrayList<Status>, val list_uncheck:ArrayList<Status>):
             Log.d("TAGS","Uncheck -  ${list_uncheck_!!.size}")
 
 
-            val i:Int =list_uncheck_!!.size
+            val i:Int = list_uncheck_.size
 
             if(i>position){
                 itemView.txt_booking_status_time.text=getDateTime(statusModel.timestamp.toString())

@@ -125,9 +125,9 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
     private RecyclerView recyclerView;
     private int REQUEST_GOODS = 100;
     private boolean isFirstTime = true;
-    private ArrayList<Bitmap> listImagesGoods;
-    private int imagecount = 0;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+
+
+
     private CircularProgressView circularProgressBar;
     private String message = "";
     private GoodsAndHelper goodsAndHelper;
@@ -136,6 +136,12 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
     private RecyclerView types_good_recyclerView;
     private ArrayList<GoodsAddModel> lists;
     private GoodAddAdapter goodAddAdapter;
+    private ArrayList<Bitmap> listImagesGoods;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private int imagecount = 0;
+
+
+
     private String select_Data;
     private String Image_Data;
     private String image_id;
@@ -180,18 +186,18 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                     listImagesGoods.add(myBitmap);
                     imagecount++;
                 }
-        }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
 
-      if(image_id.equals("123")) {
+        if(image_id.equals("123")) {
 
-      }else {
+        }else {
             listImagesGoods.add(bitmap1);
-      }
+        }
 
 
         GloableVariable.Tag_helper="1";
@@ -201,7 +207,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
 
 
     }
-//--------------------------Calender-------------------------------
+    //--------------------------Calender-------------------------------
     private void showPopUp(int choosetraveller) {
         final Dialog openDialog = new Dialog(mActivityReference);
         openDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -217,11 +223,11 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         Calendar currentCalendar = Calendar.getInstance(Locale.getDefault());
         add_date_time= new SimpleDateFormat("dd/MM/yyyy").format(new Date());
 
-         //Show Monday as first date of week
+        //Show Monday as first date of week
         calendarView.setFirstDayOfWeek(Calendar.MONDAY);
 
 
-         //Show/hide overflow days of a month
+        //Show/hide overflow days of a month
         calendarView.setShowOverflowDate(false);
 
         //call refreshCalendar to update calendar the view
@@ -249,7 +255,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
             @Override
             public void onMonthChanged(Date date) {
                 SimpleDateFormat df = new SimpleDateFormat("MM-yyyy");
-              //  Toast.makeText(getApplicationContext(), df.format(date), Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(getApplicationContext(), df.format(date), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -275,8 +281,8 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         btnok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 openDialog.dismiss();
-                 showPopUpForTime(0);
+                openDialog.dismiss();
+                showPopUpForTime(0);
             }
         });
         openDialog.show();
@@ -398,8 +404,8 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                 openDialog.dismiss();
 
                 Log.d("TAGS Time",add_date_time +"    "+add_hours+":"+ add_mit);
-                    GloableVariable.Tag_Good_Details_Comming_Date_time=add_date_time +"  "+add_hours+":"+ add_mit;
-                    String[] parsedate= add_date_time.split("/");
+                GloableVariable.Tag_Good_Details_Comming_Date_time=add_date_time +"  "+add_hours+":"+ add_mit;
+                String[] parsedate= add_date_time.split("/");
                 Calendar c = Calendar.getInstance();
                 c.set(Integer.parseInt(parsedate[2]),
                         Integer.parseInt(parsedate[1]) - 1,
@@ -420,7 +426,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         openDialog.show();
 
 
-     //   txtdateTime.setText(""+GloableVariable.Tag_Good_Details_Comming_Date_time);
+        //   txtdateTime.setText(""+GloableVariable.Tag_Good_Details_Comming_Date_time);
 
     }
 
@@ -621,10 +627,10 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
             try {
                 array = new JSONArray(select_Data);
 
-            for(int i=0;i<array.length();i++){
-                JSONObject obj=array.getJSONObject(i);
-                lists.add(new GoodsAddModel(obj.getString("id"),obj.getString("name")));
-            }
+                for(int i=0;i<array.length();i++){
+                    JSONObject obj=array.getJSONObject(i);
+                    lists.add(new GoodsAddModel(obj.getString("id"),obj.getString("name")));
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -641,7 +647,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-         handlerGoodsNavigations = mActivityReference;
+        handlerGoodsNavigations = mActivityReference;
         int id = view.getId();
         switch (id) {
             case R.id.btn_save_booking:
@@ -654,7 +660,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                     // Toast.makeText(getActivity(), "Good", Toast.LENGTH_SHORT).show();
                     handlerGoodsNavigations.callBookingDetailsFragment(listImagesGoods);
                     GloableVariable.Tag_Good_Details_Description=edtDescription.getText().toString();
-                  //  ImageValidate();
+                    //  ImageValidate();
                 }
 
                 if(listImagesGoods.size()>=1) {
@@ -742,6 +748,9 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                 try {
                     listImagesGoods.remove(bitmap1);
                 }catch (Exception e){}
+
+
+
                 if (getActivity().getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
                     if (!hasPermissions()){
                         // your app doesn't have permissions, ask for them.
@@ -781,7 +790,9 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
             ImageValidate();
         }else listImagesGoods.add(bitmap1);
     }
-//--------------------------------------------Camera Permisstion------------------------
+
+
+    //--------------------------------------------Camera Permisstion------------------------
     @SuppressLint("WrongConstant")
     private boolean hasPermissions() {
         int res = 0;
@@ -1130,7 +1141,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         builder.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                       // Toast.makeText(getApplicationContext(),"Yes is clicked",Toast.LENGTH_LONG).show();
+                        // Toast.makeText(getApplicationContext(),"Yes is clicked",Toast.LENGTH_LONG).show();
                     }
                 });
         builder.show();
