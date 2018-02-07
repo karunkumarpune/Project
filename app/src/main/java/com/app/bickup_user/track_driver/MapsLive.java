@@ -40,6 +40,8 @@ public class MapsLive extends FragmentActivity implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_track_driver);
         mapFragment.getMapAsync(this);
     }
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -196,7 +198,6 @@ public class MapsLive extends FragmentActivity implements OnMapReadyCallback {
     }
 
     private List<LatLng> decodePoly(String encoded){
-
 
         List<LatLng> poly = new ArrayList<LatLng>();
         int index = 0;

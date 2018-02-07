@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -16,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -46,26 +46,25 @@ import com.app.bickup_user.utility.CommonMethods;
 import com.app.bickup_user.utility.ConstantValues;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
@@ -79,11 +78,16 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout;
+
+import static com.app.bickup_user.GlobleVariable.GloableVariable.Tag_drop_location_address;
+import static com.app.bickup_user.GlobleVariable.GloableVariable.Tag_pickup_location_address;
+import static com.app.bickup_user.GlobleVariable.GloableVariable.is_check_pickup_or_drop;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -94,32 +98,17 @@ public class MainActivity extends AppCompatActivity implements
         LocationListener {
 
 
-    private int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-    private int PLACE_AUTOCOMPLETE_REQUEST_CODE2 = 2;
-
 //-----------------------------------------Map-------------
-    private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private Context mContext;
     private TextView edt_pickup_location,edt_drop_location;
-    private LatLng mCenterLatLong;
-    private TextView btn_pickup,btn_drop;
-    private ImageView imageMarker,btn_current_location;
-
-    private int check_pin=0;
-
+    private ImageView btn_current_location,search_pickup,search_drop;
     private double current_latitude = 0.0;
     private double current_longitude = 0.0;
-
-    private SharedPreferences pref_pickup;
-    private SharedPreferences pref_drop;
-    private String current_pickup_address;
-    private String current_drop_address;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
 //---------------------------------------------------------------------------
-    private CoordinatorLayout mCoordinatorLayout;
     public static String TAG = MainActivity.class.getSimpleName();
     private boolean mIsConnected;
     private Activity mActivityreference;
@@ -134,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements
     private TextView userName;
     private TextView useremail;
     private RoundedImageView userImage;
-    private SharedPreferences sharedPreferences;
     public String longitude;
     private CircularProgressView circularProgressBar;
     private String message;
@@ -144,7 +132,13 @@ public class MainActivity extends AppCompatActivity implements
     private String largePickupDistance = "";
     private final int REQUEST_FARE_DETAILS = 1001;
     private Snackbar snackbar;
+    private CoordinatorLayout mCoordinatorLayout;
 
+    //Google Polyline
+    private GoogleMap mMap;
+    private ArrayList<Marker> markerList;
+    private LatLng latLng;
+    private String A_address;
 
 
     @Override
@@ -156,549 +150,53 @@ public class MainActivity extends AppCompatActivity implements
         Log.d("Refreshed", "Refreshed token: " + refreshedToken);
 
         mActivityreference = MainActivity.this;
-        GloableVariable.Tag_check_locaton_type=0;
-        check_pin=0;
+
+        edt_pickup_location = findViewById(R.id.tv_pickup_location);
+        edt_drop_location = findViewById(R.id.tv_drop_location);
 
 
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        search_pickup = findViewById(R.id.search_pickup);
+        search_drop = findViewById(R.id.search_drop);
 
-               try {
-                 //  askLocationSettings();
-               }catch (Exception e){}
-
-                try {
-                    checkLocationPermission();
-                }catch (Exception e){}
-
-                try {
-                    buildGoogleApiClient();
-                    mGoogleApiClient.connect();
-                }catch (Exception e){}
-
-            }
-        } catch (Exception e) {}
-
-//-------------------------------Map--------------------------
-
-
-        pref_pickup = getSharedPreferences("MyPickup", Context.MODE_PRIVATE);
-        pref_drop = getSharedPreferences("MyDrop", Context.MODE_PRIVATE);
-
+        initMap();
         intializeViews();
-        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(MainActivity.this);
-
-        edt_pickup_location = findViewById(R.id.edt_pickup_location);
-        edt_drop_location = findViewById(R.id.edt_drop_location);
-        btn_current_location = findViewById(R.id.btn_current_location);
-        btn_pickup = findViewById(R.id.btn_pickup);
-        btn_drop = findViewById(R.id.btn_drop);
-        imageMarker = findViewById(R.id.imageMarker);
 
 
+        //btn_pickup = findViewById(R.id.btn_pickup);
+        //btn_drop = findViewById(R.id.btn_drop);
 
-//-----------------------------------------------------------------
-
-
-        GloableVariable.Tag_pickup_home_type = "2";
-        GloableVariable.Tag_drop_home_type = "2";
-        GloableVariable.Tag_drop_home_type = "1";
         setUserData();
-
-        btn_current_location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                            try {
-                                //askLocationSettings();
-                            }catch (Exception e){}
-
-                            try {
-                                checkLocationPermission();
-                            }catch (Exception e){}
-
-
-                            try {
-                                getMyLocation();
-                            }catch (Exception e){}
-
-                            try {
-                                buildGoogleApiClient();
-                            }catch (Exception e){}
-                        }
-                    }
-                } catch (Exception e) {}
-            }
-        });
-
-
-//-----------------------------Pickup-----Click----------------------------------
-        btn_pickup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                btn_pickup_Click();
-                check_pin=1;
-            }
-        });
-
-//-----------------------------Drop-----Click----------------------------------
-        btn_drop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                btn_drop_Click();
-                check_pin=2;
-
-            }
-        });
-
-    //--------------------------------end Drop-----------------------------------
-
-
-
     }
 
-    private void btn_pickup_Click() {
-        imageMarker.setImageResource(R.drawable.ic_pin_pickup);
-
-        //Drop Location save.........
-        SharedPreferences.Editor drop_edit = pref_drop.edit();
-        String drop_lat=String.valueOf(mCenterLatLong.latitude);
-        String drop_longs=String.valueOf(mCenterLatLong.longitude);
-        String drop_address=current_drop_address;
-
-        if(drop_lat !=null && drop_longs !=null && drop_address !=null) {
-            drop_edit.putString("key_drop_lat", drop_lat);
-            drop_edit.putString("key_drop_long",drop_longs);
-            drop_edit.putString("key_drop_address",drop_address);
-            drop_edit.apply();
-        }
-
-
-        //Pickup Get Location ..............
-        String pickup_s=pref_pickup.getString("key_pickup_address","");
-        String pickup_lat=pref_pickup.getString("key_pickup_lat","");
-        String pickup_long=pref_pickup.getString("key_pickup_long","");
-        if(pickup_s==null || pickup_s=="" && pickup_lat==null || pickup_lat==""  && pickup_long==null || pickup_long=="" ) {
-            edt_pickup_location.setText("");
-        }
-        else {
-            mMap.clear();
-            GloableVariable.Tag_pickup_location_address = pickup_s;
-            GloableVariable.Tag_pickup_latitude = Double.valueOf(pickup_lat.trim()).doubleValue();
-            GloableVariable.Tag_pickup_longitude = Double.valueOf(pickup_long.trim()).doubleValue();
-            edt_pickup_location.setText(GloableVariable.Tag_pickup_location_address);
-            LatLng latLng = new LatLng(Double.valueOf(pickup_lat.trim()).doubleValue(), Double.valueOf(pickup_long.trim()).doubleValue());
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-        }
-            mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-                @Override
-                public void onCameraMove() {
-
-                    mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-                        @Override
-                        public void onCameraIdle() {
-                            current_pickup_address = onCameraPositionChanged_Pickup(mMap.getCameraPosition());
-                            GloableVariable.Tag_pickup_location_address = current_pickup_address;
-                            if (current_pickup_address == null) {
-                                edt_pickup_location.setText("");
-                            } else {
-                                edt_pickup_location.setText(GloableVariable.Tag_pickup_location_address);
-                            }
-                        }
-                    });
-
-                }
-            });
-
-    }
-
-    private void btn_drop_Click() {
-        imageMarker.setImageResource(R.drawable.ic_pin_drop);
-
-        //Pickup Location save..............
-        SharedPreferences.Editor p_edit = pref_pickup.edit();
-        String p_lat=String.valueOf(mCenterLatLong.latitude);
-        String p_longs=String.valueOf(mCenterLatLong.longitude);
-        String p_address=current_pickup_address;
-
-        GloableVariable.Tag_pickup_latitude=mCenterLatLong.latitude;
-        GloableVariable.Tag_pickup_longitude=mCenterLatLong.longitude;
-
-        if(p_lat !=null && p_longs !=null && p_address !=null) {
-            p_edit.putString("key_pickup_lat",p_lat);
-            p_edit.putString("key_pickup_long",p_longs);
-            p_edit.putString("key_pickup_address",p_address);
-            p_edit.commit();
-        }
-
-     //Drop Get Location ..............
-        String drop_lat=pref_drop.getString("key_drop_lat","");
-        String drop_long=pref_drop.getString("key_drop_long","");
-        String drop_address=pref_drop.getString("key_drop_address","");
-
-        if(drop_address==null || drop_address=="" && drop_lat==null || drop_lat==""  && drop_long==null || drop_long=="" ) {
-            edt_drop_location.setText("");
-        }
-        else {
-            GloableVariable.Tag_drop_location_address = drop_address;
-            mMap.clear();
-            edt_drop_location.setText(GloableVariable.Tag_drop_location_address);
-            GloableVariable.Tag_drop_latitude = Double.valueOf(drop_lat.trim()).doubleValue();
-            GloableVariable.Tag_drop_longitude = Double.valueOf(drop_long.trim()).doubleValue();
-            LatLng latLng = new LatLng(Double.valueOf(drop_lat.trim()).doubleValue(), Double.valueOf(drop_long.trim()).doubleValue());
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-        }
-            mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-                @Override
-                public void onCameraMove() {
-                    mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-                        @Override
-                        public void onCameraIdle() {
-                            current_drop_address=onCameraPositionChanged_Drop(mMap.getCameraPosition());
-                            GloableVariable.Tag_drop_location_address=current_drop_address;
-                            if(current_drop_address==null) {
-                                edt_drop_location.setText("");
-                            }else edt_drop_location.setText(GloableVariable.Tag_drop_location_address);
-                        }});
-                }});
-
-
-    }
-
-
-//-----------------------------Check Runtime Permissions--------------------
-
-    public boolean checkLocationPermission(){
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
-            } else {
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (ContextCompat.checkSelfPermission(this,
-                            android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        if (mGoogleApiClient == null) {
-                            buildGoogleApiClient();
-                        }
-                        mMap.setMyLocationEnabled(false);
-                        try {
-                            buildGoogleApiClient();
-                            mGoogleApiClient.connect();
-                        }catch (Exception e){}
-
-                    }
-                } else {
-                    Toast.makeText(this, "Don't Permission denied ", Toast.LENGTH_LONG).show();
-                }
-                return;
-            }
-        }
-    }
-
-
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                //finish();
-            }
-            return false;
-        }
-        return true;
-    }
-
-    //--------Ask----settings----------------
-    private void askLocationSettings(){
-
-        if (checkPlayServices()) {
-            if (!isLocationEnabled(mContext)) {
-                android.app.AlertDialog.Builder dialog = new android.app.AlertDialog.Builder(mContext);
-                dialog.setMessage("Location not enabled!");
-                dialog.setPositiveButton("Open location settings", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                        Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                        startActivity(myIntent);
-                    }
-                });
-                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
-                    }
-                });
-                dialog.show();
-            }
-            buildGoogleApiClient();
-        } else {
-            Toast.makeText(mContext, "Location not supported in this device", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    public static boolean isLocationEnabled(Context context) {
-        int locationMode = 0;
-        String locationProviders;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            try {
-                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
-
-            } catch (Settings.SettingNotFoundException e) {
-                e.printStackTrace();
-            }
-            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-        } else {
-            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            return !TextUtils.isEmpty(locationProviders);
-        }
-    }
-
-    //----------getCurrent Location-------------------------
-    private void getMyLocation() {
-        mMap.clear();
-        LatLng latLng = new LatLng(current_latitude,current_longitude);
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15.0f);
-        mMap.animateCamera(cameraUpdate);
-    }
-
-    private String onCameraPositionChanged_Pickup(CameraPosition position) {
-        mCenterLatLong = position.target;
-        mMap.clear();
-        try {
-            Location mLocation = new Location("");
-            mLocation.setLatitude(mCenterLatLong.latitude);
-            mLocation.setLongitude(mCenterLatLong.longitude);
-            LatLng latLongs = new LatLng(mCenterLatLong.latitude,mCenterLatLong.longitude);
-            String s=(getAddress(latLongs));
-            if(s!=null){
-                return s;
-            }
-            return  "";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private String onCameraPositionChanged_Drop(CameraPosition position) {
-        mCenterLatLong = position.target;
-        mMap.clear();
-        try {
-            Location mLocation = new Location("");
-            mLocation.setLatitude(mCenterLatLong.latitude);
-            mLocation.setLongitude(mCenterLatLong.longitude);
-            LatLng latLongs = new LatLng(mCenterLatLong.latitude,mCenterLatLong.longitude);
-            String s=(getAddress(latLongs));
-            if(s!=null){
-                return s;
-            }
-
-            return "";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
 
+
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
+        }
+
+        if(is_check_pickup_or_drop==1) {
+            edt_pickup_location = findViewById(R.id.tv_pickup_location);
+            edt_pickup_location.setText(""+Tag_pickup_location_address);
+            showLocationOnmap();
+
+        }
+        if(is_check_pickup_or_drop==2) {
+            edt_drop_location = findViewById(R.id.tv_drop_location);
+            edt_drop_location.setText(""+Tag_drop_location_address);
+            showLocationOnmap();
+        }
+        if(is_check_pickup_or_drop !=0){
+           showLocationOnmap();
         }
 
         checkInternetconnection();
         if (AppController.getInstance() != null) {
             AppController.getInstance().setConnectivityListener(this);
         }
-
-
-
-        edt_pickup_location = findViewById(R.id.edt_pickup_location);
-        edt_drop_location = findViewById(R.id.edt_drop_location);
-
-
-        int i= GloableVariable.Tag_check_locaton_type;
-        if(i==0){
-
-        }
-
-        if(i==1){
-            String pickup=GloableVariable.Tag_pickup_location_address;
-            if(pickup !=null || pickup !="" ){
-                edt_pickup_location.setText(pickup);
-            }
-            imageMarker.setImageResource(R.drawable.ic_pin_pickup);
-            mMap.clear();
-            LatLng latLng = new LatLng(GloableVariable.Tag_pickup_latitude,GloableVariable.Tag_pickup_longitude);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-        }
-        if(i==2){
-            String drop=GloableVariable.Tag_drop_location_address;
-            if(drop !=null || drop !="" ){
-                edt_drop_location.setText(drop);
-            }
-            imageMarker.setImageResource(R.drawable.ic_pin_drop);
-            mMap.clear();
-            LatLng latLng = new LatLng(GloableVariable.Tag_drop_latitude,GloableVariable.Tag_drop_longitude);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-        }
-
-        if(check_pin==1){
-            btn_pickup_Click();
-        }if (check_pin==2){
-            btn_drop_Click();
-        }
-
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        Log.d(TAG, "OnMapReady");
-        mMap = googleMap;
-        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style);
-        this.mMap.setMapStyle(style);
-
-        mMap.setPadding(0,250,0,0);
-
-        if(check_pin==0) {
-
-            imageMarker.setImageResource(R.drawable.ic_pin_pickup);
-            mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-                @Override
-                public void onCameraIdle() {
-                    current_pickup_address = onCameraPositionChanged_Pickup(mMap.getCameraPosition());
-                    if (current_pickup_address == null) {
-                        edt_pickup_location.setText("");
-                    } else {
-                        GloableVariable.Tag_pickup_location_address = current_pickup_address;
-                        edt_pickup_location.setText(GloableVariable.Tag_pickup_location_address);
-                    }
-                }
-            });
-        }
-
-    }
-
-    private void changeMap(Location location) {
-        Log.d(TAG, "Reaching map" + mMap);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        if (mMap != null) {
-            mMap.getUiSettings().setZoomControlsEnabled(false);
-            LatLng latLong;
-            latLong = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.setMyLocationEnabled(false);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLong, 15.0f));
-            LatLng latLongs = new LatLng(location.getLatitude(),location.getLongitude());
-            String s=(getAddress(latLongs));
-            if(s!=null){
-                GloableVariable.Tag_pickup_location_address =s;
-            }
-            edt_pickup_location.setText(GloableVariable.Tag_pickup_location_address);
-        } else {
-            Toast.makeText(getApplicationContext(), "Sorry! unable to create maps", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private String getAddress(LatLng location) {
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        String addresstxt = "";
-        try {
-            List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
-            if (null != addresses && !addresses.isEmpty()) {
-                addresstxt = "" + addresses.get(0).getAddressLine(0);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (addresstxt == null) {
-            return addresstxt = "";
-        }
-        return addresstxt;
-    }
-    @Override
-    public void onConnected(Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
-           // changeMap(mLastLocation);
-            Log.d(TAG, "ON connected");
-
-        } else
-            try {
-                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        try {
-            LocationRequest mLocationRequest = new LocationRequest();
-            mLocationRequest.setInterval(10000);
-            mLocationRequest.setFastestInterval(5000);
-            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i(TAG, "Connection suspended");
-      //  mGoogleApiClient.connect();
-    }
-    @Override
-    public void onLocationChanged(Location location) {
-        try {
-            LatLng latLng;
-            if (location != null)
-                current_latitude=location.getLatitude();
-            current_longitude=location.getLongitude();
-            latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-          //  changeMap(location);
-
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-    }
-    protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
     }
 
     @Override
@@ -707,11 +205,6 @@ public class MainActivity extends AppCompatActivity implements
 
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }
-        try {
-
-        } catch (RuntimeException e) {
-            e.printStackTrace();
         }
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
@@ -833,13 +326,6 @@ public class MainActivity extends AppCompatActivity implements
                 .setPositiveButton(getResources().getString(R.string.txt_yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences.Editor pic_edit = pref_drop.edit();
-                        pic_edit.clear();
-                        pic_edit.commit();
-
-                        SharedPreferences.Editor pic_edit1 = pref_pickup.edit();
-                        pic_edit1.clear();
-                        pic_edit1.commit();
 
                         GloableVariable.Tag_pickup_latitude=0.0;
                         GloableVariable.Tag_pickup_longitude=0.0;
@@ -847,10 +333,10 @@ public class MainActivity extends AppCompatActivity implements
                         GloableVariable.Tag_drop_latitude=0.0;
                         GloableVariable.Tag_drop_latitude=0.0;
 
-                        GloableVariable.Tag_pickup_location_address="";
-                        GloableVariable.Tag_drop_location_address="";
+                        Tag_pickup_location_address="";
+                        Tag_drop_location_address="";
                         dialog.dismiss();
-                         callFinish();
+                        callFinish();
 
                     }
 
@@ -862,13 +348,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private void callFinish() {
         if(android.os.Build.VERSION.SDK_INT >= 21)
-        {
-            finishAndRemoveTask();
-        }
-        else
-        {
-            finish();
-        }
+        finishAndRemoveTask();
+        else finish();
     }
 
     private void checkInternetconnection() {
@@ -894,90 +375,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void showSnackBar(String mString) {}
-
-//-----------Place Pikar Search-----------------------------
-    private void openAutoComplePicker(int i) {
-        if (i == 0) {
-            //pickup
-            try {
-                AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                        .setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE)
-                        .setCountry("IN")
-                        .build();
-                Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                                .setFilter(typeFilter)
-                                .setBoundsBias(new LatLngBounds(new LatLng(23.63936, 68.14712), new LatLng(28.20453, 97.34466)))
-                                .build(this);
-                startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-            } catch (GooglePlayServicesRepairableException e) {
-            } catch (GooglePlayServicesNotAvailableException e) {}
-        }
-        if (i == 1) {
-            try {
-                AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
-                        .setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE)
-                        .setCountry("IN")
-                        .build();
-                Intent intent =
-                        new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                                .setFilter(typeFilter)
-                                .setBoundsBias(new LatLngBounds(new LatLng(23.63936, 68.14712), new LatLng(28.20453, 97.34466)))
-                                .build(this);
-                startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE2);
-            } catch (GooglePlayServicesRepairableException e) {
-            } catch (GooglePlayServicesNotAvailableException e) {
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //Pickap Location
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(this, data);
-                GloableVariable.Tag_pickup_latitude = place.getLatLng().latitude;
-                GloableVariable.Tag_pickup_longitude = place.getLatLng().longitude;
-
-                SharedPreferences.Editor pic_edit1 = pref_pickup.edit();
-                pic_edit1.clear();
-                pic_edit1.commit();
-
-                String s=(String) place.getAddress();
-                if(s!=null){
-                    GloableVariable.Tag_pickup_location_address=s;
-                }
-                startActivity(new Intent(this, PickupLocationActivity.class));
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-            } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
-            }
-        }//Drop Location
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE2) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(this, data);
-                GloableVariable.Tag_drop_latitude = place.getLatLng().latitude;
-                GloableVariable.Tag_drop_longitude = place.getLatLng().longitude;
-
-                SharedPreferences.Editor pic_edit = pref_drop.edit();
-                pic_edit.clear();
-                pic_edit.commit();
-
-
-                String s=(String) place.getAddress();
-                if(s!=null){
-                    GloableVariable.Tag_drop_location_address =s;
-                }
-                startActivity(new Intent(this, DropLocationActivity.class));
-            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-            } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
-            }
-        }
-
-    }
 
     @Override
     public void onClick(View view) {
@@ -1024,27 +421,17 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.menu_setting:
                 Intent setting = new Intent(this, SettingActivity.class);
                 startActivity(setting);
-
                 break;
-            case R.id.label_pickup_location_dialog:
-                check_pin=1;
-                imageMarker.setImageResource(R.drawable.ic_pin_pickup);
-              //  openAutoComplePicker(0);
-
-                startActivity(new Intent(this, PickupLocationActivity.class));
-
+           /* case R.id.label_pickup_location_dialog:
                 CommonMethods.getInstance().hideSoftKeyBoard(this);
                 overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
                 break;
             case R.id.label_drop_location:
-                check_pin=2;
-                imageMarker.setImageResource(R.drawable.ic_pin_drop);
-               // openAutoComplePicker(1);
                 startActivity(new Intent(this, DropLocationActivity.class));
                 CommonMethods.getInstance().hideSoftKeyBoard(this);
                 overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
                 break;
-            case R.id.img_drawer_image:
+       */     case R.id.img_drawer_image:
                 Intent edit = new Intent(this, EditProfileActivity.class);
                 startActivity(edit);
                 break;
@@ -1341,17 +728,537 @@ public class MainActivity extends AppCompatActivity implements
  //------------------------------------------------------------------------------------
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
 
-        SharedPreferences.Editor pic_edit = pref_drop.edit();
-        pic_edit.clear();
-        pic_edit.commit();
 
-        SharedPreferences.Editor pic_edit1 = pref_pickup.edit();
-        pic_edit1.clear();
-        pic_edit1.commit();
+
+        /*Map init*/
+
+    private void initMap(){
+        btn_current_location = findViewById(R.id.btn_current_location);
+        setGoogleMap();
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                try {checkLocationPermission();} catch (Exception ignored) {}
+                try {buildGoogleApiClient();mGoogleApiClient.connect();}
+                catch (Exception ignored) {}
+            }
+        } catch (Exception ignored) {}
+
+//-------------------------------Map--------------------------
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        btn_current_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                            try {checkLocationPermission();} catch (Exception e) {}
+                            try {getMyLocation();}catch (Exception e) {}
+                            try {buildGoogleApiClient();} catch (Exception e) {}
+                        }
+                    }
+                } catch (Exception e) {
+                }
+            }
+        });
+
+        search_pickup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(new Intent(MainActivity.this, PickupLocationActivity.class));
+                CommonMethods.getInstance().hideSoftKeyBoard(MainActivity.this);
+                overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
+
+            }
+        });
+
+
+        search_drop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, DropLocationActivity.class));
+                CommonMethods.getInstance().hideSoftKeyBoard(MainActivity.this);
+                overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
+
+            }
+        });
+
+
+
+
 
     }
+
+    //--------------------------start---Check Runtime Permissions--------------------
+    public void checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+        } else {
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this,
+                            android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        if (mGoogleApiClient == null) {
+                            buildGoogleApiClient();
+                        }
+                        mMap.setMyLocationEnabled(false);
+                        try {
+                            buildGoogleApiClient();
+                            mGoogleApiClient.connect();
+                        } catch (Exception e) {
+                        }
+
+                    }
+                } else {
+                    Toast.makeText(this, "Don't Permission denied ", Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
+    //--------------------------end---Check Runtime Permissions--------------------
+//--------Ask----settings----------------
+    private void askLocationSettings() {
+
+        if (checkPlayServices()) {
+            if (!isLocationEnabled(mContext)) {
+                android.app.AlertDialog.Builder dialog = new android.app.AlertDialog.Builder(mContext);
+                dialog.setMessage("Location not enabled!");
+                dialog.setPositiveButton("Open location settings", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(myIntent);
+                    }
+                });
+                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    }
+                });
+                dialog.show();
+            }
+            buildGoogleApiClient();
+        } else {
+            Toast.makeText(mContext, "Location not supported in this device", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                //finish();
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+    public static boolean isLocationEnabled(Context context) {
+        int locationMode = 0;
+        String locationProviders;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            try {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+            }
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+        } else {
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
+    }
+
+    //----------getCurrent Location-------------------------
+    private void getMyLocation() {
+        //clearMap();
+        latLng = new LatLng(current_latitude, current_longitude);
+        A_address=getAddress(latLng);
+        edt_pickup_location.setText(A_address);
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(latLng)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pick_location))
+                .anchor(0.5f, 0.5f)
+                .title(A_address);
+        mMap.addMarker(markerOptions);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+
+    }
+
+
+    private String getAddress(LatLng location) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        String address = "";
+        try {
+            List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
+            if (null != addresses && !addresses.isEmpty()) {
+                address = "" + addresses.get(0).getAddressLine(0);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return address;
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null) {
+            // changeMap(mLastLocation);
+            Log.d(TAG, "ON connected");
+
+        } else
+            try {
+                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        try {
+            LocationRequest mLocationRequest = new LocationRequest();
+            mLocationRequest.setInterval(10000);
+            mLocationRequest.setFastestInterval(5000);
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, "Connection suspended");
+        //  mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        try {
+            if (location != null)
+                current_latitude = location.getLatitude();
+                current_longitude = location.getLongitude();
+
+            if(is_check_pickup_or_drop==0) {
+                clearMap();
+                latLng = new LatLng(current_latitude, current_longitude);
+                A_address = getAddress(latLng);
+                edt_pickup_location.setText(A_address);
+                MarkerOptions markerOptions = new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pick_location))
+                        .anchor(0.5f, 0.5f)
+                        .title(A_address);
+                mMap.addMarker(markerOptions);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+            }
+
+
+
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+
+    private void setGoogleMap() {
+        SupportMapFragment mAupportMapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mAupportMapFragment.getMapAsync(this);
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        if (googleMap != null) {
+            this.mMap = googleMap;
+            MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style);
+            this.mMap.setMapStyle(style);
+            clearMap();
+            if(is_check_pickup_or_drop!=0) {
+                showLocationOnmap();
+            }
+        }
+    }
+
+    /*Poly Line Googe Map...*/
+
+    public void showLocationOnmap() {
+
+        GloableVariable.Tag_pickup_contact_name = User.getInstance().getFirstName() ;
+        GloableVariable.Tag_pickup_contact_number = User.getInstance().getMobileNumber();
+
+        GloableVariable.Tag_drop_contact_name = User.getInstance().getFirstName() ;
+        GloableVariable.Tag_drop_contact_number = User.getInstance().getMobileNumber();
+
+        clearMap();
+        markerList = new ArrayList<>();
+
+        double  lattitude= GloableVariable.Tag_pickup_latitude;
+        double longitude= GloableVariable.Tag_pickup_longitude;
+
+        double  droplattitude= GloableVariable.Tag_drop_latitude;
+        double  dropLongitude= GloableVariable.Tag_drop_longitude;
+
+        addMarkere(lattitude, longitude, "", R.drawable.pin_location_pin);
+        addMarkere(droplattitude,dropLongitude, "", R.drawable.drop_location_pin);
+
+        prepareRouteUrl(lattitude,longitude ,droplattitude,dropLongitude);
+    }
+
+    public void addMarkere(Double lattitude, Double longitude, String title, int marker) {
+        LatLng sydney = new LatLng(lattitude, longitude);
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(sydney)
+                .icon(BitmapDescriptorFactory.fromResource(marker))
+                .anchor(0.5f, 0.5f);
+        //.title(title);
+        Marker marker1 = mMap.addMarker(markerOptions);
+        markerList.add(marker1);
+    }
+
+    private void clearMap() {
+        if (mMap != null) {
+            mMap.clear();
+        }
+    }
+
+    private void showAllMarkers(Marker v, Marker parseDouble) {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(new LatLng(v.getPosition().latitude, v.getPosition().longitude));
+        builder.include(new LatLng(parseDouble.getPosition().latitude, parseDouble.getPosition().longitude));
+        LatLngBounds bounds = builder.build();
+        mMap.setPadding(200, 200, 100, 400);
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(v.getPosition().latitude, v.getPosition().longitude)).zoom(15).tilt(60).bearing(90).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 10);
+        mMap.moveCamera(cu);
+    }
+
+    public void prepareRouteUrl(double lattitude, double longitude, double droplattitude, double dropLongitude) {
+        String url = "https://maps.googleapis.com/maps/api/directions/json?";
+        url = url + "origin=" + lattitude + "," + longitude + "&destination=" + droplattitude + "," + dropLongitude + "&mode=driving&key=AIzaSyC-xQ2NJX_QoyLjZQJw8DWnJQwqnJvmTI4";
+        callAPIForDrawRoute(url);
+    }
+
+    private void callAPIForDrawRoute(String url) {
+        Ion.with(this)
+                .load(url)
+                .asJsonObject()
+                .withResponse()
+                .setCallback(new FutureCallback<Response<JsonObject>>() {
+                    @Override
+                    public void onCompleted(Exception e, Response<JsonObject> result) {
+                        if (e != null) {
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.txt_Netork_error), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        int status = result.getHeaders().code();
+                        JsonObject resultObject = result.getResult();
+                        switch (status) {
+                            case 200:
+                                new ParserTask().execute(String.valueOf(resultObject));
+                                break;
+                        }
+                    }
+                });
+    }
+
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+            JSONObject jObject;
+            List<List<HashMap<String, String>>> routes = null;
+            try {
+                jObject = new JSONObject(jsonData[0]);
+                Log.d("ParserTask", jsonData[0].toString());
+                DataParser parser = new DataParser();
+                Log.d("ParserTask", parser.toString());
+
+                // Starts parsing data
+                routes = parser.parse(jObject);
+                Log.d("ParserTask", "Executing routes");
+                Log.d("ParserTask", routes.toString());
+
+            } catch (Exception e) {
+                Log.d("ParserTask", e.toString());
+                e.printStackTrace();
+            }
+            return routes;
+        }
+
+        // Executes in UI thread, after the parsing process
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+            ArrayList<LatLng> points;
+            PolylineOptions lineOptions = null;
+
+            // Traversing through all the routes
+            for (int i = 0; i < result.size(); i++) {
+                points = new ArrayList<>();
+                lineOptions = new PolylineOptions();
+
+                // Fetching i-th route
+                List<HashMap<String, String>> path = result.get(i);
+
+                // Fetching all the points in i-th route
+                for (int j = 0; j < path.size(); j++) {
+                    HashMap<String, String> point = path.get(j);
+
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lng = Double.parseDouble(point.get("lng"));
+                    LatLng position = new LatLng(lat, lng);
+
+                    points.add(position);
+                }
+
+                // Adding all the points in the route to LineOptions
+                lineOptions.addAll(points);
+                lineOptions.color(getApplication().getResources().getColor(R.color.appcolor));
+
+                Log.d("onPostExecute", "onPostExecute lineoptions decoded");
+
+            }
+
+            // Drawing polyline in the Google Map for the i-th route
+            if (lineOptions != null) {
+                Polyline polyline = mMap.addPolyline(lineOptions);
+                polyline.setWidth(15);
+                showAllMarkers(markerList.get(0), markerList.get(1));
+            } else {
+                Log.d("onPostExecute", "without Polylines drawn");
+            }
+        }
+    }
+
+    public class DataParser {
+        public List<List<HashMap<String, String>>> parse(JSONObject jObject) {
+
+            List<List<HashMap<String, String>>> routes = new ArrayList<>();
+            JSONArray jRoutes;
+            JSONArray jLegs;
+            JSONArray jSteps;
+
+            try {
+
+                jRoutes = jObject.getJSONArray("routes");
+
+                /** Traversing all routes */
+                for (int i = 0; i < jRoutes.length(); i++) {
+                    jLegs = ((JSONObject) jRoutes.get(i)).getJSONArray("legs");
+                    List path = new ArrayList<>();
+
+                    /** Traversing all legs */
+                    for (int j = 0; j < jLegs.length(); j++) {
+                        jSteps = ((JSONObject) jLegs.get(j)).getJSONArray("steps");
+
+                        /** Traversing all steps */
+                        for (int k = 0; k < jSteps.length(); k++) {
+                            String polyline = "";
+                            polyline = (String) ((JSONObject) ((JSONObject) jSteps.get(k)).get("polyline")).get("points");
+                            List<LatLng> list = decodePoly(polyline);
+
+                            /** Traversing all points */
+                            for (int l = 0; l < list.size(); l++) {
+                                HashMap<String, String> hm = new HashMap<>();
+                                hm.put("lat", Double.toString((list.get(l)).latitude));
+                                hm.put("lng", Double.toString((list.get(l)).longitude));
+                                path.add(hm);
+                            }
+                        }
+                        routes.add(path);
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+            }
+
+
+            return routes;
+        }
+        private List<LatLng> decodePoly(String encoded) {
+
+            List<LatLng> poly = new ArrayList<>();
+            int index = 0, len = encoded.length();
+            int lat = 0, lng = 0;
+
+            while (index < len) {
+                int b, shift = 0, result = 0;
+                do {
+                    b = encoded.charAt(index++) - 63;
+                    result |= (b & 0x1f) << shift;
+                    shift += 5;
+                } while (b >= 0x20);
+                int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                lat += dlat;
+
+                shift = 0;
+                result = 0;
+                do {
+                    b = encoded.charAt(index++) - 63;
+                    result |= (b & 0x1f) << shift;
+                    shift += 5;
+                } while (b >= 0x20);
+                int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+                lng += dlng;
+
+                LatLng p = new LatLng((((double) lat / 1E5)),
+                        (((double) lng / 1E5)));
+                poly.add(p);
+            }
+
+            return poly;
+        }
+    }
+
+
+
+
+
+
+
 }

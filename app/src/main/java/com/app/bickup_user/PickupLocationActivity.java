@@ -68,6 +68,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import static com.app.bickup_user.GlobleVariable.GloableVariable.Tag_pickup_location_address;
+import static com.app.bickup_user.GlobleVariable.GloableVariable.is_check_pickup_or_drop;
 import static com.app.bickup_user.LoginActivity.REQUEST_LOGIN;
 
 
@@ -77,7 +79,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    private SharedPreferences pref_pickup;
     private ImageView imgBack;
     private EditText edtPickupLocation;
     private EditText edtFloorNumber;
@@ -98,11 +99,9 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
     private LinearLayout liOther;
     private TextView imgSearch;
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-    private Place place;
     private double lattitude;
     private double longitude;
     private String address;
-    private SharedPreferences sharedPreferences;
     private TextView txtBuildingName;
     private LinearLayout liBuildingDetails;
     private EditText edtBuildingName;
@@ -134,11 +133,9 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
         setContentView(R.layout.activity_pickup_location);
-
-        pref_pickup = getSharedPreferences("MyPickup", Context.MODE_PRIVATE);
         mContext=this;
         // overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
-
+        is_check_pickup_or_drop=1;
         initializeViews();
         initMap();
         GloableVariable.Tag_pickup_home_type="2";
@@ -202,7 +199,7 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         GloableVariable.Tag_pickup_contact_name=User.getInstance().getFirstName();
         GloableVariable.Tag_pickup_contact_number=User.getInstance().getMobileNumber();
 
-        address=GloableVariable.Tag_pickup_location_address;
+      //  address= Tag_pickup_location_address;
         edtPickupLocation.setText(address);
 
     }
@@ -212,8 +209,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
 
-
-
                 Place place = PlaceAutocomplete.getPlace(this, data);
                   address= (String) place.getAddress();
                   if(address.contains(",")) {
@@ -222,23 +217,19 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
                         address = array[0] + "," + array[1] + "," + array[2];
                     }catch (Exception e){}
                     }
+
                   edtPickupLocation.setText(address);
-
-                GloableVariable.Tag_pickup_location_address=address;
-
-
                 LatLng latLng= place.getLatLng();
-                  lattitude=latLng.latitude;
-                  longitude=latLng.longitude;
+                lattitude=latLng.latitude;
+                longitude=latLng.longitude;
 
-
-                imageMarker = findViewById(R.id.imageMarker);
-                imageMarker.setImageResource(R.drawable.ic_pin_pickup);
-                mMap.clear();
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-
+                Tag_pickup_location_address=address;
                 GloableVariable.Tag_pickup_latitude=latLng.latitude;
                 GloableVariable.Tag_pickup_longitude=latLng.longitude;
+
+                clearMap();
+                imageMarker.setImageResource(R.drawable.ic_pin_pickup);
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
             } else if (resultCode == RESULT_CANCELED) {
@@ -282,7 +273,11 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         setResult(Activity.RESULT_CANCELED);
         finish();
     }
-
+    private void clearMap() {
+        if (mMap != null) {
+            mMap.clear();
+        }
+    }
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -407,14 +402,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
                     finishActivit();
                 }
                 GloableVariable.Tag_pickup_comments=edtComments.getText().toString().trim();
-
-                //Pickup Location save..............
-                SharedPreferences.Editor p_edit = pref_pickup.edit();
-                    p_edit.putString("key_pickup_lat", String.valueOf(GloableVariable.Tag_pickup_latitude));
-                    p_edit.putString("key_pickup_long", String.valueOf(GloableVariable.Tag_pickup_longitude));
-                    p_edit.putString("key_pickup_address",GloableVariable.Tag_pickup_location_address);
-                    p_edit.commit();
-
                 break;
         }
 
@@ -711,6 +698,7 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
                     public void onCameraIdle() {
                         current_adress = onCameraPositionChanged_Pickup(mMap.getCameraPosition());
                         address=current_adress;
+                        Tag_pickup_location_address=current_adress;
                         edtPickupLocation.setText(address);
 
                     }
@@ -831,11 +819,13 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
 
     private String onCameraPositionChanged_Pickup(CameraPosition position) {
         mCenterLatLong = position.target;
-        mMap.clear();
+       clearMap();
         try {
             Location mLocation = new Location("");
             mLocation.setLatitude(mCenterLatLong.latitude);
             mLocation.setLongitude(mCenterLatLong.longitude);
+            GloableVariable.Tag_pickup_latitude=mCenterLatLong.latitude;
+            GloableVariable.Tag_pickup_longitude=mCenterLatLong.longitude;
             LatLng latLongs = new LatLng(mCenterLatLong.latitude, mCenterLatLong.longitude);
             String s = (getAddress(latLongs));
             if (s != null) {
@@ -848,51 +838,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         return null;
     }
 
-
-    private String onCameraPositionChanged_Drop(CameraPosition position) {
-        mCenterLatLong = position.target;
-        mMap.clear();
-        try {
-            Location mLocation = new Location("");
-            mLocation.setLatitude(mCenterLatLong.latitude);
-            mLocation.setLongitude(mCenterLatLong.longitude);
-            LatLng latLongs = new LatLng(mCenterLatLong.latitude, mCenterLatLong.longitude);
-            String s = (getAddress(latLongs));
-            if (s != null) {
-                return s;
-            }
-
-            return "";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    private void changeMap(Location location) {
-        Log.d(TAG, "Reaching map" + mMap);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        if (mMap != null) {
-            mMap.getUiSettings().setZoomControlsEnabled(false);
-            LatLng latLong;
-            latLong = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.setMyLocationEnabled(false);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLong, 15.0f));
-            LatLng latLongs = new LatLng(location.getLatitude(), location.getLongitude());
-            String s = (getAddress(latLongs));
-            if (s != null) {
-                GloableVariable.Tag_pickup_location_address = s;
-            }
-            //  edt_pickup_location.setText(GloableVariable.Tag_pickup_location_address);
-        } else {
-            Toast.makeText(getApplicationContext(), "Sorry! unable to create maps", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     private String getAddress(LatLng location) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());

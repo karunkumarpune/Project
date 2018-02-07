@@ -572,11 +572,13 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
         Marker marker1 = googleMap.addMarker(markerOptions);
         markerList.add(marker1);
     }
+
     private void clearMap() {
         if (googleMap != null) {
             googleMap.clear();
         }
     }
+
     private void showAllMarkers(Marker v, Marker parseDouble) {
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         builder.include(new LatLng(v.getPosition().latitude, v.getPosition().longitude));

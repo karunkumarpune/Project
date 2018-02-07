@@ -3,21 +3,118 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:layout_margin="@dimen/dp_10"
-        android:gravity="center"
-        android:padding="@dimen/dp_10"
-        android:id="@+id/txt_pickup"
+
+    <ScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="551dp"
+            android:background="@color/screen_background"
+            android:paddingBottom="10dp">
 
     <RelativeLayout
-        android:layout_below="@+id/txt_pickup"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorAccent">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_arrow_back"
+            android:background="@android:color/transparent"
+            />
+
+
+          <TextView
+              android:layout_marginLeft="120dp"
+              android:layout_centerVertical="true"
+              android:id="@+id/toolbar_text"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="Pickup Location"
+              android:textStyle="bold"
+              android:textSize="18sp"
+              android:textColor="#fff"
+              />
+
+
+        <ImageButton
+            android:id="@+id/btn_ok"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_ok"
+            android:background="@android:color/transparent"
+            />
+
+    </RelativeLayout>
+
+
+        <RelativeLayout
+        android:layout_below="@+id/toolbar"
+        android:id="@+id/search_container"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/img_pickup"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/pick_location" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/img_pickup">
+
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/search_address"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/search_black"/>
+
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="40dp"
+                android:id="@+id/tv_location_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="@android:color/transparent"
+                android:enabled="false"
+                android:text="Search Address..."
+                android:layout_below="@+id/txt_pickup"
+                android:textColor="@color/grey_text_color"
+                android:textSize="@dimen/medium_text" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@+id/search_container"
         android:id="@+id/rl_mapview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="450dp"
         android:background="#ffffff">
 
         <fragment
@@ -26,6 +123,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </fragment>
+
+        <ImageView
+            android:id="@+id/imageView123"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@android:color/transparent" />
 
         <ImageView
             android:layout_marginRight="@dimen/dp_5"
@@ -43,6 +146,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_pin_pickup" />
-
     </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+
 </RelativeLayout>

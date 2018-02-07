@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -26,7 +27,7 @@
                 android:src="@drawable/pick_location"/>
             <View
                 android:layout_width="0.5dp"
-                android:layout_height="@dimen/dp_45"
+                android:layout_height="45dp"
                 android:layout_marginTop="-10dp"
                 android:background="@color/greyColor"/>
 
@@ -46,7 +47,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_3"
+                android:layout_marginTop="3dp"
                 android:layout_below="@+id/img_container_booking_details"
                 android:visibility="visible"
                 android:orientation="vertical">
@@ -64,8 +65,8 @@
                         android:textSize="@dimen/small_text" />
 
                     <ImageView
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:id="@+id/search_pickup"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
@@ -79,10 +80,6 @@
                         android:id="@+id/tv_pickup_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="0dp"
-                        android:layout_marginTop="-5dp"
-                        android:paddingBottom="@dimen/dp_5"
-                        android:layout_marginEnd="@dimen/dp_40"
                         android:backgroundTint="@android:color/transparent"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -105,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/img_container_booking_details"
                 android:visibility="visible"
-                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical">
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -124,8 +121,8 @@
 
                     <ImageView
                         android:id="@+id/search_drop"
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:src="@drawable/search_black"/>
@@ -138,9 +135,6 @@
                         android:id="@+id/tv_drop_location"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="0dp"
-                        android:paddingBottom="0dp"
-                        android:layout_marginEnd="@dimen/dp_40"
                         android:backgroundTint="@android:color/transparent"
                         android:maxLines="1"
                         android:ellipsize="end"
@@ -155,4 +149,31 @@
         </LinearLayout>
     </RelativeLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:layout_below="@+id/rl_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/map"
+            class="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </fragment>
+
+
+    <ImageView
+        android:id="@+id/btn_current_location"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/t"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_my_location"/>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

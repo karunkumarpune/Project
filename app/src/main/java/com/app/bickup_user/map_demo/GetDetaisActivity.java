@@ -1,5 +1,6 @@
 package com.app.bickup_user.map_demo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -26,11 +28,16 @@ import android.widget.Toast;
 import com.app.bickup_user.GlobleVariable.GloableVariable;
 import com.app.bickup_user.R;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,18 +45,22 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import static com.app.bickup_user.map_demo.Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE;
+import static com.app.bickup_user.map_demo.Constants.is_check;
 
-public class MainActivity extends AppCompatActivity implements
+public class GetDetaisActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
+
 
     //-----------------------------------------Map-------------
     private GoogleMap mMap;
@@ -61,53 +72,153 @@ public class MainActivity extends AppCompatActivity implements
     private ImageView imageMarker, btn_current_location,imageView123;
     private double current_latitude = 0.0;
     private double current_longitude = 0.0;
-    public static String TAG = MainActivity.class.getSimpleName();
-    public String longitude_pinmove;
-    private Context mContext;
-    private TextView txt_pickup;
-    private String current_adress;
+    public static String TAG = GetDetaisActivity.class.getSimpleName();
     private ScrollView scrollview;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-       // setContentView(R.layout.activity_pickup_location);
+    private ImageView search_address;
+    private TextView tv_location_address,toolbar_text;
+    private ImageButton btn_back,btn_ok;
+    private String address;
+    private double lattitude;
+    private double longitude;
+    private LatLng latLng;
+    private Context mContext;
 
+    @Override
+    protected void onCreate( Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.testmap);
+        mContext=this;
+
+        initMap();
+        btn_back = findViewById(R.id.btn_back);
+        btn_ok = findViewById(R.id.btn_ok);
+
+        search_address = findViewById(R.id.search_address);
+        tv_location_address = findViewById(R.id.tv_location_address);
+        toolbar_text = findViewById(R.id.toolbar_text);
+        if(is_check==1)
+            toolbar_text.setText("Pickup Location");
+        else  toolbar_text.setText("Drop Location");
+
+
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+                Intent intent = getIntent();
+                Bundle args = new Bundle();
+                args.putString("Key",address);
+                args.putParcelable("LatLng", latLng);
+                intent.putExtra("bundle",args);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
+        search_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openAutoComplePicker();
+            }
+        });
+
+
+    }
+
+
+    /*Open Place pikar */
+    private void openAutoComplePicker() {
+        try {
+            AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE)
+                    .setCountry("IN")
+                    .build();
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .setFilter(typeFilter)
+                            .setBoundsBias(new LatLngBounds(new LatLng(23.63936, 68.14712), new LatLng(28.20453, 97.34466)))
+                            .build(this);
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+        } catch (GooglePlayServicesNotAvailableException e) {
+        }
+    }
+
+
+    /*Place Pickar getLocation Address..*/
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                address= ""+place.getAddress();
+                if(address.contains(",")) {
+                    String[] array = address.split(",", 3);
+                    try {
+                        address = array[0] + "," + array[1] + "," + array[2];
+                    }catch (Exception e){}
+                }
+
+                tv_location_address.setText(address);
+                latLng= place.getLatLng();
+                lattitude=latLng.latitude;
+                longitude=latLng.longitude;
+
+
+                if(is_check==1) {
+                    imageMarker.setImageResource(R.drawable.ic_pin_pickup);
+                    mMap.clear();
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+                }else {
+                    imageMarker.setImageResource(R.drawable.ic_pin_drop);
+                    mMap.clear();
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+                }
+             } //else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {}
+               //else if (resultCode == RESULT_CANCELED) {}
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(Activity.RESULT_CANCELED);
+        finish();
+    }
+
+
+    /*Map init*/
+
+    private void initMap(){
 
         imageMarker = findViewById(R.id.imageMarker);
         btn_current_location = findViewById(R.id.btn_current_location);
-        txt_pickup = findViewById(R.id.txt_pickup);
         scrollview = findViewById(R.id.scrollview);
         imageView123 = findViewById(R.id.imageView123);
 
 
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-                try {
-                    //  askLocationSettings();
-                } catch (Exception e) {
-                }
-
-                try {
-                    checkLocationPermission();
-                } catch (Exception e) {
-                }
-
-                try {
-                    buildGoogleApiClient();
-                    mGoogleApiClient.connect();
-                } catch (Exception e) {
-                }
-
+                try {checkLocationPermission();} catch (Exception ignored) {}
+                try {buildGoogleApiClient();mGoogleApiClient.connect();}
+                catch (Exception ignored) {}
             }
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
 
 //-------------------------------Map--------------------------
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.google_map_loication);
-        mapFragment.getMapAsync(MainActivity.this);
+        mapFragment.getMapAsync(this);
 
         imageView123.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -135,33 +246,15 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-
         btn_current_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                            try {
-                                //askLocationSettings();
-                            } catch (Exception e) {
-                            }
-
-                            try {
-                                checkLocationPermission();
-                            } catch (Exception e) {
-                            }
-
-
-                            try {
-                                getMyLocation();
-                            } catch (Exception e) {
-                            }
-
-                            try {
-                                buildGoogleApiClient();
-                            } catch (Exception e) {
-                            }
+                            try {checkLocationPermission();} catch (Exception e) {}
+                            try {getMyLocation();}catch (Exception e) {}
+                            try {buildGoogleApiClient();} catch (Exception e) {}
                         }
                     }
                 } catch (Exception e) {
@@ -171,31 +264,61 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    /*Google Map Ready*/
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style);
         this.mMap.setMapStyle(style);
         mMap.setPadding(0, 250, 0, 0);
-        imageMarker.setImageResource(R.drawable.ic_pin_pickup);
 
-   //     mMap.clear();
+        if(is_check==1) {
+            imageMarker.setImageResource(R.drawable.ic_pin_pickup);
+            currentMoveMap();
+        }else {
+            imageMarker.setImageResource(R.drawable.ic_pin_drop);
+            currentMoveMap();
+        }
+    }
+
+
+    private void currentMoveMap(){
+        mMap.clear();
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
             public void onCameraMove() {
                 mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
                     @Override
                     public void onCameraIdle() {
-                        current_adress = onCameraPositionChanged_Pickup(mMap.getCameraPosition());
-                        txt_pickup.setText(current_adress);
+                         address= onCameraPositionChanged(mMap.getCameraPosition());
+                         tv_location_address.setText(""+address);
                     }
                 });
 
             }
         });
+    }
 
 
+    private String onCameraPositionChanged(CameraPosition position) {
+        mCenterLatLong = position.target;
+        latLng = position.target;
+        mMap.clear();
+        try {
+            Location mLocation = new Location("");
+            mLocation.setLatitude(mCenterLatLong.latitude);
+            mLocation.setLongitude(mCenterLatLong.longitude);
+            LatLng latLongs = new LatLng(mCenterLatLong.latitude,mCenterLatLong.longitude);
+            String s=(getAddress(latLongs));
+            if(s!=null){
+                return s;
+            }
 
+            return "";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
@@ -302,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements
     //----------getCurrent Location-------------------------
     private void getMyLocation() {
         mMap.clear();
-        LatLng latLng = new LatLng(current_latitude, current_longitude);
+        latLng = new LatLng(current_latitude, current_longitude);
         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15.0f);
         mMap.animateCamera(cameraUpdate);
     }
@@ -326,28 +449,6 @@ public class MainActivity extends AppCompatActivity implements
         }
         return null;
     }
-
-
-    private String onCameraPositionChanged_Drop(CameraPosition position) {
-        mCenterLatLong = position.target;
-        mMap.clear();
-        try {
-            Location mLocation = new Location("");
-            mLocation.setLatitude(mCenterLatLong.latitude);
-            mLocation.setLongitude(mCenterLatLong.longitude);
-            LatLng latLongs = new LatLng(mCenterLatLong.latitude, mCenterLatLong.longitude);
-            String s = (getAddress(latLongs));
-            if (s != null) {
-                return s;
-            }
-
-            return "";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 
     private void changeMap(Location location) {
         Log.d(TAG, "Reaching map" + mMap);
@@ -459,5 +560,9 @@ public class MainActivity extends AppCompatActivity implements
             mGoogleApiClient.disconnect();
         }
     }
+
+
+
+
 
 }

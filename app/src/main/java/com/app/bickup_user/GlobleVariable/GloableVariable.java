@@ -23,6 +23,7 @@ public class GloableVariable {
 
 
 
+    public static int is_check_pickup_or_drop = 0;
 
     public static String Tag_drop_location_check="";
 

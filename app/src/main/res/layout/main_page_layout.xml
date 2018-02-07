@@ -56,14 +56,7 @@
             android:layout_below="@+id/t"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_my_location"/>
-
-        <ImageView
-            android:layout_centerInParent="true"
-            android:id="@+id/imageMarker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_pin_pickup" />
+            app:srcCompat="@drawable/ic_my_location"/>
 
 
         <RelativeLayout

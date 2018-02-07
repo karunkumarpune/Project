@@ -40,7 +40,6 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -68,6 +67,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
+import static com.app.bickup_user.GlobleVariable.GloableVariable.is_check_pickup_or_drop;
 
 public class DropLocationActivity extends AppCompatActivity implements View.OnClickListener,
         NetworkCallBack ,OnMapReadyCallback,
@@ -98,13 +99,12 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
     private double lattitude;
     private double longitude;
     private String address;
-    private SharedPreferences sharedPreferences;
     private EditText edtBuildingName;
     private LinearLayout liBuildingDetails;
     private TextView txtBuildingName;
     private CircularProgressView circularProgressBar;
     private String message;
-    private SharedPreferences pref_drop;
+
 
 
 
@@ -124,13 +124,13 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
     private Context mContext;
     private String current_adress;
     private ScrollView scrollview;
-    private TextView txtPickup;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
-        pref_drop = getSharedPreferences("MyDrop", Context.MODE_PRIVATE);
+        is_check_pickup_or_drop=2;
 
         setContentView(R.layout.activity_pickup_location);
         initializeViews();
@@ -207,7 +207,7 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         GloableVariable.Tag_drop_contact_name=User.getInstance().getFirstName()+" "+User.getInstance().getLastName();
         GloableVariable.Tag_drop_contact_number=User.getInstance().getMobileNumber();
 
-        address=GloableVariable.Tag_drop_location_address;
+      //  address=GloableVariable.Tag_drop_location_address;
         edtPickupLocation.setText(address);
 
 
@@ -217,32 +217,41 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+
+
                 Place place = PlaceAutocomplete.getPlace(this, data);
-                lattitude = place.getLatLng().latitude;
-                longitude = place.getLatLng().longitude;
+                address= (String) place.getAddress();
+                if(address.contains(",")) {
+                    String[] array = address.split(",", 3);
+                    try {
+                        address = array[0] + "," + array[1] + "," + array[2];
+                    }catch (Exception e){}
+                }
 
+                edtPickupLocation.setText(address);
                 LatLng latLng= place.getLatLng();
-                imageMarker = findViewById(R.id.imageMarker);
+                lattitude=latLng.latitude;
+                longitude=latLng.longitude;
+
+                GloableVariable.Tag_drop_location_address=address;
+                GloableVariable.Tag_drop_latitude=latLng.latitude;
+                GloableVariable.Tag_drop_longitude=latLng.longitude;
+
+                clearMap();
                 imageMarker.setImageResource(R.drawable.ic_pin_drop);
-                mMap.clear();
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-
-
-                GloableVariable.Tag_pickup_latitude=lattitude;
-                GloableVariable.Tag_pickup_longitude=longitude;
 
                 address = (String) place.getAddress();
                 edtPickupLocation.setText(address);
-                //setUserDataToPreferences(this);
-
-                GloableVariable.Tag_drop_location_address=address;
-
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                Status status = PlaceAutocomplete.getStatus(this, data);
-            } else if (resultCode == RESULT_CANCELED) {
-                // The user canceled the operation.
-            }
+            } else if (resultCode == RESULT_CANCELED) {}
+        }
+    }
+
+    private void clearMap() {
+        if (mMap != null) {
+            mMap.clear();
         }
     }
 
@@ -369,14 +378,6 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
 
                 }
                 GloableVariable.Tag_drop_comments=edtComments.getText().toString().trim();
-
-                //Drop Location save.........
-                SharedPreferences.Editor drop_edit = pref_drop.edit();
-                    drop_edit.putString("key_drop_lat", String.valueOf(GloableVariable.Tag_drop_latitude));
-                    drop_edit.putString("key_drop_long",String.valueOf(GloableVariable.Tag_drop_longitude));
-                    drop_edit.putString("key_drop_address",GloableVariable.Tag_drop_location_address);
-                    drop_edit.commit();
-
                 finishActivit();
                 break;
 
@@ -393,15 +394,6 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         super.onBackPressed();
 
     }
-
-   /* public void setUserDataToPreferences(Activity activity){
-        sharedPreferences=activity.getSharedPreferences(ConstantValues.USER_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("droplattitude", String.valueOf(lattitude));
-        editor.putString("droplongitude", String.valueOf(longitude_pinmove));
-        editor.commit();
-    }*/
-
 
     private boolean validateFields() {
 
@@ -698,7 +690,7 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style);
         this.mMap.setMapStyle(style);
         mMap.setPadding(0, 250, 0, 0);
-        imageMarker.setImageResource(R.drawable.ic_pin_pickup);
+        imageMarker.setImageResource(R.drawable.ic_pin_drop);
 
         //     mMap.clear();
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
@@ -709,7 +701,8 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
                     public void onCameraIdle() {
                         current_adress = onCameraPositionChanged_Pickup(mMap.getCameraPosition());
                         address=current_adress;
-                        edtPickupLocation.setText(address);
+                        GloableVariable.Tag_drop_location_address=current_adress;
+                        edtPickupLocation.setText(current_adress);
 
                     }
                 });
@@ -834,6 +827,8 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
             Location mLocation = new Location("");
             mLocation.setLatitude(mCenterLatLong.latitude);
             mLocation.setLongitude(mCenterLatLong.longitude);
+            GloableVariable.Tag_drop_latitude=mCenterLatLong.latitude;
+            GloableVariable.Tag_drop_longitude=mCenterLatLong.longitude;
             LatLng latLongs = new LatLng(mCenterLatLong.latitude, mCenterLatLong.longitude);
             String s = (getAddress(latLongs));
             if (s != null) {

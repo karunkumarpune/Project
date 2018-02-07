@@ -139,8 +139,7 @@
                 android:layout_centerInParent="true"
                 android:id="@+id/imageMarker"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_pin_pickup" />
+                android:layout_height="wrap_content" />
 
         </RelativeLayout>
 
