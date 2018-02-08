@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <RelativeLayout
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorAccent">
+
+
+        <TextView
+            android:layout_marginLeft="120dp"
+            android:layout_centerVertical="true"
+            android:id="@+id/toolbar_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search Location"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="#fff"
+            />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_below="@+id/toolbar"
+        android:id="@+id/search_container"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/img_pickup"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/pick_location" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/img_pickup">
+
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:onClick="btn_from"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/search_black"/>
+
+
+            <EditText
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="40dp"
+                android:id="@+id/edt_from_location"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:hint="From Address..."
+                android:layout_below="@+id/txt_pickup"
+                android:textColor="@color/grey_text_color"
+                android:textSize="@dimen/medium_text" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@+id/search_container"
+        android:id="@+id/search_container1"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/img_drop"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/pick_location" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/img_drop">
+
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/search_btn_"
+                android:onClick="btn_to"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/search_black"/>
+
+
+            <EditText
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="40dp"
+                android:id="@+id/edt_to_location"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:hint="To Address..."
+                android:layout_below="@+id/txt_pickup"
+                android:textColor="@color/grey_text_color"
+                android:textSize="@dimen/medium_text" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@+id/search_container1"
+        android:id="@+id/rl_mapview"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:background="#ffffff">
+
+        <fragment
+            android:id="@+id/map"
+            class="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </fragment>
+
+        <ImageView
+            android:id="@+id/imageView123"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@android:color/transparent" />
+
+    </RelativeLayout>
+</RelativeLayout>

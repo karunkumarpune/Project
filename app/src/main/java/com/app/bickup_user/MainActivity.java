@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -141,6 +142,14 @@ public class MainActivity extends AppCompatActivity implements
     private String A_address;
 
 
+
+    private SharedPreferences pref_pickup;
+    private SharedPreferences pref_drop;
+
+    private double pickup_latitude,pickup_longitude;
+    private String pickup_location_address;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -150,6 +159,11 @@ public class MainActivity extends AppCompatActivity implements
         Log.d("Refreshed", "Refreshed token: " + refreshedToken);
 
         mActivityreference = MainActivity.this;
+        pref_pickup = getSharedPreferences("MyPickup", Context.MODE_PRIVATE);
+        pref_drop = getSharedPreferences("MyDrop", Context.MODE_PRIVATE);
+
+
+
 
         edt_pickup_location = findViewById(R.id.tv_pickup_location);
         edt_drop_location = findViewById(R.id.tv_drop_location);
@@ -172,6 +186,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+
+        pickup_latitude= Double.parseDouble(pref_pickup.getString("key_pickup_lat","1.2"));
+        pickup_longitude= Double.parseDouble(pref_pickup.getString("key_pickup_long","1.2"));
+        pickup_location_address=pref_pickup.getString("key_pickup_address","1.2");
+
+       GloableVariable.Tag_pickup_latitude=pickup_latitude;
+       GloableVariable.Tag_pickup_longitude=pickup_longitude;
+       GloableVariable.Tag_pickup_location_address=pickup_location_address;
 
 
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -769,6 +791,14 @@ public class MainActivity extends AppCompatActivity implements
             public void onClick(View view) {
 
                 startActivity(new Intent(MainActivity.this, PickupLocationActivity.class));
+
+                //Pickup Location save..............
+                SharedPreferences.Editor p_edit = pref_pickup.edit();
+                p_edit.putString("key_pickup_lat", "" + GloableVariable.Tag_pickup_latitude);
+                p_edit.putString("key_pickup_long", "" + GloableVariable.Tag_pickup_longitude);
+                p_edit.putString("key_pickup_address", GloableVariable.Tag_pickup_location_address);
+                p_edit.apply();
+
                 CommonMethods.getInstance().hideSoftKeyBoard(MainActivity.this);
                 overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
 
@@ -898,6 +928,7 @@ public class MainActivity extends AppCompatActivity implements
         latLng = new LatLng(current_latitude, current_longitude);
         A_address=getAddress(latLng);
         edt_pickup_location.setText(A_address);
+        Tag_pickup_location_address=A_address;
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(latLng)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.pick_location))
@@ -963,13 +994,18 @@ public class MainActivity extends AppCompatActivity implements
         try {
             if (location != null)
                 current_latitude = location.getLatitude();
-                current_longitude = location.getLongitude();
+            assert location != null;
+            current_longitude = location.getLongitude();
+
+            GloableVariable.Tag_pickup_latitude=location.getLatitude();
+            GloableVariable.Tag_pickup_longitude=location.getLongitude();
 
             if(is_check_pickup_or_drop==0) {
                 clearMap();
                 latLng = new LatLng(current_latitude, current_longitude);
                 A_address = getAddress(latLng);
                 edt_pickup_location.setText(A_address);
+                Tag_pickup_location_address=A_address;
                 MarkerOptions markerOptions = new MarkerOptions()
                         .position(latLng)
                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.pick_location))
@@ -1068,11 +1104,10 @@ public class MainActivity extends AppCompatActivity implements
         builder.include(new LatLng(v.getPosition().latitude, v.getPosition().longitude));
         builder.include(new LatLng(parseDouble.getPosition().latitude, parseDouble.getPosition().longitude));
         LatLngBounds bounds = builder.build();
-        mMap.setPadding(200, 200, 100, 400);
+        mMap.setPadding(200, 450, 200, 400);
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(v.getPosition().latitude, v.getPosition().longitude)).zoom(15).tilt(60).bearing(90).build();
+                .target(new LatLng(v.getPosition().latitude, v.getPosition().longitude)).zoom(11).tilt(40).bearing(50).build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 10);
         mMap.moveCamera(cu);
     }

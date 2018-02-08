@@ -46,7 +46,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -68,6 +67,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import static com.app.bickup_user.GlobleVariable.GloableVariable.Tag_drop_location_address;
 import static com.app.bickup_user.GlobleVariable.GloableVariable.is_check_pickup_or_drop;
 
 public class DropLocationActivity extends AppCompatActivity implements View.OnClickListener,
@@ -233,7 +233,7 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
                 lattitude=latLng.latitude;
                 longitude=latLng.longitude;
 
-                GloableVariable.Tag_drop_location_address=address;
+                Tag_drop_location_address=address;
                 GloableVariable.Tag_drop_latitude=latLng.latitude;
                 GloableVariable.Tag_drop_longitude=latLng.longitude;
 
@@ -450,12 +450,14 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         try {
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE)
-                    .setCountry("IN")
+                    .setCountry("AE")
+                    // .setCountry("IN")
                     .build();
             Intent intent =
                     new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
                             .setFilter(typeFilter)
-                            .setBoundsBias(new LatLngBounds(new LatLng(23.63936, 68.14712), new LatLng(28.20453, 97.34466)))
+                            // .setBoundsBias(new LatLngBounds(new LatLng(23.63936, 68.14712), new LatLng(28.20453, 97.34466)))
+                            .setBoundsBias(new LatLngBounds(new LatLng(25.276987, 55.296249), new LatLng(28.20453, 97.34466)))
                             .build(this);
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException e) {
@@ -692,23 +694,32 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         mMap.setPadding(0, 250, 0, 0);
         imageMarker.setImageResource(R.drawable.ic_pin_drop);
 
-        //     mMap.clear();
-        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-            @Override
-            public void onCameraMove() {
-                mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-                    @Override
-                    public void onCameraIdle() {
-                        current_adress = onCameraPositionChanged_Pickup(mMap.getCameraPosition());
-                        address=current_adress;
-                        GloableVariable.Tag_drop_location_address=current_adress;
-                        edtPickupLocation.setText(current_adress);
 
-                    }
-                });
+        String add= Tag_drop_location_address;
+        if(!add.isEmpty()) {
+            edtPickupLocation.setText(Tag_drop_location_address);
+            double Latitude = GloableVariable.Tag_drop_latitude;
+            double Longitude = GloableVariable.Tag_drop_longitude;
+            Marker(Latitude, Longitude);
+        }else {
+            clearMap();
+            mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+                @Override
+                public void onCameraMove() {
+                    mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                        @Override
+                        public void onCameraIdle() {
+                            current_adress = onCameraPositionChanged_Pickup(mMap.getCameraPosition());
+                            address = current_adress;
+                            Tag_drop_location_address = current_adress;
+                            edtPickupLocation.setText(current_adress);
 
-            }
-        });
+                        }
+                    });
+
+                }
+            });
+        }
     }
 
     //--------------------------start---Check Runtime Permissions--------------------
@@ -813,10 +824,7 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
 
     //----------getCurrent Location-------------------------
     private void getMyLocation() {
-        mMap.clear();
-        LatLng latLng = new LatLng(current_latitude, current_longitude);
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15.0f);
-        mMap.animateCamera(cameraUpdate);
+        Marker(current_latitude,current_longitude);
     }
 
 
@@ -879,9 +887,9 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
             LatLng latLongs = new LatLng(location.getLatitude(), location.getLongitude());
             String s = (getAddress(latLongs));
             if (s != null) {
-                GloableVariable.Tag_pickup_location_address = s;
+                Tag_drop_location_address = s;
             }
-            //  edt_pickup_location.setText(GloableVariable.Tag_pickup_location_address);
+            //  edt_pickup_location.setText(GloableVariable.Tag_drop_location_address);
         } else {
             Toast.makeText(getApplicationContext(), "Sorry! unable to create maps", Toast.LENGTH_SHORT).show();
         }
@@ -939,19 +947,47 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onLocationChanged(Location location) {
         try {
-            LatLng latLng;
             if (location != null)
                 current_latitude = location.getLatitude();
+            assert location != null;
             current_longitude = location.getLongitude();
-            latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-            //  changeMap(location);
 
+            GloableVariable.Tag_drop_latitude=location.getLatitude();
+            GloableVariable.Tag_drop_longitude=location.getLongitude();
+
+            String add= Tag_drop_location_address;
+            if(add.isEmpty()) {
+                Marker(location.getLatitude(), location.getLongitude());
+            }
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void Marker(double Latitude,double Longitude ){
+        clearMap();
+
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                    @Override
+                    public void onCameraIdle() {
+                        current_adress = onCameraPositionChanged_Pickup(mMap.getCameraPosition());
+                        address = current_adress;
+                        Tag_drop_location_address = current_adress;
+                        edtPickupLocation.setText(address);
+
+                    }
+                });
+
+            }
+        });
+
+        LatLng latLng = new LatLng(Latitude, Longitude);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
     }
 
     @Override
