@@ -149,6 +149,9 @@ public class MainActivity extends AppCompatActivity implements
     private double pickup_latitude,pickup_longitude;
     private String pickup_location_address;
 
+    private double drop_latitude,drop_longitude;
+    private String drop_location_address;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,8 +166,6 @@ public class MainActivity extends AppCompatActivity implements
         pref_drop = getSharedPreferences("MyDrop", Context.MODE_PRIVATE);
 
 
-
-
         edt_pickup_location = findViewById(R.id.tv_pickup_location);
         edt_drop_location = findViewById(R.id.tv_drop_location);
 
@@ -174,51 +175,7 @@ public class MainActivity extends AppCompatActivity implements
 
         initMap();
         intializeViews();
-
-
-        //btn_pickup = findViewById(R.id.btn_pickup);
-        //btn_drop = findViewById(R.id.btn_drop);
-
         setUserData();
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        pickup_latitude= Double.parseDouble(pref_pickup.getString("key_pickup_lat","1.2"));
-        pickup_longitude= Double.parseDouble(pref_pickup.getString("key_pickup_long","1.2"));
-        pickup_location_address=pref_pickup.getString("key_pickup_address","1.2");
-
-       GloableVariable.Tag_pickup_latitude=pickup_latitude;
-       GloableVariable.Tag_pickup_longitude=pickup_longitude;
-       GloableVariable.Tag_pickup_location_address=pickup_location_address;
-
-
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        }
-
-        if(is_check_pickup_or_drop==1) {
-            edt_pickup_location = findViewById(R.id.tv_pickup_location);
-            edt_pickup_location.setText(""+Tag_pickup_location_address);
-            showLocationOnmap();
-
-        }
-        if(is_check_pickup_or_drop==2) {
-            edt_drop_location = findViewById(R.id.tv_drop_location);
-            edt_drop_location.setText(""+Tag_drop_location_address);
-            showLocationOnmap();
-        }
-        if(is_check_pickup_or_drop !=0){
-           showLocationOnmap();
-        }
-
-        checkInternetconnection();
-        if (AppController.getInstance() != null) {
-            AppController.getInstance().setConnectivityListener(this);
-        }
     }
 
     @Override
@@ -232,7 +189,6 @@ public class MainActivity extends AppCompatActivity implements
             mGoogleApiClient.disconnect();
         }
     }
-
 
     private void intializeViews() {
         navigationDrawer = findViewById(R.id.navigation_menu);
@@ -302,8 +258,6 @@ public class MainActivity extends AppCompatActivity implements
         findViewById(R.id.help_container).setOnClickListener(this);
     }
 
-
-
 //-------Menu---Pic---Details---------------
     private void setUserData() {
         String firstName = User.getInstance().getFirstName();
@@ -324,9 +278,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (userName != null && useremail != null) {
             String name=User.getInstance().getFirstName() +" "+User.getInstance().getLastName();
-            if(name==null) {
-                userName.setText("");
-            }else  userName.setText(name);
+            userName.setText(name);
             useremail.setText(User.getInstance().getEmail());
             if (userImage != null) {
                 if (userImageString != null) {
@@ -748,11 +700,6 @@ public class MainActivity extends AppCompatActivity implements
 
 
  //------------------------------------------------------------------------------------
-
-
-
-
-
         /*Map init*/
 
     private void initMap(){
@@ -767,7 +714,7 @@ public class MainActivity extends AppCompatActivity implements
         } catch (Exception ignored) {}
 
 //-------------------------------Map--------------------------
-        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         btn_current_location.setOnClickListener(new View.OnClickListener() {
@@ -776,12 +723,12 @@ public class MainActivity extends AppCompatActivity implements
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                            try {checkLocationPermission();} catch (Exception e) {}
-                            try {getMyLocation();}catch (Exception e) {}
-                            try {buildGoogleApiClient();} catch (Exception e) {}
+                            try {checkLocationPermission();} catch (Exception ignored) {}
+                            try {getMyLocation();}catch (Exception ignored) {}
+                            try {buildGoogleApiClient();} catch (Exception ignored) {}
                         }
                     }
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
             }
         });
@@ -794,9 +741,9 @@ public class MainActivity extends AppCompatActivity implements
 
                 //Pickup Location save..............
                 SharedPreferences.Editor p_edit = pref_pickup.edit();
-                p_edit.putString("key_pickup_lat", "" + GloableVariable.Tag_pickup_latitude);
-                p_edit.putString("key_pickup_long", "" + GloableVariable.Tag_pickup_longitude);
-                p_edit.putString("key_pickup_address", GloableVariable.Tag_pickup_location_address);
+                p_edit.putString("key_pickup_lat", "" + pickup_latitude);
+                p_edit.putString("key_pickup_long", "" + pickup_longitude);
+                p_edit.putString("key_pickup_address", pickup_location_address);
                 p_edit.apply();
 
                 CommonMethods.getInstance().hideSoftKeyBoard(MainActivity.this);
@@ -810,6 +757,14 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, DropLocationActivity.class));
+
+                //Drop Location save..............
+                SharedPreferences.Editor p_edit = pref_drop.edit();
+                p_edit.putString("key_drop_lat", "" + drop_latitude);
+                p_edit.putString("key_drop_long", "" + drop_longitude);
+                p_edit.putString("key_drop_address", drop_location_address);
+                p_edit.apply();
+
                 CommonMethods.getInstance().hideSoftKeyBoard(MainActivity.this);
                 overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
 
@@ -924,7 +879,7 @@ public class MainActivity extends AppCompatActivity implements
 
     //----------getCurrent Location-------------------------
     private void getMyLocation() {
-        //clearMap();
+        clearMap();
         latLng = new LatLng(current_latitude, current_longitude);
         A_address=getAddress(latLng);
         edt_pickup_location.setText(A_address);
@@ -989,40 +944,6 @@ public class MainActivity extends AppCompatActivity implements
         //  mGoogleApiClient.connect();
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        try {
-            if (location != null)
-                current_latitude = location.getLatitude();
-            assert location != null;
-            current_longitude = location.getLongitude();
-
-            GloableVariable.Tag_pickup_latitude=location.getLatitude();
-            GloableVariable.Tag_pickup_longitude=location.getLongitude();
-
-            if(is_check_pickup_or_drop==0) {
-                clearMap();
-                latLng = new LatLng(current_latitude, current_longitude);
-                A_address = getAddress(latLng);
-                edt_pickup_location.setText(A_address);
-                Tag_pickup_location_address=A_address;
-                MarkerOptions markerOptions = new MarkerOptions()
-                        .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.pick_location))
-                        .anchor(0.5f, 0.5f)
-                        .title(A_address);
-                mMap.addMarker(markerOptions);
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-            }
-
-
-
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -1045,17 +966,116 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+
+        edt_drop_location = findViewById(R.id.tv_drop_location);
+        edt_pickup_location = findViewById(R.id.tv_pickup_location);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+        //Pickup...................
+        pickup_latitude= Double.parseDouble(pref_pickup.getString("key_pickup_lat","1.2"));
+        pickup_longitude= Double.parseDouble(pref_pickup.getString("key_pickup_long","1.2"));
+        pickup_location_address=pref_pickup.getString("key_pickup_address","");
+        edt_pickup_location.setText(pickup_location_address);
+
+        GloableVariable.Tag_pickup_latitude=pickup_latitude;
+        GloableVariable.Tag_pickup_longitude=pickup_longitude;
+        GloableVariable.Tag_pickup_location_address=pickup_location_address;
+
+
+        //Drop.....................
+        drop_latitude= Double.parseDouble(pref_drop.getString("key_drop_lat","1.2"));
+        drop_longitude= Double.parseDouble(pref_drop.getString("key_drop_long","1.2"));
+        drop_location_address=pref_drop.getString("key_drop_address","");
+
+        GloableVariable.Tag_drop_latitude=drop_latitude;
+        GloableVariable.Tag_drop_longitude=drop_longitude;
+        GloableVariable.Tag_drop_location_address=drop_location_address;
+        edt_drop_location.setText(drop_location_address);
+
+
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }
+
+        checkInternetconnection();
+        if (AppController.getInstance() != null) {
+            AppController.getInstance().setConnectivityListener(this);
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        try {
+            if (location != null)
+
+                current_latitude = location.getLatitude();
+            assert location != null;
+            current_longitude = location.getLongitude();
+
+
+            if(is_check_pickup_or_drop==0) {
+                    if(pickup_location_address.isEmpty()) {
+
+                        pickup_latitude = location.getLatitude();
+                        pickup_longitude = location.getLongitude();
+                        clearMap();
+                        latLng = new LatLng(pickup_latitude, pickup_longitude);
+                        A_address = getAddress(latLng);
+                        edt_pickup_location.setText(A_address);
+                        pickup_location_address = A_address;
+                        MarkerOptions markerOptions = new MarkerOptions()
+                                .position(latLng)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.pick_location))
+                                .anchor(0.5f, 0.5f)
+                                .title(A_address);
+                        mMap.addMarker(markerOptions);
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+                    }
+                }
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         if (googleMap != null) {
             this.mMap = googleMap;
             MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style);
             this.mMap.setMapStyle(style);
-            clearMap();
-            if(is_check_pickup_or_drop!=0) {
+
+
+            if (is_check_pickup_or_drop == 1) {
                 showLocationOnmap();
             }
+            if (is_check_pickup_or_drop == 2) {
+                showLocationOnmap();
+            }
+            if (is_check_pickup_or_drop != 0) {
+                showLocationOnmap();
+            }
+
+           /* if(pickup_location_address.equals(""))
+              // getMyLocation();
+            }*/
         }
     }
+
 
     /*Poly Line Googe Map...*/
 
@@ -1069,17 +1089,9 @@ public class MainActivity extends AppCompatActivity implements
 
         clearMap();
         markerList = new ArrayList<>();
-
-        double  lattitude= GloableVariable.Tag_pickup_latitude;
-        double longitude= GloableVariable.Tag_pickup_longitude;
-
-        double  droplattitude= GloableVariable.Tag_drop_latitude;
-        double  dropLongitude= GloableVariable.Tag_drop_longitude;
-
-        addMarkere(lattitude, longitude, "", R.drawable.pin_location_pin);
-        addMarkere(droplattitude,dropLongitude, "", R.drawable.drop_location_pin);
-
-        prepareRouteUrl(lattitude,longitude ,droplattitude,dropLongitude);
+        addMarkere(pickup_latitude, pickup_longitude, "", R.drawable.pin_location_pin);
+        addMarkere(drop_latitude,drop_longitude, "", R.drawable.drop_location_pin);
+        prepareRouteUrl(pickup_latitude,pickup_longitude ,drop_latitude,drop_longitude);
     }
 
     public void addMarkere(Double lattitude, Double longitude, String title, int marker) {
@@ -1289,11 +1301,5 @@ public class MainActivity extends AppCompatActivity implements
             return poly;
         }
     }
-
-
-
-
-
-
 
 }

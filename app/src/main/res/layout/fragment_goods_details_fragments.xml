@@ -442,7 +442,6 @@
         </LinearLayout>
 
         <Button
-            android:visibility="gone"
             android:id="@+id/btn_save_booking"
             android:layout_width="match_parent"
             android:layout_below="@+id/date_time_container"

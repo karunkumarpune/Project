@@ -26,11 +26,24 @@ public class SplashActivity extends AppCompatActivity implements InternetConnect
     private CoordinatorLayout mCoordinatorLayout;
     private Snackbar snackbar;
 
+    private SharedPreferences pref_pickup;
+    private SharedPreferences pref_drop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        pref_pickup = getSharedPreferences("MyPickup", Context.MODE_PRIVATE);
+        pref_drop = getSharedPreferences("MyDrop", Context.MODE_PRIVATE);
+        SharedPreferences.Editor pic_edit = pref_pickup.edit();
+        pic_edit.clear();
+        pic_edit.apply();
+
+        SharedPreferences.Editor drop_edit = pref_drop.edit();
+        drop_edit.clear();
+        drop_edit.apply();
+
 
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d("Refreshed token", "Refreshed token: " + refreshedToken);

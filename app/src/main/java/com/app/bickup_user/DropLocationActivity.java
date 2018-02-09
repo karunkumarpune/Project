@@ -125,6 +125,13 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
     private String current_adress;
     private ScrollView scrollview;
 
+    private SharedPreferences pref_drop;
+    private double drop_latitude,drop_longitude;
+    private String drop_location_address;
+
+
+    private int isChekDrop=0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +140,10 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         is_check_pickup_or_drop=2;
 
         setContentView(R.layout.activity_pickup_location);
+
+        pref_drop = getSharedPreferences("MyDrop", Context.MODE_PRIVATE);
+
+
         initializeViews();
         initMap();
         GloableVariable.Tag_check_locaton_type=2;
@@ -218,7 +229,7 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
 
-
+                isChekDrop=1;
                 Place place = PlaceAutocomplete.getPlace(this, data);
                 address= (String) place.getAddress();
                 if(address.contains(",")) {
@@ -227,22 +238,16 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
                         address = array[0] + "," + array[1] + "," + array[2];
                     }catch (Exception e){}
                 }
+                address = (String) place.getAddress();
 
                 edtPickupLocation.setText(address);
                 LatLng latLng= place.getLatLng();
-                lattitude=latLng.latitude;
-                longitude=latLng.longitude;
-
-                Tag_drop_location_address=address;
-                GloableVariable.Tag_drop_latitude=latLng.latitude;
-                GloableVariable.Tag_drop_longitude=latLng.longitude;
-
+                drop_location_address=address;
+                drop_latitude=latLng.latitude;
+                drop_longitude=latLng.longitude;
                 clearMap();
                 imageMarker.setImageResource(R.drawable.ic_pin_drop);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-
-                address = (String) place.getAddress();
-                edtPickupLocation.setText(address);
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
             } else if (resultCode == RESULT_CANCELED) {}
@@ -375,6 +380,15 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
                     GloableVariable.Tag_drop_floor_number = florNumber;
                     GloableVariable.Tag_drop_unit_number = unitNumber;
                     GloableVariable.Tag_drop_location_check ="3";
+
+
+
+                    //Drop Location save..............
+                    SharedPreferences.Editor p_edit = pref_drop.edit();
+                    p_edit.putString("key_drop_lat", "" +drop_latitude);
+                    p_edit.putString("key_drop_long", "" + drop_longitude);
+                    p_edit.putString("key_drop_address",drop_location_address);
+                    p_edit.apply();
 
                 }
                 GloableVariable.Tag_drop_comments=edtComments.getText().toString().trim();
@@ -687,6 +701,17 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
 
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(isChekDrop==0) {
+            drop_latitude = Double.parseDouble(pref_drop.getString("key_drop_lat", "1.2"));
+            drop_longitude = Double.parseDouble(pref_drop.getString("key_drop_long", "1.2"));
+            drop_location_address = pref_drop.getString("key_drop_address", "");
+        }
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style);
@@ -695,12 +720,9 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         imageMarker.setImageResource(R.drawable.ic_pin_drop);
 
 
-        String add= Tag_drop_location_address;
-        if(!add.isEmpty()) {
+        if(!drop_location_address.isEmpty()) {
             edtPickupLocation.setText(Tag_drop_location_address);
-            double Latitude = GloableVariable.Tag_drop_latitude;
-            double Longitude = GloableVariable.Tag_drop_longitude;
-            Marker(Latitude, Longitude);
+            Marker();
         }else {
             clearMap();
             mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
@@ -710,8 +732,7 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
                         @Override
                         public void onCameraIdle() {
                             current_adress = onCameraPositionChanged_Pickup(mMap.getCameraPosition());
-                            address = current_adress;
-                            Tag_drop_location_address = current_adress;
+                            drop_location_address = current_adress;
                             edtPickupLocation.setText(current_adress);
 
                         }
@@ -824,7 +845,8 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
 
     //----------getCurrent Location-------------------------
     private void getMyLocation() {
-        Marker(current_latitude,current_longitude);
+        LatLng latLng = new LatLng(current_latitude, current_longitude);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
     }
 
 
@@ -835,8 +857,8 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
             Location mLocation = new Location("");
             mLocation.setLatitude(mCenterLatLong.latitude);
             mLocation.setLongitude(mCenterLatLong.longitude);
-            GloableVariable.Tag_drop_latitude=mCenterLatLong.latitude;
-            GloableVariable.Tag_drop_longitude=mCenterLatLong.longitude;
+            drop_latitude=mCenterLatLong.latitude;;
+            drop_longitude=mCenterLatLong.longitude;
             LatLng latLongs = new LatLng(mCenterLatLong.latitude, mCenterLatLong.longitude);
             String s = (getAddress(latLongs));
             if (s != null) {
@@ -850,50 +872,6 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
     }
 
 
-    private String onCameraPositionChanged_Drop(CameraPosition position) {
-        mCenterLatLong = position.target;
-        mMap.clear();
-        try {
-            Location mLocation = new Location("");
-            mLocation.setLatitude(mCenterLatLong.latitude);
-            mLocation.setLongitude(mCenterLatLong.longitude);
-            LatLng latLongs = new LatLng(mCenterLatLong.latitude, mCenterLatLong.longitude);
-            String s = (getAddress(latLongs));
-            if (s != null) {
-                return s;
-            }
-
-            return "";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    private void changeMap(Location location) {
-        Log.d(TAG, "Reaching map" + mMap);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-
-        if (mMap != null) {
-            mMap.getUiSettings().setZoomControlsEnabled(false);
-            LatLng latLong;
-            latLong = new LatLng(location.getLatitude(), location.getLongitude());
-            mMap.setMyLocationEnabled(false);
-            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLong, 15.0f));
-            LatLng latLongs = new LatLng(location.getLatitude(), location.getLongitude());
-            String s = (getAddress(latLongs));
-            if (s != null) {
-                Tag_drop_location_address = s;
-            }
-            //  edt_pickup_location.setText(GloableVariable.Tag_drop_location_address);
-        } else {
-            Toast.makeText(getApplicationContext(), "Sorry! unable to create maps", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     private String getAddress(LatLng location) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -952,12 +930,11 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
             assert location != null;
             current_longitude = location.getLongitude();
 
-            GloableVariable.Tag_drop_latitude=location.getLatitude();
-            GloableVariable.Tag_drop_longitude=location.getLongitude();
+            drop_latitude=location.getLatitude();
+            drop_longitude=location.getLongitude();
 
-            String add= Tag_drop_location_address;
-            if(add.isEmpty()) {
-                Marker(location.getLatitude(), location.getLongitude());
+            if(drop_location_address.isEmpty()) {
+                Marker();
             }
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
 
@@ -966,9 +943,8 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    private void Marker(double Latitude,double Longitude ){
+    private void Marker(){
         clearMap();
-
         mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
             @Override
             public void onCameraMove() {
@@ -976,17 +952,14 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     public void onCameraIdle() {
                         current_adress = onCameraPositionChanged_Pickup(mMap.getCameraPosition());
-                        address = current_adress;
-                        Tag_drop_location_address = current_adress;
-                        edtPickupLocation.setText(address);
-
+                        drop_location_address = current_adress;
+                        edtPickupLocation.setText(current_adress);
                     }
                 });
 
             }
         });
-
-        LatLng latLng = new LatLng(Latitude, Longitude);
+        LatLng latLng = new LatLng(drop_latitude, drop_longitude);
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
     }
 

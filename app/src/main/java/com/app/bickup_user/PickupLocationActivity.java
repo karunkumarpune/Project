@@ -67,7 +67,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import static com.app.bickup_user.GlobleVariable.GloableVariable.Tag_pickup_location_address;
 import static com.app.bickup_user.GlobleVariable.GloableVariable.is_check_pickup_or_drop;
 import static com.app.bickup_user.LoginActivity.REQUEST_LOGIN;
 
@@ -98,8 +97,7 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
     private LinearLayout liOther;
     private TextView imgSearch;
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
-    private double lattitude;
-    private double longitude;
+    private int isChekPickup=0;
     private String address;
     private TextView txtBuildingName;
     private LinearLayout liBuildingDetails;
@@ -215,42 +213,36 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
     protected void onResume() {
         super.onResume();
 
-       /* pickup_latitude= Double.parseDouble(pref_pickup.getString("key_pickup_lat","1.2"));
-        pickup_longitude= Double.parseDouble(pref_pickup.getString("key_pickup_long","1.2"));
-        pickup_location_address=pref_pickup.getString("key_pickup_address","1.2");
-
-        GloableVariable.Tag_pickup_latitude=pickup_latitude;
-        GloableVariable.Tag_pickup_longitude=pickup_longitude;
-        GloableVariable.Tag_pickup_location_address=pickup_location_address;*/
-
+        if(isChekPickup==0) {
+            pickup_latitude = Double.parseDouble(pref_pickup.getString("key_pickup_lat", "1.2"));
+            pickup_longitude = Double.parseDouble(pref_pickup.getString("key_pickup_long", "1.2"));
+            pickup_location_address = pref_pickup.getString("key_pickup_address", "");
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-
+                isChekPickup=1;
                 Place place = PlaceAutocomplete.getPlace(this, data);
               String  address= (String) place.getAddress();
                   if(address.contains(",")) {
                     String[] array = address.split(",", 3);
                     try {
                         address = array[0] + "," + array[1] + "," + array[2];
-                    }catch (Exception e){}
-                    }
+                    }catch (Exception ignored){}}
 
-                edtPickupLocation.setText(address);
-                LatLng latLng= place.getLatLng();
-                lattitude=latLng.latitude;
-                longitude=latLng.longitude;
-
+                 edtPickupLocation.setText(address);
+                 LatLng latLng= place.getLatLng();
                  pickup_location_address=address;
                  pickup_latitude=latLng.latitude;
                  pickup_longitude=latLng.longitude;
 
                 clearMap();
                 imageMarker.setImageResource(R.drawable.ic_pin_pickup);
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+                Marker();
+
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
             } else if (resultCode == RESULT_CANCELED) {
@@ -393,8 +385,7 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
                         isMe="1";
 
                     }
-                    prepareBooking(String.valueOf(lattitude),String.valueOf(longitude),buildingName,buildingName,florNumber,unitNumber,contactPersonName,contactPersonNumber,comment,isMe,locationtype);
-
+                    prepareBooking(String.valueOf(pickup_latitude),String.valueOf(pickup_longitude),buildingName,buildingName,florNumber,unitNumber,contactPersonName,contactPersonNumber,comment,isMe,locationtype);
 
                     if(GloableVariable.Tag_pickup_home_type.equals("2")){
                         GloableVariable.Tag_pickup_villa_no="";
@@ -435,20 +426,18 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         }
 
     }
-
     private void finishActivit() {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra(ConstantValues.LATITUDE,lattitude);
-        returnIntent.putExtra(ConstantValues.LONGITUDE,longitude);
+        returnIntent.putExtra(ConstantValues.LATITUDE,pickup_latitude);
+        returnIntent.putExtra(ConstantValues.LONGITUDE,pickup_longitude);
         returnIntent.putExtra(ConstantValues.ADDRESS,address);
         saveLocationToPreferenxes(returnIntent);
     }
-
     private void saveLocationToPreferenxes(Intent intent) {
         SharedPreferences sharedPreferences=getSharedPreferences(ConstantValues.USER_PREFERENCES,MODE_PRIVATE);
         SharedPreferences.Editor edit=sharedPreferences.edit();
-        edit.putString(ConstantValues.LATITUDE, String.valueOf(lattitude));
-        edit.putString(ConstantValues.LONGITUDE,String.valueOf(longitude));
+        edit.putString(ConstantValues.LATITUDE, String.valueOf(pickup_latitude));
+        edit.putString(ConstantValues.LONGITUDE,String.valueOf(pickup_longitude));
         edit.putString(ConstantValues.ADDRESS,address);
         boolean isSaved=edit.commit();
         if(isSaved) {
@@ -456,9 +445,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
             finish();
         }
     }
-
-
-
     private void openAutoComplePicker() {
         try {
             AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
@@ -477,8 +463,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         } catch (GooglePlayServicesNotAvailableException e) {
         }
     }
-
-
     public void  prepareBooking(final String lattitude, final String longitude,final String buildinName,final String villaNumber,String floorNumber,String unitNumber,String contactPersonName,String contactPersonNumber,String comments,String contact,String locationType) {
         String createUserUrl= WebAPIManager.getInstance().getSaveAddressUrl();
         final JsonObject requestBody=new JsonObject();
@@ -499,8 +483,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
 
         callAPI(requestBody,createUserUrl,this,60*1000,REQUEST_LOGIN);
     }
-
-
     private void callAPI(JsonObject requestBody, String createUserUrl, final NetworkCallBack loginActivity, int timeOut, final int requestCode) {
         circularProgressBar.setVisibility(View.VISIBLE);
         Ion.with(this)
@@ -547,7 +529,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
                     }
                 });
     }
-
     @Override
     public void onSuccess(JsonObject data, int requestCode, int statusCode) {
         ParseSaveBooking parseSaveBooking=new ParseSaveBooking();
@@ -707,12 +688,9 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         imageMarker.setImageResource(R.drawable.ic_pin_pickup);
 
 
-        String add=GloableVariable.Tag_pickup_location_address;
-        if(!add.isEmpty()) {
-            edtPickupLocation.setText(Tag_pickup_location_address);
-            double Latitude = GloableVariable.Tag_pickup_latitude;
-            double Longitude = GloableVariable.Tag_pickup_longitude;
-            Marker(Latitude, Longitude);
+        if(!pickup_location_address.isEmpty()) {
+            edtPickupLocation.setText(pickup_location_address);
+            Marker();
         }else {
             clearMap();
             mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
@@ -731,6 +709,88 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
                 }
             });
         }
+    }
+
+    private String onCameraPositionChanged_Pickup(CameraPosition position) {
+        mCenterLatLong = position.target;
+        try {
+            Location mLocation = new Location("");
+            mLocation.setLatitude(mCenterLatLong.latitude);
+            mLocation.setLongitude(mCenterLatLong.longitude);
+            pickup_latitude=mCenterLatLong.latitude;
+            pickup_longitude=mCenterLatLong.longitude;
+            LatLng latLongs = new LatLng(mCenterLatLong.latitude, mCenterLatLong.longitude);
+            String s = (getAddress(latLongs));
+            if (s != null) {
+                return s;
+            }
+            return "";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @Override
+    public void onLocationChanged(Location location) {
+        try {
+            if (location != null) {
+                if (!pickup_location_address.isEmpty()) {
+                    pickup_latitude = location.getLatitude();
+                    pickup_longitude = location.getLongitude();
+                } else {
+                    pickup_latitude = location.getLatitude();
+                    pickup_longitude = location.getLongitude();
+                    Marker();
+                }
+                LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+            }
+
+             /*  if(!GloableVariable.Tag_pickup_location_address.isEmpty()){
+                   double Latitude=GloableVariable.Tag_pickup_latitude;
+                   double Longitude=GloableVariable.Tag_pickup_longitude;
+                   Marker(Latitude,Longitude);
+               }else {
+                   Marker(location.getLatitude(),location.getLongitude());
+               }
+*/
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void Marker() {
+        clearMap();
+        LatLng latLng = new LatLng(pickup_latitude, pickup_longitude);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+
+        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+            @Override
+            public void onCameraMove() {
+                mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                    @Override
+                    public void onCameraIdle() {
+                        current_adress = onCameraPositionChanged_Pickup(mMap.getCameraPosition());
+                        pickup_location_address = current_adress;
+                        edtPickupLocation.setText(current_adress);
+
+                    }
+                });
+
+            }
+        });
+    }
+
+    //----------getCurrent Location-------------------------
+    private void getMyLocation() {
+        LatLng latLng = new LatLng(pickup_latitude, pickup_longitude);
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+    }
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
     //--------------------------start---Check Runtime Permissions--------------------
@@ -770,7 +830,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
             }
         }
     }
-
     //--------------------------end---Check Runtime Permissions--------------------
 //--------Ask----settings----------------
     private void askLocationSettings() {
@@ -814,7 +873,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         return true;
     }
 
-
     public static boolean isLocationEnabled(Context context) {
         int locationMode = 0;
         String locationProviders;
@@ -833,34 +891,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         }
     }
 
-    //----------getCurrent Location-------------------------
-    private void getMyLocation() {
-        Marker(current_latitude,current_longitude);
-    }
-
-
-    private String onCameraPositionChanged_Pickup(CameraPosition position) {
-        mCenterLatLong = position.target;
-       clearMap();
-        try {
-            Location mLocation = new Location("");
-            mLocation.setLatitude(mCenterLatLong.latitude);
-            mLocation.setLongitude(mCenterLatLong.longitude);
-            GloableVariable.Tag_pickup_latitude=mCenterLatLong.latitude;
-            GloableVariable.Tag_pickup_longitude=mCenterLatLong.longitude;
-            LatLng latLongs = new LatLng(mCenterLatLong.latitude, mCenterLatLong.longitude);
-            String s = (getAddress(latLongs));
-            if (s != null) {
-                return s;
-            }
-            return "";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
     private String getAddress(LatLng location) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         String address = "";
@@ -874,7 +904,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         }
         return address;
     }
-
     @Override
     public void onConnected(Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -910,59 +939,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         //  mGoogleApiClient.connect();
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        try {
-            if (location != null)
-                current_latitude = location.getLatitude();
-                current_longitude = location.getLongitude();
-
-
-
-
-             /*  if(!GloableVariable.Tag_pickup_location_address.isEmpty()){
-                   double Latitude=GloableVariable.Tag_pickup_latitude;
-                   double Longitude=GloableVariable.Tag_pickup_longitude;
-                   Marker(Latitude,Longitude);
-                   LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-               }else {
-                   Marker(location.getLatitude(),location.getLongitude());
-               }
-*/
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void Marker(double Latitude,double Longitude ){
-        clearMap();
-
-        mMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-            @Override
-            public void onCameraMove() {
-                mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-                    @Override
-                    public void onCameraIdle() {
-                        current_adress = onCameraPositionChanged_Pickup(mMap.getCameraPosition());
-                        pickup_location_address = current_adress;
-                        edtPickupLocation.setText(current_adress);
-
-                    }
-                });
-
-            }
-        });
-
-        LatLng latLng = new LatLng(Latitude, Longitude);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-    }
-
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -970,7 +946,6 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
                 .addApi(LocationServices.API)
                 .build();
     }
-
     @Override
     protected void onStop() {
         super.onStop();
