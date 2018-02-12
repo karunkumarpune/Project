@@ -55,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/label_pickup_location_dialog">
                     <TextView
-                        android:id="@+id/btn_pickup"
+                        android:id="@+id/btn_tag_pickup"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@+id/txt_helper"
@@ -114,7 +114,7 @@
 
 
                     <TextView
-                        android:id="@+id/btn_drop"
+                        android:id="@+id/btn_tag_drop"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@+id/txt_helper"

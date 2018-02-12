@@ -162,6 +162,9 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
     }
 
 
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -202,9 +205,6 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
 
         GloableVariable.Tag_helper="1";
         GloableVariable.Tag_Good_Details_Comming_time_type="1";
-
-
-
 
     }
     //--------------------------Calender-------------------------------
@@ -404,7 +404,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                 openDialog.dismiss();
 
                 Log.d("TAGS Time",add_date_time +"    "+add_hours+":"+ add_mit);
-                GloableVariable.Tag_Good_Details_Comming_Date_time=add_date_time +"  "+add_hours+":"+ add_mit;
+                GloableVariable.Tag_Good_Details_Comming_Date_time=add_date_time +" - "+add_hours+":"+ add_mit;
                 String[] parsedate= add_date_time.split("/");
                 Calendar c = Calendar.getInstance();
                 c.set(Integer.parseInt(parsedate[2]),
@@ -416,7 +416,11 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                 GloableVariable.Tag_Good_Details_Comming_Date_time_Stamp=timestamp;
 
                 if (GloableVariable.Tag_Good_Details_Comming_time_type.equals("2")){
-                    txtdateTime_.setText(GloableVariable.Tag_Good_Details_Comming_Date_time);
+
+                    txtdateTime_.setVisibility(View.VISIBLE);
+                    txtdateTime_.setText("Schedule Booking : "+GloableVariable.Tag_Good_Details_Comming_Date_time);
+
+
                    // Save();
                 }
 
@@ -518,10 +522,11 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                 btnComeNow.setTextColor(mActivityReference.getResources().getColor(R.color.grey_text_color));
                 btnComeLater.setTextColor(mActivityReference.getResources().getColor(R.color.white));
 
-                String date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+                String date = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(new Date());
                 GloableVariable.Tag_Good_Details_Comming_Date_time=date;
                 GloableVariable.Tag_Good_Details_Comming_time_type="1";
-                txtdateTime_.setText(date);
+                txtdateTime_.setVisibility(View.VISIBLE);
+                txtdateTime_.setText("Current Booking : "+date);
 
             }
         });
@@ -570,12 +575,15 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         btnSaveBooking.setTypeface(mTypefaceRegular);
 
 
-        String date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
+        String date = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(new Date());
         GloableVariable.Tag_Good_Details_Comming_Date_time=date;
 
         Long tsLong = System.currentTimeMillis()/1000;
         GloableVariable.Tag_Good_Details_Comming_Date_time_Stamp=tsLong;
-        txtdateTime_.setText(date);
+        txtdateTime_.setText("Current Booking : "+date);
+
+
+
     }
 
     private void setImagesList() {
@@ -691,6 +699,8 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
 
                 break;
             case R.id.btn_come_later:
+
+
 
                 btnComeLater.setBackgroundColor(mActivityReference.getResources().getColor(R.color.white));
                 btnComeNow.setBackground(mActivityReference.getResources().getDrawable(R.drawable.sm_btn));

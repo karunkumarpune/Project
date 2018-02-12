@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private Context mContext;
     private TextView edt_pickup_location,edt_drop_location;
+    private TextView btn_tag_pickup,btn_tag_drop;
+
     private ImageView btn_current_location,search_pickup,search_drop;
     private double current_latitude = 0.0;
     private double current_longitude = 0.0;
@@ -169,6 +171,8 @@ public class MainActivity extends AppCompatActivity implements
         edt_pickup_location = findViewById(R.id.tv_pickup_location);
         edt_drop_location = findViewById(R.id.tv_drop_location);
 
+        btn_tag_pickup = findViewById(R.id.btn_tag_pickup);
+        btn_tag_drop = findViewById(R.id.btn_tag_drop);
 
         search_pickup = findViewById(R.id.search_pickup);
         search_drop = findViewById(R.id.search_drop);
@@ -353,6 +357,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onClick(View view) {
         int id = view.getId();
+        String pickup=edt_pickup_location.getText().toString();
+        String drop=edt_drop_location.getText().toString();
         switch (id) {
             case R.id.rl_small_traveller:
                 prepareGetFareDetails(String.valueOf(GloableVariable.Tag_pickup_latitude),
@@ -369,11 +375,22 @@ public class MainActivity extends AppCompatActivity implements
 
                 setLayoutForLargetraveller();
                 break;
-            case R.id.btn_submit_small:
+        case R.id.btn_submit_small:
+            if(pickup.isEmpty()){
+                buildDialog(R.style.DialogAnimation, "Please choose Pickup Location");
+            }else if (drop.isEmpty()){
+                buildDialog(R.style.DialogAnimation, "Please choose drop Location");
+            }else
                 showPopUp(1);
                 break;
             case R.id.btn_submit_large:
-                showPopUp(0);
+                if(pickup.isEmpty()){
+                    buildDialog(R.style.DialogAnimation, "Please choose Pickup Location");
+                }else if (drop.isEmpty()){
+                    buildDialog(R.style.DialogAnimation, "Please choose drop Location");
+                }else
+                    showPopUp(0);
+
                 break;
             case R.id.navigation_menu:
                 if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
@@ -446,9 +463,39 @@ public class MainActivity extends AppCompatActivity implements
                 break;
         }
 
+
+
     }
 
-//--------------------Booking Show Popup--------------------------
+    private void buildDialog(int animationSource, String type) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(type);
+        builder.setNegativeButton("OK", null);
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().getAttributes().windowAnimations = animationSource;
+        dialog.show();
+    }
+
+   /*
+
+    What is multithreading?
+
+    What is the difference between Process and Thread?
+
+   What are the benefits of multi-threaded programming?
+
+   Can we call run() method of a Thread class?
+
+   Why thread communication methods wait(), notify() and notifyAll() are in Object class?
+
+   Why wait(), notify() and notifyAll() methods have to be called from synchronized method or block?
+
+  What is difference between user Thread and daemon Thread?
+
+  Which is more preferred – Synchronized method or Synchronized block?
+*/
+
+    //--------------------Booking Show Popup--------------------------
     private void showPopUp(int choosetraveller) {
         final Dialog openDialog = new Dialog(mActivityreference);
         openDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -733,22 +780,43 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
+        btn_tag_pickup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PickupSend();
+            }
+        });
+
+
+        btn_tag_drop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DropSend();
+            }
+        });
+
+
+
+
+        edt_pickup_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PickupSend();
+            }
+        });
+
+
+        edt_drop_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DropSend();
+            }
+        });
+
         search_pickup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                startActivity(new Intent(MainActivity.this, PickupLocationActivity.class));
-
-                //Pickup Location save..............
-                SharedPreferences.Editor p_edit = pref_pickup.edit();
-                p_edit.putString("key_pickup_lat", "" + pickup_latitude);
-                p_edit.putString("key_pickup_long", "" + pickup_longitude);
-                p_edit.putString("key_pickup_address", pickup_location_address);
-                p_edit.apply();
-
-                CommonMethods.getInstance().hideSoftKeyBoard(MainActivity.this);
-                overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
-
+                PickupSend();
             }
         });
 
@@ -756,23 +824,43 @@ public class MainActivity extends AppCompatActivity implements
         search_drop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, DropLocationActivity.class));
-
-                //Drop Location save..............
-                SharedPreferences.Editor p_edit = pref_drop.edit();
-                p_edit.putString("key_drop_lat", "" + drop_latitude);
-                p_edit.putString("key_drop_long", "" + drop_longitude);
-                p_edit.putString("key_drop_address", drop_location_address);
-                p_edit.apply();
-
-                CommonMethods.getInstance().hideSoftKeyBoard(MainActivity.this);
-                overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
-
+                DropSend();
             }
         });
 
 
 
+
+
+    }
+
+    private void PickupSend(){
+        startActivity(new Intent(MainActivity.this, PickupLocationActivity.class));
+
+        //Pickup Location save..............
+        SharedPreferences.Editor p_edit = pref_pickup.edit();
+        p_edit.putString("key_pickup_lat", "" + pickup_latitude);
+        p_edit.putString("key_pickup_long", "" + pickup_longitude);
+        p_edit.putString("key_pickup_address", pickup_location_address);
+        p_edit.apply();
+
+        CommonMethods.getInstance().hideSoftKeyBoard(MainActivity.this);
+        overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
+
+    }
+
+    private void DropSend(){
+        startActivity(new Intent(MainActivity.this, DropLocationActivity.class));
+
+        //Drop Location save..............
+        SharedPreferences.Editor p_edit = pref_drop.edit();
+        p_edit.putString("key_drop_lat", "" + drop_latitude);
+        p_edit.putString("key_drop_long", "" + drop_longitude);
+        p_edit.putString("key_drop_address", drop_location_address);
+        p_edit.apply();
+
+        CommonMethods.getInstance().hideSoftKeyBoard(MainActivity.this);
+        overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
 
 
     }

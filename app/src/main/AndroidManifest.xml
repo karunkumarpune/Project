@@ -10,13 +10,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-library android:name="com.google.android.maps"/>
-
+    <uses-library android:name="com.google.android.maps" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -24,18 +23,17 @@
     <uses-feature android:name="android.hardware.location.gps" />
 
     <application
-        android:name="com.app.bickup_user.controller.AppController"
+        android:name=".controller.AppController"
         android:allowBackup="true"
-        android:largeHeap="true"
-        tools:replace="allowBackup"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="allowBackup">
 
-<!--
-
+        <!--
         <activity
             android:name="com.app.bickup_user.poly.maplocation.MapsActivity"
             android:label="@string/title_activity_maps">
@@ -48,11 +46,11 @@
         <service
             android:name="com.app.bickup_user.poly.maplocation.FetchAddressIntentService"
             android:exported="false" />
--->
+        -->
 
 
-
-      <!--  <activity
+        <!--
+        <activity
             android:name="com.app.bickup_user.soket.SoketMain"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -63,8 +61,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
--->
-<!--
+        -->
+        <!--
         <activity
             android:name="com.app.bickup_user.map_demo.SearchPolyline.SearchDrawPolyline"
             android:label="@string/app_name"
@@ -79,9 +77,10 @@
 
         <activity android:name="com.app.bickup_user.map_demo.GetDetaisActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            />-->
+            />
+        -->
 
-      <activity
+        <activity
             android:name="com.app.bickup_user.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -92,79 +91,71 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name="com.app.bickup_user.pic.HiddenActivity"
+            android:name=".pic.HiddenActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
         <activity
             android:name=".ZoomActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/custome_zoom"
-            />
-
+            android:theme="@style/custome_zoom" />
         <activity
-            android:name="com.app.bickup_user.utility.select.MainActivity"
+            android:name=".utility.select.MainActivity"
             android:label="@string/title_activity_base"
             android:theme="@style/AppTheme" />
-
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name="com.app.bickup_user.MainActivity"
-            android:screenOrientation="portrait"
+            android:name=".MainActivity"
             android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <service android:name=".track_driver.MyLocationService"/>
+        <service android:name=".track_driver.MyLocationService" />
 
-<!--  Push Notification- -->
+        <!-- Push Notification- -->
 
         <service android:name=".push_notification.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name=".push_notification.FirebaseIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
         <activity
-            android:name="com.app.bickup_user.TrackDriverActivity"
+            android:name=".TrackDriverActivity"
             android:screenOrientation="portrait" />
 
-
-        <!--  Push Notification- -->
+        <!-- Push Notification- -->
         <activity
-            android:name="com.app.bickup_user.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="stateHidden|adjustResize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
         <receiver
-            android:name="com.app.bickup_user.broadcastreciever.InternetConnectionBroadcast"
+            android:name=".broadcastreciever.InternetConnectionBroadcast"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
-
         <service android:name=".FirebaseIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
@@ -173,66 +164,69 @@
             android:label="@string/title_activity_base"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.app.bickup_user.ResetAndForgetPasswordActivity"
+            android:name=".ResetAndForgetPasswordActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.app.bickup_user.TypesGoods"
+            android:name=".TypesGoods"
             android:screenOrientation="portrait" />
-
         <activity
             android:name="com.app.GoodsActivity"
             android:screenOrientation="portrait" />
-
         <activity
-            android:name="com.app.bickup_user.select.MainActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name="com.app.bickup_user.GoodsActivity"
+            android:name=".select.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.app.bickup_user.DeliveryActivity"
+            android:name=".GoodsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DeliveryActivity"
             android:label="@string/title_activity_delivery"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.app.bickup_user.ScheduledActivity"
+            android:name=".ScheduledActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.app.bickup_user.SettingActivity"
+            android:name=".SettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.app.bickup_user.PickupLocationActivity"
+            android:name=".PickupLocationActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            />
+            android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.app.bickup_user.InviteAndEarn"
+            android:name=".InviteAndEarn"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.app.bickup_user.EditProfileActivity"
+            android:name=".EditProfileActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".RatedriverActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.app.bickup_user.ShopkeeperMainActivity"
+            android:name=".ShopkeeperMainActivity"
             android:label="@string/title_activity_shopkeeper_main"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
-            android:name="com.app.bickup_user.DropLocationActivity"
-            android:label="@string/txt_drop"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
-        <activity
-            android:name="com.app.bickup_user.CMSActivity"
+            android:name=".DropLocationActivity"
             android:label="@string/txt_drop"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".CMSActivity"
+            android:label="@string/txt_drop"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <service
+            android:name=".service.MyService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".service.ServicesActivity"></activity>
     </application>
 
 </manifest>

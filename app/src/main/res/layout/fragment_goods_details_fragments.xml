@@ -18,19 +18,32 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:id="@+id/img_container"
-
             android:visibility="visible"
             android:background="#ffffff"
-            android:paddingStart="20dp"
+            android:paddingStart="0dp"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_marginLeft="@dimen/dp_10"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/img_upload_image"
+                android:src="@drawable/product_placeholder"
+                android:layout_alignParentEnd="true"/>
             
             <android.support.v7.widget.RecyclerView
+                android:layout_marginLeft="@dimen/dp_10"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginTop="10dp"
-                android:id="@+id/recyclerImages">
+                android:layout_height="wrap_content"
+                android:id="@+id/recyclerImages"/>
 
-            </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
 
             <HorizontalScrollView
             android:id="@+id/hsv"
@@ -90,15 +103,7 @@
                 android:layout_marginBottom="10dp" />
         </RelativeLayout>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/img_upload_image"
-            android:layout_below="@+id/img_container"
-            android:layout_marginTop="-28dp"
-            android:layout_marginEnd="5dp"
-            android:src="@drawable/upload_img"
-            android:layout_alignParentEnd="true"/>
+
         <!-- <android.support.v7.widget.RecyclerView
              android:layout_width="match_parent"
              android:layout_height="wrap_content">
@@ -426,12 +431,12 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_marginTop="12dp"
-
                 android:layout_height="1dp"
                 android:background="@color/screen_background"></View>
 
 
             <TextView
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_marginTop="5dp"
                 android:textSize="@dimen/medium_text"

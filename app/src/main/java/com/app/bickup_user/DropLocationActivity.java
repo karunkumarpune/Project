@@ -389,10 +389,10 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
                     p_edit.putString("key_drop_long", "" + drop_longitude);
                     p_edit.putString("key_drop_address",drop_location_address);
                     p_edit.apply();
-
+                    finishActivit();
                 }
                 GloableVariable.Tag_drop_comments=edtComments.getText().toString().trim();
-                finishActivit();
+
                 break;
 
         }
