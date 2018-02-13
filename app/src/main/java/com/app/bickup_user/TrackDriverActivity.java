@@ -584,12 +584,11 @@ public class TrackDriverActivity extends AppCompatActivity implements OnMapReady
         builder.include(new LatLng(v.getPosition().latitude, v.getPosition().longitude));
         builder.include(new LatLng(parseDouble.getPosition().latitude, parseDouble.getPosition().longitude));
         LatLngBounds bounds = builder.build();
-        googleMap.setPadding(200, 200, 100, 600);
+        googleMap.setPadding(200, 200, 200, 700);
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(v.getPosition().latitude, v.getPosition().longitude)).zoom(15).tilt(60).bearing(90).build();
+                .target(new LatLng(v.getPosition().latitude, v.getPosition().longitude)).zoom(5).tilt(90).bearing(50).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 10);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
         googleMap.moveCamera(cu);
     }
 

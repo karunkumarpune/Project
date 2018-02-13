@@ -1,5 +1,6 @@
 package com.app.bickup_user;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +18,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private ImageView imgBack;
     private SharedPreferences Image_Sp;
     private SharedPreferences Image_Sp1;
+
+    private SharedPreferences pref_pickup;
+    private SharedPreferences pref_drop;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,17 +59,24 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.btn_logout:
 
-             SharedPreferences.Editor editor=Image_Sp.edit();
+                pref_pickup = getSharedPreferences("MyPickup", Context.MODE_PRIVATE);
+                pref_drop = getSharedPreferences("MyDrop", Context.MODE_PRIVATE);
+                SharedPreferences.Editor pic_edit = pref_pickup.edit();
+                pic_edit.clear();
+                pic_edit.apply();
+
+                SharedPreferences.Editor drop_edit = pref_drop.edit();
+                drop_edit.clear();
+                drop_edit.apply();
+
+
+                 SharedPreferences.Editor editor=Image_Sp.edit();
                 editor.clear();
-                editor.commit();
+                editor.apply();
 
                 SharedPreferences.Editor editor1=Image_Sp1.edit();
                 editor1.clear();
-
-
-
-
-                editor1.commit();
+                editor1.apply();
 
                 GloableVariable.Tag_drop_location_check="";
                 GloableVariable.Tag_pickup_location_address="";

@@ -1090,11 +1090,21 @@ public class MainActivity extends AppCompatActivity implements
         GloableVariable.Tag_drop_latitude=drop_latitude;
         GloableVariable.Tag_drop_longitude=drop_longitude;
         GloableVariable.Tag_drop_location_address=drop_location_address;
-        edt_drop_location.setText(drop_location_address);
 
 
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
+        }
+
+
+        if (is_check_pickup_or_drop == 1) {
+            edt_pickup_location.setText(pickup_location_address);
+        }
+        if (is_check_pickup_or_drop == 2) {
+            edt_drop_location.setText(drop_location_address);
+        }
+        if (is_check_pickup_or_drop != 0) {
+            showLocationOnmap();
         }
 
         checkInternetconnection();
@@ -1204,11 +1214,11 @@ public class MainActivity extends AppCompatActivity implements
         builder.include(new LatLng(v.getPosition().latitude, v.getPosition().longitude));
         builder.include(new LatLng(parseDouble.getPosition().latitude, parseDouble.getPosition().longitude));
         LatLngBounds bounds = builder.build();
-        mMap.setPadding(200, 450, 200, 400);
+        mMap.setPadding(200, 650, 200, 590);
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(v.getPosition().latitude, v.getPosition().longitude)).zoom(11).tilt(40).bearing(50).build();
+                .target(new LatLng(v.getPosition().latitude, v.getPosition().longitude)).zoom(5).tilt(90).bearing(150).build();
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 10);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
         mMap.moveCamera(cu);
     }
 

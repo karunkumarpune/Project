@@ -153,6 +153,15 @@
             </intent-filter>
         </receiver>
 
+
+        <receiver android:name="com.app.bickup_user.service.My">
+            <intent-filter>
+                <action android:name="android.intent.action.CAMERA_BUTTON"/>
+            </intent-filter>
+        </receiver>
+
+
+
         <service android:name=".FirebaseIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -221,12 +230,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 
-        <service
-            android:name=".service.MyService"
-            android:enabled="true"
-            android:exported="true" />
 
-        <activity android:name=".service.ServicesActivity"></activity>
     </application>
 
 </manifest>

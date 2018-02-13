@@ -156,6 +156,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
     private String time_Stamp_month;
     private String time_Stamp_year;
     private String time_Stamp_day;
+    private boolean isCheckButton=false;
 
     public GoodsDetailsFragments() {
         // Required empty public constructor
@@ -199,7 +200,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         if(image_id.equals("123")) {
 
         }else {
-            listImagesGoods.add(bitmap1);
+          //  listImagesGoods.add(bitmap1);
         }
 
 
@@ -515,6 +516,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
             @Override
             public void onClick(View view) {
                // Save();
+                isCheckButton=true;
 
                 btnComeNow.setBackgroundColor(mActivityReference.getResources().getColor(R.color.white));
                 btnComeLater.setBackground(mActivityReference.getResources().getDrawable(R.drawable.sm_btn));
@@ -629,6 +631,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
     public void onResume() {
         super.onResume();
 
+
         Image_Sp = getActivity().getSharedPreferences("Image_Sp", 0);
         Image_Data=Image_Sp.getString("Image_Array","");
         image_id=Image_Sp.getString("image_id","");
@@ -671,6 +674,10 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         int id = view.getId();
         switch (id) {
             case R.id.btn_save_booking:
+
+                if(!isCheckButton){
+                    buildDialog(R.style.DialogAnimation, "Please choose Coming Time");
+                }else
                 Save();
                /* try {
                     listImagesGoods.remove(bitmap1);
@@ -699,9 +706,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
 
                 break;
             case R.id.btn_come_later:
-
-
-
+                isCheckButton=true;
                 btnComeLater.setBackgroundColor(mActivityReference.getResources().getColor(R.color.white));
                 btnComeNow.setBackground(mActivityReference.getResources().getDrawable(R.drawable.sm_btn));
 
@@ -785,7 +790,14 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         }
 
     }
-
+    private void buildDialog(int animationSource, String type) {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+        builder.setMessage(type);
+        builder.setNegativeButton("OK", null);
+        android.support.v7.app.AlertDialog dialog = builder.create();
+        dialog.getWindow().getAttributes().windowAnimations = animationSource;
+        dialog.show();
+    }
     private void Save(){
         handlerGoodsNavigations = mActivityReference;
         try {
