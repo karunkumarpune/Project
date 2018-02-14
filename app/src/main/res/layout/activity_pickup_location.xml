@@ -107,7 +107,7 @@
         <RelativeLayout
             android:id="@+id/rl_mapview"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="300dp"
             android:layout_below="@+id/rl_pickup_location"
             android:background="#ffffff">
 
@@ -244,7 +244,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/btn_layout"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="7dp">
 
                     <TextView
                         android:id="@+id/txt_building_name"
@@ -500,7 +500,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/tv_forgot_heading"
-                                android:layout_marginTop="10dp"
+                                android:layout_marginTop="7dp"
                                 android:clipToPadding="false"
                                 app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
 

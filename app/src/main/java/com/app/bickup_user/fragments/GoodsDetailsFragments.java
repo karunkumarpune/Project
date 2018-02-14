@@ -518,11 +518,21 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                // Save();
                 isCheckButton=true;
 
-                btnComeNow.setBackgroundColor(mActivityReference.getResources().getColor(R.color.white));
-                btnComeLater.setBackground(mActivityReference.getResources().getDrawable(R.drawable.sm_btn));
+                btnComeNow.setBackground(mActivityReference.getResources().getDrawable(R.drawable.sm_btn));
+                btnComeLater.setBackgroundColor(mActivityReference.getResources().getColor(R.color.white));
 
-                btnComeNow.setTextColor(mActivityReference.getResources().getColor(R.color.grey_text_color));
-                btnComeLater.setTextColor(mActivityReference.getResources().getColor(R.color.white));
+                btnComeNow.setTextColor(mActivityReference.getResources().getColor(R.color.white));
+                btnComeLater.setTextColor(mActivityReference.getResources().getColor(R.color.grey_text_color));
+
+
+
+
+
+
+
+
+
+
 
                 String date = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(new Date());
                 GloableVariable.Tag_Good_Details_Comming_Date_time=date;
@@ -675,9 +685,9 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         switch (id) {
             case R.id.btn_save_booking:
 
-                if(!isCheckButton){
-                    buildDialog(R.style.DialogAnimation, "Please choose Coming Time");
-                }else
+             //   if(!isCheckButton){
+                   // buildDialog(R.style.DialogAnimation, "Please choose Coming Time");
+              //  }else
                 Save();
                /* try {
                     listImagesGoods.remove(bitmap1);
@@ -707,11 +717,17 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                 break;
             case R.id.btn_come_later:
                 isCheckButton=true;
-                btnComeLater.setBackgroundColor(mActivityReference.getResources().getColor(R.color.white));
-                btnComeNow.setBackground(mActivityReference.getResources().getDrawable(R.drawable.sm_btn));
 
-                btnComeLater.setTextColor(mActivityReference.getResources().getColor(R.color.grey_text_color));
-                btnComeNow.setTextColor(mActivityReference.getResources().getColor(R.color.white));
+
+                btnComeLater.setBackground(mActivityReference.getResources().getDrawable(R.drawable.sm_btn));
+                btnComeNow.setBackgroundColor(mActivityReference.getResources().getColor(R.color.white));
+
+                btnComeLater.setTextColor(mActivityReference.getResources().getColor(R.color.white));
+                btnComeNow.setTextColor(mActivityReference.getResources().getColor(R.color.grey_text_color));
+
+
+
+
 
 
                 showPopUp(0);

@@ -421,10 +421,10 @@
                         android:text="@string/txt_coming_later"
                         android:paddingBottom="10dp"
                         android:gravity="center"
-                        android:textColor="#ffffff"
+                        android:textColor="#000000"
                         android:textSize="@dimen/medium_text"
                         android:layout_height="70dp"
-                        android:background="@drawable/sm_btn"
+                        android:background="@color/white"
                         />
             </LinearLayout>
 
@@ -436,7 +436,6 @@
 
 
             <TextView
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_marginTop="5dp"
                 android:textSize="@dimen/medium_text"
