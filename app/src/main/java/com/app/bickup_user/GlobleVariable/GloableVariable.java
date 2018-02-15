@@ -24,6 +24,9 @@ public class GloableVariable {
 
 
     public static int is_check_pickup_or_drop = 0;
+    public static int is_check_image_product = 0;
+
+    public static int is_check_button_comeNow = 0;
 
     public static String Tag_drop_location_check="";
 

@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -159,6 +160,7 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         TextView txtPickup = (TextView) findViewById(R.id.txt_pickup);
         TextView labelFeilddetails = (TextView) findViewById(R.id.txt_label_filldetails);
         labelFeilddetails.setText(getResources().getString(R.string.txt_please_fill_drop_location_details));
+        RelativeLayout search_container=(RelativeLayout)findViewById(R.id.search_container);
 
         TextView labelDropContacts = (TextView) findViewById(R.id.txt_label_fill_contact_details);
         labelDropContacts.setText(getResources().getString(R.string.txt_please_fill_drop_contact_details));
@@ -218,7 +220,33 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         GloableVariable.Tag_drop_contact_name=User.getInstance().getFirstName()+" "+User.getInstance().getLastName();
         GloableVariable.Tag_drop_contact_number=User.getInstance().getMobileNumber();
 
-      //  address=GloableVariable.Tag_drop_location_address;
+
+        //----------------------------
+        edtPickupLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                CommonMethods.getInstance().hideSoftKeyBoard(DropLocationActivity.this);
+                openAutoComplePicker();
+            }
+        });
+
+        search_container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                CommonMethods.getInstance().hideSoftKeyBoard(DropLocationActivity.this);
+                openAutoComplePicker();
+            }
+        });
+
+
+
+
+
+
+
+        //  address=GloableVariable.Tag_drop_location_address;
         edtPickupLocation.setText(address);
 
 

@@ -28,9 +28,9 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,6 +85,9 @@ import java.util.List;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
+import static com.app.bickup_user.GlobleVariable.GloableVariable.Tag_Good_Details_Comming_Date_time_Stamp;
+import static com.app.bickup_user.GlobleVariable.GloableVariable.is_check_button_comeNow;
+import static com.app.bickup_user.GlobleVariable.GloableVariable.is_check_image_product;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 
@@ -138,7 +141,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
     private GoodAddAdapter goodAddAdapter;
     private ArrayList<Bitmap> listImagesGoods;
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    private int imagecount = 0;
+    public static int imagecount = 0;
 
 
 
@@ -157,6 +160,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
     private String time_Stamp_year;
     private String time_Stamp_day;
     private boolean isCheckButton=false;
+    private String datetimeString;
 
     public GoodsDetailsFragments() {
         // Required empty public constructor
@@ -414,13 +418,15 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                         Integer.parseInt(add_hours),
                         Integer.parseInt(add_mit));
                 long timestamp = c.getTimeInMillis();
-                GloableVariable.Tag_Good_Details_Comming_Date_time_Stamp=timestamp;
+                Tag_Good_Details_Comming_Date_time_Stamp=timestamp;
 
                 if (GloableVariable.Tag_Good_Details_Comming_time_type.equals("2")){
 
                     txtdateTime_.setVisibility(View.VISIBLE);
-                    txtdateTime_.setText("Schedule Booking : "+GloableVariable.Tag_Good_Details_Comming_Date_time);
-
+                    datetimeString = DateFormat.format("dd-MM-yyyy hh:mm a", new Date(Tag_Good_Details_Comming_Date_time_Stamp)).toString();
+                    String  timeString = datetimeString.substring(11);
+                    String   dateString = datetimeString.substring(0,10);
+                    txtdateTime_.setText("Schedule Booking : " + timeString +" / "+dateString);
 
                    // Save();
                 }
@@ -474,7 +480,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         }
 
         GloableVariable.Tag_Good_Details_Description=edtDescription.getText().toString();
-
+        is_check_image_product=1;
         return view;
     }
 
@@ -512,6 +518,63 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         btnComeLater.setTag(false);
 
 
+        if(is_check_button_comeNow==1){
+
+            isCheckButton=true;
+
+            btnComeNow.setBackground(mActivityReference.getResources().getDrawable(R.drawable.sm_btn));
+            btnComeLater.setBackgroundColor(mActivityReference.getResources().getColor(R.color.white));
+
+            btnComeNow.setTextColor(mActivityReference.getResources().getColor(R.color.white));
+            btnComeLater.setTextColor(mActivityReference.getResources().getColor(R.color.grey_text_color));
+
+            is_check_button_comeNow=1;
+            GloableVariable.Tag_Good_Details_Comming_time_type="1";
+
+            if (GloableVariable.Tag_Good_Details_Comming_time_type.equals("1")) {
+                String date = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(new Date());
+                GloableVariable.Tag_Good_Details_Comming_Date_time = date;
+                txtdateTime_.setVisibility(View.VISIBLE);
+
+                Long tsLong = System.currentTimeMillis();
+                String ts = tsLong.toString();
+                long millisecond = Long.parseLong(ts);
+                datetimeString = DateFormat.format("dd-MM-yyyy hh:mm a", new Date(millisecond)).toString();
+                String  timeString = datetimeString.substring(11);
+                String   dateString = datetimeString.substring(0,10);
+                txtdateTime_.setText("Current Booking : " + timeString +" / "+dateString);
+
+            }
+
+
+        }
+        if(is_check_button_comeNow==2){
+
+            is_check_button_comeNow=2;
+            GloableVariable.Tag_Good_Details_Comming_time_type="2";
+            btnComeLater.setBackground(mActivityReference.getResources().getDrawable(R.drawable.sm_btn));
+            btnComeNow.setBackgroundColor(mActivityReference.getResources().getColor(R.color.white));
+
+            btnComeLater.setTextColor(mActivityReference.getResources().getColor(R.color.white));
+            btnComeNow.setTextColor(mActivityReference.getResources().getColor(R.color.grey_text_color));
+
+
+            if (GloableVariable.Tag_Good_Details_Comming_time_type.equals("2")){
+                txtdateTime_.setVisibility(View.VISIBLE);
+
+                datetimeString = DateFormat.format("dd-MM-yyyy hh:mm a", new Date(Tag_Good_Details_Comming_Date_time_Stamp)).toString();
+                String  timeString = datetimeString.substring(11);
+                String   dateString = datetimeString.substring(0,10);
+                txtdateTime_.setText("Schedule Booking : " + timeString +" / "+dateString);
+
+
+            }
+
+            //   showPopUp(0);
+
+        }
+
+
         btnComeNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -524,21 +587,22 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                 btnComeNow.setTextColor(mActivityReference.getResources().getColor(R.color.white));
                 btnComeLater.setTextColor(mActivityReference.getResources().getColor(R.color.grey_text_color));
 
-
-
-
-
-
-
-
-
-
-
-                String date = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(new Date());
-                GloableVariable.Tag_Good_Details_Comming_Date_time=date;
+                is_check_button_comeNow=1;
                 GloableVariable.Tag_Good_Details_Comming_time_type="1";
-                txtdateTime_.setVisibility(View.VISIBLE);
-                txtdateTime_.setText("Current Booking : "+date);
+
+                if(is_check_button_comeNow==1) {
+                    String date = new SimpleDateFormat("dd/MM/yyyy - HH:mm a").format(new Date());
+                    GloableVariable.Tag_Good_Details_Comming_Date_time = date;
+                    txtdateTime_.setVisibility(View.VISIBLE);
+
+                    Long tsLong = System.currentTimeMillis();
+                    String ts = tsLong.toString();
+                    long millisecond = Long.parseLong(ts);
+                    datetimeString = DateFormat.format("dd-MM-yyyy hh:mm a", new Date(millisecond)).toString();
+                    String  timeString = datetimeString.substring(11);
+                    String   dateString = datetimeString.substring(0,10);
+                     txtdateTime_.setText("Current Booking : " + timeString+" / "+dateString);
+                }
 
             }
         });
@@ -587,14 +651,24 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         btnSaveBooking.setTypeface(mTypefaceRegular);
 
 
-        String date = new SimpleDateFormat("dd/MM/yyyy - HH:mm").format(new Date());
-        GloableVariable.Tag_Good_Details_Comming_Date_time=date;
 
-        Long tsLong = System.currentTimeMillis()/1000;
-        GloableVariable.Tag_Good_Details_Comming_Date_time_Stamp=tsLong;
-        txtdateTime_.setText("Current Booking : "+date);
+        if (GloableVariable.is_check_button_comeNow==0) {
 
+            String date = new SimpleDateFormat("dd/MM/yyyy - HH:mm a").format(new Date());
+            GloableVariable.Tag_Good_Details_Comming_Date_time = date;
 
+            Long tsLong = System.currentTimeMillis() / 1000;
+            Tag_Good_Details_Comming_Date_time_Stamp = tsLong;
+
+            tsLong = System.currentTimeMillis();
+            String ts = tsLong.toString();
+            long millisecond = Long.parseLong(ts);
+            datetimeString = DateFormat.format("dd-MM-yyyy hh:mm a", new Date(millisecond)).toString();
+            String  timeString = datetimeString.substring(11);
+            String   dateString = datetimeString.substring(0,10);
+             txtdateTime_.setText("Current Booking : " + timeString +" / "+dateString);
+
+        }
 
     }
 
@@ -602,7 +676,6 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         GoodsImagesAdapter goodsImagesAdapter = new GoodsImagesAdapter(mActivityReference, listImagesGoods);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mActivityReference, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(goodsImagesAdapter);
     }
 
@@ -718,20 +791,15 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
             case R.id.btn_come_later:
                 isCheckButton=true;
 
-
+                is_check_button_comeNow=2;
+                GloableVariable.Tag_Good_Details_Comming_time_type="2";
                 btnComeLater.setBackground(mActivityReference.getResources().getDrawable(R.drawable.sm_btn));
                 btnComeNow.setBackgroundColor(mActivityReference.getResources().getColor(R.color.white));
 
                 btnComeLater.setTextColor(mActivityReference.getResources().getColor(R.color.white));
                 btnComeNow.setTextColor(mActivityReference.getResources().getColor(R.color.grey_text_color));
-
-
-
-
-
-
                 showPopUp(0);
-                GloableVariable.Tag_Good_Details_Comming_time_type="2";
+
                 break;
             case R.id.img_helper_single:
                 if (!(boolean) imghelperCheckBox.getTag()) {
@@ -1135,7 +1203,6 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         goodAddAdapter = new GoodAddAdapter(mActivityReference, lists);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mActivityReference, LinearLayoutManager.HORIZONTAL, false);
         types_good_recyclerView.setLayoutManager(mLayoutManager);
-        types_good_recyclerView.setItemAnimator(new DefaultItemAnimator());
         types_good_recyclerView.setAdapter(goodAddAdapter);
         goodAddAdapter.notifyDataSetChanged();
 

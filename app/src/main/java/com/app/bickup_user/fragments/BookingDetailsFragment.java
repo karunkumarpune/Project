@@ -61,6 +61,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.app.bickup_user.GlobleVariable.GloableVariable.is_check_image_product;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 
@@ -135,7 +136,7 @@ public class BookingDetailsFragment extends Fragment implements View.OnClickList
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_booking_detail, container, false);
         initializeViews(view);
-
+        is_check_image_product=2;
         return view;
     }
 

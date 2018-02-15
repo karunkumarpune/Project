@@ -66,7 +66,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -104,9 +103,8 @@ public class MainActivity extends AppCompatActivity implements
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     private Context mContext;
     private TextView edt_pickup_location,edt_drop_location;
-    private TextView btn_tag_pickup,btn_tag_drop;
 
-    private ImageView btn_current_location,search_pickup,search_drop;
+    private ImageView btn_current_location;
     private double current_latitude = 0.0;
     private double current_longitude = 0.0;
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -121,8 +119,6 @@ public class MainActivity extends AppCompatActivity implements
     private Typeface mTypefaceBold;
     private DuoDrawerLayout drawerLayout;
     private ImageView navigationDrawer;
-    private RelativeLayout imgPickupSearch;
-    private RelativeLayout imgDropSearch;
     private TextView userName;
     private TextView useremail;
     private RoundedImageView userImage;
@@ -154,28 +150,31 @@ public class MainActivity extends AppCompatActivity implements
     private double drop_latitude,drop_longitude;
     private String drop_location_address;
 
+    private RelativeLayout liner_btn_pickup,liner_btn_drop;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(R.anim.slide_in, R.anim._slide_out);
         setContentView(R.layout.activity_main);
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d("Refreshed", "Refreshed token: " + refreshedToken);
 
         mActivityreference = MainActivity.this;
         pref_pickup = getSharedPreferences("MyPickup", Context.MODE_PRIVATE);
         pref_drop = getSharedPreferences("MyDrop", Context.MODE_PRIVATE);
 
 
+
+
         edt_pickup_location = findViewById(R.id.tv_pickup_location);
         edt_drop_location = findViewById(R.id.tv_drop_location);
 
-        btn_tag_pickup = findViewById(R.id.btn_tag_pickup);
-        btn_tag_drop = findViewById(R.id.btn_tag_drop);
 
-        search_pickup = findViewById(R.id.search_pickup);
-        search_drop = findViewById(R.id.search_drop);
+        liner_btn_pickup = findViewById(R.id.label_pickup_locations);
+        liner_btn_drop = findViewById(R.id.liner_btn_drops);
+
+
+
 
         initMap();
         intializeViews();
@@ -222,11 +221,7 @@ public class MainActivity extends AppCompatActivity implements
         txtLargeTravellername = findViewById(R.id.txt_traveller_name_large);
         txtLargeCost = findViewById(R.id.txt_cost_large);
 
-        imgPickupSearch = findViewById(R.id.label_pickup_location_dialog);
-        imgDropSearch = findViewById(R.id.label_drop_location);
 
-        imgDropSearch.setOnClickListener(this);
-        imgPickupSearch.setOnClickListener(this);
 
         btnLargeSubmit = findViewById(R.id.btn_submit_large);
         btnSmallSubmit = findViewById(R.id.btn_submit_small);
@@ -305,6 +300,13 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
+
+
+
+
+
+
+                        GloableVariable.is_check_pickup_or_drop=0;
                         GloableVariable.Tag_pickup_latitude=0.0;
                         GloableVariable.Tag_pickup_longitude=0.0;
 
@@ -780,21 +782,22 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        btn_tag_pickup.setOnClickListener(new View.OnClickListener() {
+
+
+
+        liner_btn_pickup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PickupSend();
             }
         });
 
-
-        btn_tag_drop.setOnClickListener(new View.OnClickListener() {
+        liner_btn_drop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DropSend();
             }
         });
-
 
 
 
@@ -805,7 +808,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-
         edt_drop_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -813,6 +815,8 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
+
+      /*
         search_pickup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -827,7 +831,7 @@ public class MainActivity extends AppCompatActivity implements
                 DropSend();
             }
         });
-
+*/
 
 
 
@@ -1104,7 +1108,10 @@ public class MainActivity extends AppCompatActivity implements
             edt_drop_location.setText(drop_location_address);
         }
         if (is_check_pickup_or_drop != 0) {
-            showLocationOnmap();
+
+            if(mMap !=null) {
+                showLocationOnmap();
+            }
         }
 
         checkInternetconnection();

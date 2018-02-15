@@ -12,9 +12,12 @@ import android.widget.ImageView;
 
 import com.app.bickup_user.R;
 import com.app.bickup_user.ZoomActivity;
+import com.app.bickup_user.fragments.GoodsDetailsFragments;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+
+import static com.app.bickup_user.GlobleVariable.GloableVariable.is_check_image_product;
 
 /**
  * Created by fluper-pc on 14/10/17.
@@ -65,7 +68,7 @@ public class GoodsImagesAdapter extends RecyclerView.Adapter<GoodsImagesAdapter.
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         final Bitmap bitmap = listImages.get(position);
         if (bitmap != null){
            // Bitmap scaledImage = setPic(holder.imageView, bitmap);
@@ -92,9 +95,18 @@ public class GoodsImagesAdapter extends RecyclerView.Adapter<GoodsImagesAdapter.
 
           // holder.imageView.setImageResource(R.drawable.driver_2);
         }
+            if(is_check_image_product==1){
+                holder.crossImage.setVisibility(View.VISIBLE);
+            }else holder.crossImage.setVisibility(View.GONE);
+
+
             holder.crossImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                notifyItemRangeChanged(position, listImages.size());
+                listImages.remove(position);
+                notifyItemRemoved(position);
+                GoodsDetailsFragments.imagecount--;
 
             }
         });

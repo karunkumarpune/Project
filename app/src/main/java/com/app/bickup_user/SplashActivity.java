@@ -10,7 +10,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import com.app.bickup_user.broadcastreciever.InternetConnectionBroadcast;
 import com.app.bickup_user.controller.AppController;
@@ -29,10 +28,18 @@ public class SplashActivity extends AppCompatActivity implements InternetConnect
     private SharedPreferences pref_pickup;
     private SharedPreferences pref_drop;
 
+    private SharedPreferences Image_Sp;
+    private SharedPreferences Image_Sp1;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+
+        Image_Sp = this.getSharedPreferences("Image_Sp", 0);
+        Image_Sp1 = this.getSharedPreferences("LoginInfos", 0);
 
         pref_pickup = getSharedPreferences("MyPickup", Context.MODE_PRIVATE);
         pref_drop = getSharedPreferences("MyDrop", Context.MODE_PRIVATE);
@@ -45,8 +52,18 @@ public class SplashActivity extends AppCompatActivity implements InternetConnect
         drop_edit.apply();
 
 
+
+        SharedPreferences.Editor editor=Image_Sp.edit();
+        editor.clear();
+        editor.apply();
+
+        SharedPreferences.Editor editor1=Image_Sp1.edit();
+        editor1.clear();
+        editor1.apply();
+
+
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.d("Refreshed token", "Refreshed token: " + refreshedToken);
+       // Log.d("Refreshed token", "Refreshed token: " + refreshedToken);
         storeToken(refreshedToken);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

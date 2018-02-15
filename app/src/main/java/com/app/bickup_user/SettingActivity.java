@@ -78,6 +78,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 editor1.clear();
                 editor1.apply();
 
+
+                GloableVariable.is_check_pickup_or_drop=0;
                 GloableVariable.Tag_drop_location_check="";
                 GloableVariable.Tag_pickup_location_address="";
                  GloableVariable.Tag_pickup_latitude=0.0;

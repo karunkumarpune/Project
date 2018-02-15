@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -153,6 +154,7 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
     private void initializeViews() {
         circularProgressBar=(CircularProgressView)findViewById(R.id.progress_view);
         TextView txtHeader=(TextView)findViewById(R.id.txt_activty_header);
+        RelativeLayout search_container=(RelativeLayout)findViewById(R.id.search_container);
         txtPickup=(TextView)findViewById(R.id.txt_pickup);
         txtPickup.setText(getResources().getString(R.string.txt_pick_up));
         txtHeader.setText(getResources().getString(R.string.txt_pick_up));
@@ -198,6 +200,27 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         imgBack.setOnClickListener(this);
         edtContactPersonname.setText(User.getInstance().getFirstName() +" "+User.getInstance().getLastName());
         edtContactPersonNumber.setText(User.getInstance().getMobileNumber());
+
+
+        //----------------------------
+        edtPickupLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                CommonMethods.getInstance().hideSoftKeyBoard(PickupLocationActivity.this);
+                openAutoComplePicker();
+            }
+        });
+
+        search_container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                CommonMethods.getInstance().hideSoftKeyBoard(PickupLocationActivity.this);
+                openAutoComplePicker();
+            }
+        });
+
 
 
 
