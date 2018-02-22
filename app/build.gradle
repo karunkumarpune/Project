@@ -101,7 +101,7 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'com.google.android.gms:play-services:9.8.0'
     compile 'com.xw.repo:bubbleseekbar:3.6-lite'
-    compile 'com.android.support:multidex:1.0.2'
+    compile 'com.android.support:multidex:1.0.1'
     compile 'com.applandeo:material-calendar-view:1.1.0'
     compile 'com.wajahatkarim3.EasyFlipView:EasyFlipView:1.0.2'
     compile 'com.flipboard:bottomsheet-core:1.5.3'
@@ -116,6 +116,7 @@ dependencies {
 
     // this line must be included to integrate with Firebase
 
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
 
     compile 'com.android.support:support-compat:26.1.0'
 }

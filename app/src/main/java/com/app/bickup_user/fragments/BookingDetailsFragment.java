@@ -640,7 +640,9 @@ public class BookingDetailsFragment extends Fragment implements View.OnClickList
         final String[] message = new String[1];
         circularProgressView.setVisibility(View.VISIBLE);
 
-        Builders.Any.B builder = Ion.with(getActivity()).load("POST", WebAPIManager.get_url_Ride).setLogging("", Log.ERROR);
+        Builders.Any.B builder = Ion.with(getActivity()).
+                load("POST", WebAPIManager.get_url_Ride)
+                .setLogging("", Log.ERROR);
         builder.setHeader(ConstantValues.USER_ACCESS_TOKEN, User.getInstance().getAccesstoken());
 
        //---------------------------Type of goods----------

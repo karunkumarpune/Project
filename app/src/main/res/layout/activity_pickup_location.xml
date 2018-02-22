@@ -13,10 +13,11 @@
         android:layout_height="wrap_content">
 
         <RelativeLayout
+
             android:layout_width="match_parent"
             android:layout_height="551dp"
             android:background="@color/screen_background"
-            android:paddingBottom="10dp">
+            android:paddingBottom="8dp">
 
             <include
                 android:id="@+id/toobar_layout"
@@ -38,6 +39,7 @@
                     android:padding="5dp">
 
                     <ImageView
+                        android:layout_marginTop="5dp"
                         android:id="@+id/img_pickup"
                         android:layout_width="20dp"
                         android:layout_height="wrap_content"
@@ -61,7 +63,7 @@
                             android:textColor="@color/greyColor"
                             android:textSize="@dimen/medium_text" />
 
-                        <EditText
+                        <TextView
                             android:id="@+id/edt_pickupLocation"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -186,7 +188,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/sm_btn"
                         android:gravity="center"
-                        android:paddingBottom="10dp">
+                        android:paddingBottom="8dp">
 
                         <ImageView
                             android:id="@+id/img_building"
@@ -215,7 +217,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:paddingBottom="10dp">
+                        android:paddingBottom="8dp">
 
                         <ImageView
                             android:id="@+id/img_villa"
@@ -256,13 +258,12 @@
                         android:textSize="@dimen/medium_text" />
 
                     <EditText
+                        android:layout_marginTop="@dimen/dp_5"
                         android:id="@+id/edt_building_name"
                         android:layout_width="match_parent"
-
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/txt_building_name"
                         android:background="@android:color/transparent"
-                        android:text=""
                         android:textColor="@color/grey_text_color"
                         android:textSize="@dimen/medium_text" />
 
@@ -271,11 +272,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.5dp"
                         android:layout_below="@+id/edt_building_name"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="0dp"
                         android:background="@color/greyColor" />
 
 
                     <LinearLayout
+                        android:layout_marginTop="@dimen/dp_10"
                         android:id="@+id/li_building_details"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -293,11 +295,7 @@
                             <android.support.design.widget.TextInputLayout
                                 android:id="@+id/text_enter_mobile_login"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/tv_forgot_heading"
-                                android:layout_marginTop="10dp"
-                                android:clipToPadding="false"
-                                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout_grey">
+                                android:layout_height="wrap_content">
 
                                 <EditText
                                     android:id="@+id/edt_floor_number"
@@ -306,33 +304,12 @@
                                     android:backgroundTint="@color/greyColor"
                                     android:hint="@string/txt_floor_number"
                                     android:maxLines="1"
-                                    android:paddingBottom="15dp"
-                                    android:paddingTop="1dp"
+                                    android:paddingBottom="8dp"
+                                    android:paddingTop="10dp"
                                     android:textCursorDrawable="@null"
-                                    android:textSize="@dimen/medium_text" />
+                                    android:textSize="13sp" />
                             </android.support.design.widget.TextInputLayout>
 
-                            <!-- <TextView
-                                 android:layout_width="wrap_content"
-                                 android:layout_height="wrap_content"
-                                 android:layout_marginTop="10dp"
-
-                                 android:text="@string/txt_floor_number"
-                                 android:maxLines="1"
-                                 android:textColor="@color/greyColor"
-                                 android:textSize="@dimen/medium_text" />
-
-                             <EditText
-                                 android:textSize="@dimen/medium_text"
-                                 android:id="@+id/edt_floor_number"
-                                 android:layout_width="match_parent"
-                                 android:layout_height="wrap_content"
-                                 android:maxLines="1"
-                                 android:layout_marginLeft="-5dp"
-                                 android:textColor="@color/grey_text_color"
-                                 android:paddingBottom="5dp"
-                                 android:backgroundTint="@color/greyColor"
-                                 />-->
 
                         </LinearLayout>
 
@@ -344,11 +321,7 @@
 
                             <android.support.design.widget.TextInputLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/tv_forgot_heading"
-                                android:layout_marginTop="10dp"
-                                android:clipToPadding="false"
-                                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout_grey">
+                                android:layout_height="wrap_content">
 
                                 <EditText
                                     android:id="@+id/edt_unit_number"
@@ -357,10 +330,10 @@
                                     android:backgroundTint="@color/greyColor"
                                     android:hint="@string/txt_unit_number"
                                     android:maxLines="1"
-                                    android:paddingBottom="15dp"
-                                    android:paddingTop="1dp"
+                                    android:paddingBottom="8dp"
+                                    android:paddingTop="10dp"
                                     android:textCursorDrawable="@null"
-                                    android:textSize="@dimen/medium_text" />
+                                    android:textSize="13sp" />
                             </android.support.design.widget.TextInputLayout>
 
                             <!-- <TextView
@@ -378,7 +351,7 @@
                                  android:layout_width="match_parent"
                                  android:layout_height="wrap_content"
                                  android:textColor="@color/grey_text_color"
-                                 android:paddingBottom="5dp"
+                                 android:paddingBottom="8dp"
                                  android:layout_marginLeft="-5dp"
                                  android:backgroundTint="@color/greyColor"
                                  />-->
@@ -389,6 +362,8 @@
                     </LinearLayout>
 
                 </RelativeLayout>
+
+
             </RelativeLayout>
 
 
@@ -435,7 +410,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/sm_btn"
                         android:gravity="center"
-                        android:paddingBottom="10dp">
+                        android:paddingBottom="8dp">
 
                         <TextView
                             android:id="@+id/txt_me"
@@ -457,7 +432,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:paddingBottom="10dp">
+                        android:paddingBottom="8dp">
 
                         <TextView
                             android:id="@+id/txt_other"
@@ -465,7 +440,7 @@
                             android:layout_height="70dp"
                             android:layout_marginEnd="5dp"
                             android:gravity="center"
-                            android:paddingBottom="10dp"
+                            android:paddingBottom="8dp"
                             android:text="@string/txt_others_contacts"
                             android:textColor="@color/grey_text_color"
                             android:textSize="@dimen/medium_text"></TextView>
@@ -495,13 +470,8 @@
 
 
                             <android.support.design.widget.TextInputLayout
-
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/tv_forgot_heading"
-                                android:layout_marginTop="7dp"
-                                android:clipToPadding="false"
-                                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout">
+                                android:layout_height="wrap_content">
 
                                 <EditText
                                     android:id="@+id/edt_contact_peron_name"
@@ -509,35 +479,13 @@
                                     android:layout_height="wrap_content"
                                     android:backgroundTint="@color/greyColor"
                                     android:hint="@string/txt_contact_person_name"
-                                    android:inputType="text"
                                     android:maxLines="1"
-                                    android:paddingBottom="15dp"
-                                    android:paddingTop="1dp"
-                                    android:textColorHint="@color/greyColor"
+                                    android:paddingBottom="8dp"
+                                    android:paddingTop="10dp"
                                     android:textCursorDrawable="@null"
-                                    android:textSize="@dimen/medium_text" />
+                                    android:textSize="13sp" />
                             </android.support.design.widget.TextInputLayout>
 
-
-                            <!-- <TextView
-                                 android:layout_width="wrap_content"
-                                 android:layout_height="wrap_content"
-                                 android:layout_marginTop="10dp"
-
-                                 android:text="@string/txt_contact_person_name"
-                                 android:textColor="@color/greyColor"
-                                 android:textSize="@dimen/medium_text" />
-
-                             <EditText
-                                 android:textSize="@dimen/medium_text"
-                                 android:id="@+id/edt_contact_peron_name"
-                                 android:layout_width="match_parent"
-                                 android:layout_height="wrap_content"
-                                 android:layout_marginLeft="-5dp"
-                                 android:paddingBottom="5dp"
-                                 android:textColor="@color/grey_text_color"
-                                 android:backgroundTint="@color/greyColor"
-                                 />-->
 
                         </LinearLayout>
 
@@ -549,11 +497,7 @@
 
                             <android.support.design.widget.TextInputLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@+id/tv_forgot_heading"
-                                android:layout_marginTop="10dp"
-                                android:clipToPadding="false"
-                                app:hintTextAppearance="@style/TextAppearence.App.TextInputLayout_grey">
+                                android:layout_height="wrap_content">
 
                                 <EditText
                                     android:id="@+id/edt_edt_contact_person_number"
@@ -561,36 +505,13 @@
                                     android:layout_height="wrap_content"
                                     android:backgroundTint="@color/greyColor"
                                     android:hint="@string/txt_contact_person_number"
-                                    android:inputType="number"
                                     android:maxLines="1"
-                                    android:paddingBottom="15dp"
-                                    android:paddingTop="1dp"
-                                    android:textColorHint="@color/greyColor"
+                                    android:paddingBottom="8dp"
+                                    android:paddingTop="10dp"
                                     android:textCursorDrawable="@null"
-                                    android:textSize="@dimen/medium_text" />
+                                    android:textSize="13sp" />
                             </android.support.design.widget.TextInputLayout>
-                            <!--
 
-                                                    <TextView
-                                                        android:layout_width="wrap_content"
-                                                        android:layout_height="wrap_content"
-                                                        android:layout_marginTop="10dp"
-
-                                                        android:text="@string/txt_contact_person_number"
-                                                        android:textColor="@color/greyColor"
-                                                        android:textSize="@dimen/medium_text" />
-
-                                                    <EditText
-                                                        android:textSize="@dimen/medium_text"
-                                                        android:id="@+id/edt_edt_contact_person_number"
-                                                        android:layout_width="match_parent"
-                                                        android:layout_height="wrap_content"
-                                                        android:textColor="@color/grey_text_color"
-                                                        android:layout_marginLeft="-3dp"
-                                                        android:paddingBottom="5dp"
-                                                        android:backgroundTint="@color/greyColor"
-                                                        />
-                            -->
 
                         </LinearLayout>
 

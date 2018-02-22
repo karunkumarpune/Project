@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.app.bickup_user.broadcastreciever.InternetConnectionBroadcast;
 import com.app.bickup_user.controller.AppController;
 import com.app.bickup_user.fragments.BookingDetailsFragment;
+import com.app.bickup_user.fragments.BookingDetailsFragmentKotlin;
 import com.app.bickup_user.fragments.GoodsDetailsFragments;
 import com.app.bickup_user.interfaces.HandlerGoodsNavigations;
 import com.app.bickup_user.utility.CommonMethods;
@@ -95,10 +96,10 @@ public class GoodsActivity extends AppCompatActivity  implements HandlerGoodsNav
 
     @Override
     public void callBookingDetailsFragment(ArrayList<Bitmap> listImages) {
-        BookingDetailsFragment bookingDetailsFragments=new BookingDetailsFragment();
+        BookingDetailsFragmentKotlin bookingDetailsFragments=new BookingDetailsFragmentKotlin();
         bookingDetailsFragments.setImagelist(listImages);
         txtHeader.setText(getResources().getString(R.string.txt_view_details));
-        getSupportFragmentManager().beginTransaction().replace(R.id.goods_activity_container,bookingDetailsFragments).addToBackStack(BookingDetailsFragment.Tag).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.goods_activity_container,bookingDetailsFragments).addToBackStack(null).commit();
     }
 
     @Override

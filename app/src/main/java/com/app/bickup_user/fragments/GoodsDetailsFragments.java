@@ -2,6 +2,7 @@ package com.app.bickup_user.fragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,10 +15,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -27,6 +26,7 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +40,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.app.bickup_user.GlobleVariable.GloableVariable;
@@ -65,7 +66,6 @@ import com.stacktips.view.CustomCalendarView;
 import com.stacktips.view.DayDecorator;
 import com.stacktips.view.DayView;
 import com.stacktips.view.utils.CalendarUtils;
-import com.xw.repo.BubbleSeekBar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -145,13 +145,12 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
 
 
 
+
     private String select_Data;
     private String Image_Data;
     private String image_id;
     private String add_date_time;
     private String add_date_time_time_stamp;
-    private String add_mit="";
-    private String add_hours="";
     private TextView txtdateTime_;
     private String current_Date;
     Bitmap bitmap1 = null, bitmap2 = null, bitmap3 = null, bitmap4 = null;
@@ -161,11 +160,17 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
     private String time_Stamp_day;
     private boolean isCheckButton=false;
     private String datetimeString;
-
+    public static TimePicker timePickers;
     public GoodsDetailsFragments() {
         // Required empty public constructor
     }
 
+
+    static final int TIME_DIALOG_ID = 1111;
+    private TextView view;
+    public Button btnClick;
+    private int hr;
+    private int min;
 
 
 
@@ -226,7 +231,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
 
         //Initialize calendar with date
         Calendar currentCalendar = Calendar.getInstance(Locale.getDefault());
-        add_date_time= new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+        add_date_time= new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 
         //Show Monday as first date of week
         calendarView.setFirstDayOfWeek(Calendar.MONDAY);
@@ -287,7 +292,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 openDialog.dismiss();
-                showPopUpForTime(0);
+                showPopUpForTime();
             }
         });
         openDialog.show();
@@ -295,120 +300,119 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
     }
 
 
-    private void showPopUpForTime(int choosetraveller) {
+    @TargetApi(Build.VERSION_CODES.M)
+    private void showPopUpForTime() {
+
+
         final Dialog openDialog = new Dialog(mActivityReference);
         openDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        openDialog.setContentView(R.layout.time_dialog);
+        openDialog.setContentView(R.layout.activity_custome_time);
         openDialog.setTitle("Custom Dialog Box");
         openDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        final TextView fifteenMinuit = (TextView) openDialog.findViewById(R.id.fifteen_minuit);
-        final TextView thirtyMinuit = (TextView) openDialog.findViewById(R.id.thirty_minuit);
-        final TextView fourtyMinuit = (TextView) openDialog.findViewById(R.id.fourty_minuit);
-        final TextView minuitText = (TextView) openDialog.findViewById(R.id.minuit_txt);
-        final TextView hourtext = (TextView) openDialog.findViewById(R.id.hourtext);
-        minuitText.setTypeface(mTypefaceRegular);
-        fifteenMinuit.setTypeface(mTypefaceRegular);
-        thirtyMinuit.setTypeface(mTypefaceRegular);
-        fourtyMinuit.setTypeface(mTypefaceRegular);
-        setColorWhite(fifteenMinuit);
-        setColorWhite(thirtyMinuit);
-        setColorWhite(fourtyMinuit);
-        final com.xw.repo.BubbleSeekBar seekBar = (com.xw.repo.BubbleSeekBar) openDialog.findViewById(R.id.seekbar);
-        add_hours="1";
-        seekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
-            @Override
-            public void onProgressChanged(int progress, float progressFloat) {
-                hourtext.setText(String.valueOf(progress));
-                add_hours=String.valueOf(progress);
-            }
 
-            @Override
-            public void getProgressOnActionUp(int progress, float progressFloat) {
+        openDialog.show();
+        final TimePicker tp = (TimePicker)openDialog.findViewById(R.id.timePicker);
+        final TextView ok = (TextView)openDialog.findViewById(R.id.tv_ok);
+        final TextView cancle =(TextView)openDialog.findViewById(R.id.tv_cancel);
 
-            }
 
-            @Override
-            public void getProgressOnFinally(int progress, float progressFloat) {
 
-            }
-        });
 
-        add_mit="15";
-        fifteenMinuit.setOnClickListener(new View.OnClickListener() {
+        ok.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
             @Override
             public void onClick(View view) {
-                minuitText.setText("15");
-                add_mit="15";
-                fifteenMinuit.setTextColor(getActivity().getResources().getColor(R.color.grey_text_color));
-                thirtyMinuit.setTextColor(getActivity().getResources().getColor(R.color.greyColor));
-                fourtyMinuit.setTextColor(getActivity().getResources().getColor(R.color.greyColor));
-                setColorYellow(view);
-                setColorWhite(thirtyMinuit);
-                setColorWhite(fourtyMinuit);
+                tp.setIs24HourView(false);
+                int hourOfDay = tp.getCurrentHour();
 
+                //Get TimePicker current hour
+                int minute = tp.getCurrentMinute(); //Get TimePicker current minute
+
+                int resultHr = 0;
+
+
+
+                //Display the TimePicker current time to app interface
+                String AMPM = "AM";
+                if(hourOfDay>11)
+                {
+                    //Get the current hour as AM PM 12 hour format
+                    hourOfDay = hourOfDay-12;
+
+                    AMPM = "PM";
+                }
+
+                if(hourOfDay==0){
+                    resultHr=12;
+                }else {
+                    resultHr = hourOfDay;
+                }
+
+                String resultHrs ="";
+                String resultMin ="";
+
+                if(resultHr>=0 && resultHr<10){
+                    resultHrs= "0"+String.valueOf(resultHr);
+                }else resultHrs= String.valueOf(resultHr);
+
+                if(minute>=0 && minute<10){
+                    resultMin= "0"+String.valueOf(minute);
+                }else resultMin= String.valueOf(minute);
+
+
+                Log.d("TAGS Time",add_date_time +"    "+resultHrs+":"+ resultMin);
+                GloableVariable.Tag_Good_Details_Comming_Date_time=add_date_time +" - "+hourOfDay+":"+ minute;
+
+                String[] parsedate= add_date_time.split("/");
+                Calendar c = Calendar.getInstance();
+                c.set(Integer.parseInt(parsedate[2]),
+                        Integer.parseInt(parsedate[1]) - 1,
+                        Integer.parseInt(parsedate[0]), hourOfDay, minute);
+
+                Tag_Good_Details_Comming_Date_time_Stamp= c.getTimeInMillis();
+
+                if (GloableVariable.Tag_Good_Details_Comming_time_type.equals("2")){
+
+                    txtdateTime_.setVisibility(View.VISIBLE);
+                  //  datetimeString = DateFormat.format("dd-MM-yyyy hh:mm a", new Date(Tag_Good_Details_Comming_Date_time_Stamp)).toString();
+                  //  String  timeString = datetimeString.substring(11);
+                  //  String   dateString = datetimeString.substring(0,10);
+                    txtdateTime_.setText("Schedule Booking : "+resultHrs+":"+ resultMin +" "+AMPM +" / "+add_date_time);
+                    openDialog.cancel();
+                }
+
+
+              /*  if (GloableVariable.Tag_Good_Details_Comming_time_type.equals("2")){
+
+                    txtdateTime_.setVisibility(View.VISIBLE);
+                    // datetimeString = DateFormat.format("dd-MM-yyyy hh:mm a", new Date(Tag_Good_Details_Comming_Date_time_Stamp)).toString();
+                    // String  timeString = datetimeString.substring(11);
+                    // String   dateString = datetimeString.substring(0,10);
+                    // txtdateTime_.setText("Schedule Booking : " + timeString +" / "+dateString);
+                    txtdateTime_.setText("Schedule Booking :" + hourOfDay + ":" + minute + ":" + AMPM  +"/"+add_date_time);
+                    openDialog.cancel();
+                }
+
+*/
             }
-
-
         });
 
-        thirtyMinuit.setOnClickListener(new View.OnClickListener() {
+        cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                minuitText.setText("30");
-                add_mit="30";
+                openDialog.cancel();
 
-                thirtyMinuit.setTextColor(getActivity().getResources().getColor(R.color.grey_text_color));
-                fifteenMinuit.setTextColor(getActivity().getResources().getColor(R.color.greyColor));
-                fourtyMinuit.setTextColor(getActivity().getResources().getColor(R.color.greyColor));
-                setColorYellow(view);
-                setColorWhite(fifteenMinuit);
-                setColorWhite(fourtyMinuit);
-            }
-        });
 
-        fourtyMinuit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setColorYellow(view);
-                minuitText.setText("45");
-                add_mit="45";
-                fourtyMinuit.setTextColor(getActivity().getResources().getColor(R.color.grey_text_color));
-                fifteenMinuit.setTextColor(getActivity().getResources().getColor(R.color.greyColor));
-                thirtyMinuit.setTextColor(getActivity().getResources().getColor(R.color.greyColor));
-                setColorWhite(thirtyMinuit);
-                setColorWhite(fifteenMinuit);
             }
         });
 
 
 
-        TextView travellerCost = (TextView) openDialog.findViewById(R.id.txt_traveller_cost);
-        ImageView travellerImage = (ImageView) openDialog.findViewById(R.id.img_traveller);
-        Button btnCancel = (Button) openDialog.findViewById(R.id.btn_cancel);
 
-        Button btnok = (Button) openDialog.findViewById(R.id.btn_ok);
-        btnCancel.setTypeface(mTypefaceRegular);
-        btnok.setTypeface(mTypefaceRegular);
-       /* travellerName.setTypeface(mTypefaceBold);
-        travellerCost.setTypeface(mTypefaceRegular);
-        btnDisagree.setTypeface(mTypefaceBold);
-        btnAgree.setTypeface(mTypefaceBold);*/
-        if (choosetraveller == 1) {
+              /*
 
-        }
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                openDialog.dismiss();
-            }
-        });
-        btnok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openDialog.dismiss();
-
-                Log.d("TAGS Time",add_date_time +"    "+add_hours+":"+ add_mit);
+                Log.d("TAGS Time",add_date_time +"    "+hourOfDay+":"+ add_mit);
                 GloableVariable.Tag_Good_Details_Comming_Date_time=add_date_time +" - "+add_hours+":"+ add_mit;
                 String[] parsedate= add_date_time.split("/");
                 Calendar c = Calendar.getInstance();
@@ -429,28 +433,16 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                     txtdateTime_.setText("Schedule Booking : " + timeString +" / "+dateString);
 
                    // Save();
-                }
+                }*/
 
 
-            }
-        });
-        openDialog.show();
+
 
 
         //   txtdateTime.setText(""+GloableVariable.Tag_Good_Details_Comming_Date_time);
 
     }
 
-    private void setColorYellow(View view) {
-        TextView view1 = (TextView) view;
-        StateListDrawable bgShape = (StateListDrawable) view1.getBackground();
-        bgShape.setColorFilter(Color.parseColor("#e6ba13"), PorterDuff.Mode.SRC_ATOP);
-    }
-
-    private void setColorWhite(TextView view) {
-        StateListDrawable bgShape = (StateListDrawable) view.getBackground().mutate();
-        bgShape.setColorFilter(Color.parseColor("#ffffff"), PorterDuff.Mode.SRC_ATOP);
-    }
 
 
     private class DisabledColorDecorator implements DayDecorator {
@@ -506,6 +498,8 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         btnComeNow = (TextView) view.findViewById(R.id.btn_come_now);
         btnComeLater = (TextView) view.findViewById(R.id.btn_come_later);
         imgUploadImage = (ImageView) view.findViewById(R.id.img_upload_image);
+
+
 
         imgOneHelper.setOnClickListener(this);
         imgUploadImage.setOnClickListener(this);

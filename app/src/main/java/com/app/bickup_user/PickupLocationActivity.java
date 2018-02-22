@@ -79,7 +79,7 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         LocationListener {
 
     private ImageView imgBack;
-    private EditText edtPickupLocation;
+    private TextView edtPickupLocation;
     private EditText edtFloorNumber;
     private EditText edtUnitNumber;
     private EditText edtContactPersonname;
@@ -164,7 +164,7 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         edtFloorNumber=(EditText)findViewById(R.id.edt_floor_number);
         edtUnitNumber=(EditText)findViewById(R.id.edt_unit_number);
         edtContactPersonname=(EditText)findViewById(R.id.edt_contact_peron_name);
-        edtPickupLocation=(EditText)findViewById(R.id.edt_pickupLocation);
+        edtPickupLocation=(TextView)findViewById(R.id.edt_pickupLocation);
         edtBuildingName=(EditText)findViewById(R.id.edt_building_name);
         edtContactPersonNumber=(EditText)findViewById(R.id.edt_edt_contact_person_number);
         edtComments=(EditText)findViewById(R.id.edt_comments);

@@ -78,7 +78,7 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         LocationListener {
 
     private ImageView imgBack;
-    private EditText edtPickupLocation;
+    private TextView edtPickupLocation;
     private EditText edtFloorNumber;
     private EditText edtUnitNumber;
     private EditText edtContactPersonname;
@@ -172,7 +172,7 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         ImageView imageView = (ImageView) findViewById(R.id.img_pickup);
         imageView.setImageResource(R.drawable.drop_location);
 
-        edtPickupLocation = (EditText) findViewById(R.id.edt_pickupLocation);
+        edtPickupLocation = (TextView) findViewById(R.id.edt_pickupLocation);
         edtFloorNumber = (EditText) findViewById(R.id.edt_floor_number);
         edtUnitNumber = (EditText) findViewById(R.id.edt_unit_number);
         edtContactPersonname = (EditText) findViewById(R.id.edt_contact_peron_name);

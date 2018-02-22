@@ -295,15 +295,16 @@
 
 
        <LinearLayout
-           android:layout_marginTop="@dimen/dp_5"
+           android:gravity="center"
            android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:gravity="center_vertical">
+           android:layout_height="60dp">
 
            <android.support.v7.widget.RecyclerView
+               android:layout_marginLeft="@dimen/dp_10"
+               android:layout_gravity="center_horizontal"
                android:id="@+id/types_good_recyclerView"
                android:layout_width="match_parent"
-               android:layout_height="40dp"/>
+               android:layout_height="match_parent"/>
 
        </LinearLayout>
 
@@ -314,7 +315,6 @@
            android:layout_height="match_parent"
            android:visibility="visible"
            android:layout_below="@+id/img_container_booking_details"
-           android:layout_marginTop="10dp"
            android:orientation="vertical">
 
 
@@ -332,7 +332,7 @@
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:visibility="visible"
-               android:layout_marginTop="10dp"
+               android:layout_marginTop="5dp"
                android:text="Andrew smith is a great person and he is willing to relocate so coming to noida to check the app.He lives in."
                android:textColor="@color/grey_text_color"
                android:textSize="@dimen/medium_text" />
@@ -458,8 +458,8 @@
                        android:inputType="text"
                        android:maxLines="1"
                        android:textCursorDrawable="@null"
-                       android:paddingTop="1dp"
-                       android:paddingBottom="15dp"
+                       android:paddingTop="10dp"
+                       android:paddingBottom="8dp"
                        android:backgroundTint="@color/greyColor"
                        android:hint="@string/txt_contact_person_name"
                        />
@@ -509,8 +509,8 @@
                        android:inputType="number"
                        android:maxLines="1"
                        android:textCursorDrawable="@null"
-                       android:paddingTop="1dp"
-                       android:paddingBottom="15dp"
+                       android:paddingTop="10dp"
+                       android:paddingBottom="8dp"
                        android:backgroundTint="@color/greyColor"
                        android:hint="@string/txt_contact_person_number"
                        />
