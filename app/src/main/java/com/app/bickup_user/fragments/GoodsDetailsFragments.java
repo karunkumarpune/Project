@@ -28,6 +28,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
@@ -39,6 +40,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -121,10 +123,11 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
     private ImageView imgTickTwoHelper;
     private EditText edtDescription;
     private TextView btnComeNow;
+    private static TextView tv_good_types;
     private TextView btnComeLater;
     private ImageView imgUploadImage;
     private ImageView imghelperCheckBox;
-    private ImageView imgTypesGoods;
+    private RelativeLayout imgTypesGoods;
     private RecyclerView recyclerView;
     private int REQUEST_GOODS = 100;
     private boolean isFirstTime = true;
@@ -161,6 +164,8 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
     private boolean isCheckButton=false;
     private String datetimeString;
     public static TimePicker timePickers;
+    private GoodsImagesAdapter goodsImagesAdapter;
+
     public GoodsDetailsFragments() {
         // Required empty public constructor
     }
@@ -465,15 +470,29 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_goods_details_fragments, container, false);
+        tv_good_types = view.findViewById(R.id.tv_good_types);
         try {
             initializeViews(view);
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+        if(listImagesGoods.isEmpty()){
+            ShowTest();
+        }
+
         GloableVariable.Tag_Good_Details_Description=edtDescription.getText().toString();
         is_check_image_product=1;
         return view;
+    }
+
+
+    public static void HideTest(){
+        tv_good_types.setVisibility(View.GONE);
+    }
+
+    public static void ShowTest(){
+        tv_good_types.setVisibility(View.VISIBLE);
     }
 
     private void initializeViews(View view) throws JSONException {
@@ -493,9 +512,10 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         imgTickOneHelper = (ImageView) view.findViewById(R.id.tick_single_helper);
         imgTickTwoHelper = (ImageView) view.findViewById(R.id.tick_double_helper);
         imghelperCheckBox = (ImageView) view.findViewById(R.id.check_box_img);
-        imgTypesGoods = (ImageView) view.findViewById(R.id.img_types_goods);
+        imgTypesGoods = (RelativeLayout) view.findViewById(R.id.img_types_goods);
         edtDescription = (EditText) view.findViewById(R.id.edt_description);
         btnComeNow = (TextView) view.findViewById(R.id.btn_come_now);
+        tv_good_types = (TextView) view.findViewById(R.id.tv_good_types);
         btnComeLater = (TextView) view.findViewById(R.id.btn_come_later);
         imgUploadImage = (ImageView) view.findViewById(R.id.img_upload_image);
 
@@ -736,6 +756,7 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
             }
         }
         AddGoodOption();
+        AddGoodOptionItem();
     }
 
     @Override
@@ -1010,10 +1031,13 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
                     default:
                         rotatedBitmap = bitmap;
                 }
-                GoodsImagesAdapter goodsImagesAdapter = (GoodsImagesAdapter) recyclerView.getAdapter();
-                goodsImagesAdapter.notiFydata(getResizedBitmap(rotatedBitmap,400), imagecount);
 
-                imagecount++;
+                listImagesGoods.add(getResizedBitmap(rotatedBitmap,400));
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mActivityReference, LinearLayoutManager.HORIZONTAL, false);
+                recyclerView.setLayoutManager(mLayoutManager);
+                goodsImagesAdapter =new  GoodsImagesAdapter(mActivityReference,listImagesGoods);
+                recyclerView.setAdapter(goodsImagesAdapter);
+                recyclerView.getAdapter().notifyDataSetChanged();
 
             }catch (Exception e){
 
@@ -1192,13 +1216,25 @@ public class GoodsDetailsFragments extends Fragment implements View.OnClickListe
         }
     }
 
-    private void AddGoodOption() {
+
+    private void AddGoodOptionItem() {
 
         goodAddAdapter = new GoodAddAdapter(mActivityReference, lists);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mActivityReference, LinearLayoutManager.HORIZONTAL, false);
         types_good_recyclerView.setLayoutManager(mLayoutManager);
+        types_good_recyclerView.setItemAnimator(new DefaultItemAnimator());
         types_good_recyclerView.setAdapter(goodAddAdapter);
         goodAddAdapter.notifyDataSetChanged();
+
+    }
+
+    private void AddGoodOption() {
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mActivityReference, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(mLayoutManager);
+        goodsImagesAdapter =new  GoodsImagesAdapter(mActivityReference,listImagesGoods);
+        recyclerView.setAdapter(goodsImagesAdapter);
+        recyclerView.getAdapter().notifyDataSetChanged();
 
     }
 

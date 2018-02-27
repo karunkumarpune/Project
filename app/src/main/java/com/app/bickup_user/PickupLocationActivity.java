@@ -100,9 +100,8 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
     int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
     private int isChekPickup=0;
     private String address;
-    private TextView txtBuildingName;
     private LinearLayout liBuildingDetails;
-    private EditText edtBuildingName;
+    private EditText edtBuildingName,edt_vila_name;
     private CircularProgressView circularProgressBar;
     private String message;
 
@@ -128,6 +127,7 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
     private double pickup_latitude,pickup_longitude;
     private String pickup_location_address;
 
+    LinearLayout ll_layout_building,ll_layout_villa;
 
 
 
@@ -166,13 +166,21 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
         edtContactPersonname=(EditText)findViewById(R.id.edt_contact_peron_name);
         edtPickupLocation=(TextView)findViewById(R.id.edt_pickupLocation);
         edtBuildingName=(EditText)findViewById(R.id.edt_building_name);
+        edt_vila_name=(EditText)findViewById(R.id.edt_vila_name);
+
+
+                ll_layout_building=findViewById(R.id.ll_layout_building);
+                ll_layout_villa=findViewById(R.id.ll_layout_villa);
+
+
+
         edtContactPersonNumber=(EditText)findViewById(R.id.edt_edt_contact_person_number);
         edtComments=(EditText)findViewById(R.id.edt_comments);
         txtMe=(TextView)findViewById(R.id.txt_me);
         txtOther=(TextView)findViewById(R.id.txt_other);
         txtBuildings=(TextView)findViewById(R.id.txt_building);
         txtVilla=(TextView)findViewById(R.id.txt_villa);
-        txtBuildingName=(TextView)findViewById(R.id.txt_building_name);
+
 
         imgBuilding=(ImageView) findViewById(R.id.img_building);
         imgVilla=(ImageView) findViewById(R.id.img_villa);
@@ -346,6 +354,10 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
                 break;
 
             case R.id.li_building:
+                ll_layout_building.setVisibility(View.VISIBLE);
+                ll_layout_villa.setVisibility(View.GONE);
+
+
                 liBuilding.setBackground(this.getResources().getDrawable(R.drawable.sm_btn));
                 liVilla.setBackgroundColor(this.getResources().getColor(R.color.white));
                 txtBuildings.setTextColor(this.getResources().getColor(R.color.white));
@@ -353,19 +365,23 @@ public class PickupLocationActivity extends AppCompatActivity implements View.On
                 imgBuilding.setImageResource(R.drawable.ac_home);
                 imgVilla.setImageResource(R.drawable.de_villa);
                 liBuildingDetails.setVisibility(View.VISIBLE);
-                txtBuildingName.setText(getResources().getString(R.string.txt_building_name));
+               // edtBuildingName.setHint(getResources().getString(R.string.txt_building_name));
                 liBuilding.setTag(true);
                 liVilla.setTag(false);
                 GloableVariable.Tag_pickup_home_type="2";
                 break;
             case R.id.li_villa:
+
+                ll_layout_villa.setVisibility(View.VISIBLE);
+                ll_layout_building.setVisibility(View.GONE);
+
                 liBuilding.setBackgroundColor(this.getResources().getColor(R.color.white));
                 liVilla.setBackground(this.getResources().getDrawable(R.drawable.sm_btn));
                 txtBuildings.setTextColor(this.getResources().getColor(R.color.grey_text_color));
                 txtVilla.setTextColor(this.getResources().getColor(R.color.white));
                 imgBuilding.setImageResource(R.drawable.de_home);
                 imgVilla.setImageResource(R.drawable.ac_villa);
-                txtBuildingName.setText(getResources().getText(R.string.txt_villa_number));
+               // edtBuildingName.setHint(getResources().getText(R.string.txt_villa_number));
                 liBuildingDetails.setVisibility(View.GONE);
                 liBuilding.setTag(false);
                 liVilla.setTag(true);

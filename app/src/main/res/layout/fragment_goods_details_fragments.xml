@@ -23,6 +23,16 @@
             android:paddingStart="0dp"
             android:orientation="vertical">
 
+            <TextView
+                android:id="@+id/tv_good_types"
+                android:layout_marginLeft="@dimen/dp_60"
+                android:textSize="20sp"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="Please add goods images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
             <LinearLayout
                 android:layout_marginLeft="@dimen/dp_10"
                 android:gravity="center"
@@ -272,6 +282,7 @@
             android:layout_height="wrap_content">
 
             <RelativeLayout
+                android:id="@+id/img_types_goods"
                 android:layout_width="match_parent"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
@@ -294,7 +305,6 @@
                     android:layout_alignParentEnd="true"
                     android:paddingTop="2dp"
                     android:layout_marginEnd="5dp"
-                    android:id="@+id/img_types_goods"
                     android:src="@drawable/next_arrow_black"
                     android:layout_centerVertical="true"/>
             </RelativeLayout>

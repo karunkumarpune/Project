@@ -102,9 +102,10 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
     private String address;
     private EditText edtBuildingName;
     private LinearLayout liBuildingDetails;
-    private TextView txtBuildingName;
     private CircularProgressView circularProgressBar;
     private String message;
+
+    LinearLayout ll_layout_building,ll_layout_villa;
 
 
 
@@ -184,7 +185,11 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
         txtVilla = (TextView) findViewById(R.id.txt_villa);
 
         liBuildingDetails = (LinearLayout) findViewById(R.id.li_building_details);
-        txtBuildingName = (TextView) findViewById(R.id.txt_building_name);
+
+
+        ll_layout_building=findViewById(R.id.ll_layout_building);
+        ll_layout_villa=findViewById(R.id.ll_layout_villa);
+
 
 
         edtBuildingName = (EditText) findViewById(R.id.edt_building_name);
@@ -321,6 +326,10 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.li_building:
+                ll_layout_building.setVisibility(View.VISIBLE);
+                ll_layout_villa.setVisibility(View.GONE);
+
+
                 liBuilding.setBackground(this.getResources().getDrawable(R.drawable.sm_btn));
                 liVilla.setBackgroundColor(this.getResources().getColor(R.color.white));
                 txtBuildings.setTextColor(this.getResources().getColor(R.color.white));
@@ -328,19 +337,24 @@ public class DropLocationActivity extends AppCompatActivity implements View.OnCl
                 imgBuilding.setImageResource(R.drawable.ac_home);
                 imgVilla.setImageResource(R.drawable.de_villa);
                 liBuildingDetails.setVisibility(View.VISIBLE);
-                txtBuildingName.setText(getResources().getString(R.string.txt_building_name));
+                edtBuildingName.setHint(getResources().getString(R.string.txt_building_name));
                 liBuilding.setTag(true);
                 liVilla.setTag(false);
                 GloableVariable.Tag_drop_home_type="2";
                 break;
             case R.id.li_villa:
+
+                ll_layout_villa.setVisibility(View.VISIBLE);
+                ll_layout_building.setVisibility(View.GONE);
+
+
                 liBuilding.setBackgroundColor(this.getResources().getColor(R.color.white));
                 liVilla.setBackground(this.getResources().getDrawable(R.drawable.sm_btn));
                 txtBuildings.setTextColor(this.getResources().getColor(R.color.grey_text_color));
                 txtVilla.setTextColor(this.getResources().getColor(R.color.white));
                 imgBuilding.setImageResource(R.drawable.de_home);
                 imgVilla.setImageResource(R.drawable.ac_villa);
-                txtBuildingName.setText(getResources().getText(R.string.txt_villa_number));
+                edtBuildingName.setHint(getResources().getText(R.string.txt_villa_number));
                 liBuildingDetails.setVisibility(View.GONE);
                 liBuilding.setTag(false);
                 liVilla.setTag(true);

@@ -36,7 +36,7 @@ public class GoodsImagesAdapter extends RecyclerView.Adapter<GoodsImagesAdapter.
 
     }*/
 
-    public void notiFydata(Bitmap bitmap,int count)
+    /*public void notiFydata(Bitmap bitmap,int count)
     {
         if(count==listImages.size()){
             listImages.add(bitmap);
@@ -46,7 +46,7 @@ public class GoodsImagesAdapter extends RecyclerView.Adapter<GoodsImagesAdapter.
             notifyItemChanged(count);
         }
 
-    }
+    }*/
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageView,crossImage;
@@ -73,6 +73,10 @@ public class GoodsImagesAdapter extends RecyclerView.Adapter<GoodsImagesAdapter.
         if (bitmap != null){
            // Bitmap scaledImage = setPic(holder.imageView, bitmap);
         //   holder.imageView.animate().rotation(90).start();
+
+            if(position>=0){
+                GoodsDetailsFragments.HideTest();
+            }else GoodsDetailsFragments.ShowTest();
 
             holder.imageView.setImageBitmap(bitmap);
 
@@ -106,7 +110,11 @@ public class GoodsImagesAdapter extends RecyclerView.Adapter<GoodsImagesAdapter.
                 notifyItemRangeChanged(position, listImages.size());
                 listImages.remove(position);
                 notifyItemRemoved(position);
-                GoodsDetailsFragments.imagecount--;
+                if(position>0){
+                    GoodsDetailsFragments.HideTest();
+                }else GoodsDetailsFragments.ShowTest();
+
+
 
             }
         });

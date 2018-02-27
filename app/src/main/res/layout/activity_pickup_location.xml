@@ -244,37 +244,77 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/btn_layout"
-                    android:layout_marginTop="7dp">
+                    android:layout_below="@+id/btn_layout">
 
-                    <TextView
-                        android:id="@+id/txt_building_name"
+                    <LinearLayout
+                        android:id="@+id/li_building_"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:gravity="center_vertical"
-                        android:text="@string/txt_building_name"
-                        android:textColor="@color/appcolor"
-                        android:textSize="@dimen/medium_text" />
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/devider2"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
 
-                    <EditText
-                        android:layout_marginTop="@dimen/dp_5"
-                        android:id="@+id/edt_building_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/txt_building_name"
-                        android:background="@android:color/transparent"
-                        android:textColor="@color/grey_text_color"
-                        android:textSize="@dimen/medium_text" />
+                        <LinearLayout
+                            android:id="@+id/ll_layout_building"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                    <View
-                        android:id="@+id/devider2"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_below="@+id/edt_building_name"
-                        android:layout_marginTop="0dp"
-                        android:background="@color/greyColor" />
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
 
+                                <EditText
+                                    android:id="@+id/edt_building_name"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:backgroundTint="@color/greyColor"
+                                    android:hint="@string/txt_building_name"
+                                    android:maxLines="1"
+                                    android:paddingBottom="8dp"
+                                    android:paddingTop="10dp"
+                                    android:textCursorDrawable="@null"
+                                    android:textSize="13sp" />
+
+                            </android.support.design.widget.TextInputLayout>
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:visibility="gone"
+                            android:id="@+id/ll_layout_villa"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <android.support.design.widget.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+
+                                <EditText
+                                    android:id="@+id/edt_vila_name"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:backgroundTint="@color/greyColor"
+                                    android:hint="@string/txt_villa_number"
+                                    android:maxLines="1"
+                                    android:paddingBottom="8dp"
+                                    android:paddingTop="10dp"
+                                    android:textCursorDrawable="@null"
+                                    android:textSize="13sp" />
+
+                            </android.support.design.widget.TextInputLayout>
+
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_marginTop="@dimen/dp_10"
@@ -282,7 +322,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
-                        android:layout_below="@+id/devider2"
+                        android:layout_below="@+id/li_building_"
                         android:orientation="horizontal"
                         android:weightSum="2">
 

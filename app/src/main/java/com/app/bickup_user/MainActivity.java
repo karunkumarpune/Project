@@ -891,7 +891,9 @@ public class MainActivity extends AppCompatActivity implements
                         if (mGoogleApiClient == null) {
                             buildGoogleApiClient();
                         }
-                        mMap.setMyLocationEnabled(false);
+                        if(mMap !=null) {
+                            mMap.setMyLocationEnabled(false);
+                        }
                         try {
                             buildGoogleApiClient();
                             mGoogleApiClient.connect();

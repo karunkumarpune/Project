@@ -121,7 +121,7 @@ public class SplashActivity extends AppCompatActivity implements InternetConnect
                 finish();
 
             }
-        },000);
+        },2000);
     }
 
     private void initializeViews() {

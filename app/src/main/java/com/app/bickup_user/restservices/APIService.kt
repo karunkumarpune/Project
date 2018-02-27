@@ -1,14 +1,11 @@
-package com.immigration.restservices
+package com.app.bickup_user.restservices
 
 
-import com.retrofitdemo.retrofit.restservices.Constant.key_accessToken
+import com.app.bickup_user.restservices.Constant.key_accessToken
+import com.app.bickup_user.restservices.model.Example
 import okhttp3.MultipartBody
-import org.json.JSONObject
 import retrofit2.Call
-import retrofit2.http.Header
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
+import retrofit2.http.*
 
 
 interface APIService {
@@ -54,11 +51,29 @@ interface APIService {
                   @Part(key_countryCode) countryCode: RequestBody
                  ): Call<ResponseModel>*/
    
-   @Multipart
-   @POST("/ride")
-   fun postImage(
-    @Header(key_accessToken) accessToken:String,
-    @Part image: MultipartBody.Part): Call<JSONObject>
+   
+/*   {
+      "user": {
+      "profile_photo": image_file,
+      "username": "android",
+      ...,
+      "banner_pictures": [
+      file1,
+      file2,
+      file3,
+      ...
+      ]
+   }
+   }
+   */
+     
+     
+     @Headers("Content-Type: application/json")
+     @Multipart
+     @POST("/ride")
+     fun postImage(
+     @Header(key_accessToken) accessToken:String,
+     @Part image: MultipartBody.Part): Call<Example>
 }
 
 

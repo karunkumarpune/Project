@@ -22,7 +22,6 @@ public class GloableVariable {
 
 
 
-
     public static int is_check_pickup_or_drop = 0;
     public static int is_check_image_product = 0;
 

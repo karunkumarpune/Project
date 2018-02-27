@@ -1,4 +1,4 @@
-package com.immigration.restservices
+package com.app.bickup_user.restservices
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,7 +16,7 @@ class RetrofitClient {
             logging.level = HttpLoggingInterceptor.Level.BODY
             val httpClient = OkHttpClient.Builder()
             httpClient.addInterceptor(logging)
-
+           
             retrofit = Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())

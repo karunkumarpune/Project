@@ -1,7 +1,7 @@
-package com.immigration.restservices
+package com.app.bickup_user.restservices
 
-import com.retrofitdemo.retrofit.restservices.Constant.BASE_URL
-import com.retrofitdemo.retrofit.restservices.Constant.BASE_URL2
+import com.app.bickup_user.restservices.Constant.BASE_URL
+import com.app.bickup_user.restservices.Constant.BASE_URL2
 
 object ApiUtils {
 

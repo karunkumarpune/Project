@@ -1,4 +1,4 @@
-package com.retrofitdemo.retrofit.restservices
+package com.app.bickup_user.restservices
 
 
 object Constant {
