@@ -1219,15 +1219,26 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void showAllMarkers(Marker v, Marker parseDouble) {
+
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(true);
+
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         builder.include(new LatLng(v.getPosition().latitude, v.getPosition().longitude));
         builder.include(new LatLng(parseDouble.getPosition().latitude, parseDouble.getPosition().longitude));
         LatLngBounds bounds = builder.build();
         mMap.setPadding(200, 650, 200, 590);
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(v.getPosition().latitude, v.getPosition().longitude)).zoom(5).tilt(90).bearing(150).build();
+
+                .target(new LatLng(v.getPosition().latitude, v.getPosition().longitude))
+                .zoom(11.10f)
+                .tilt(0)
+                .bearing(300)
+                .build();
+
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 100);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 10);
         mMap.moveCamera(cu);
     }
 
